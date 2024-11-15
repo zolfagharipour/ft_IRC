@@ -1,9 +1,9 @@
 HELPFUL LINKS:
 
-First impression:
+- First impression:
 	https://reactive.so/post/42-a-comprehensive-guide-to-ft_irc/
 	
-Socket explanation (boring slides, but actually not bad. also remember we should use TCP and that means no datagram socket):
+- Socket explanation (boring slides, but actually not bad. also remember we should use TCP and that means no datagram socket):
 	https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf
 
 
