@@ -1,4 +1,4 @@
-HELPFUL LINKS:
+LINKS FOR BRGINNING:
 
 - First impression:
 	https://reactive.so/post/42-a-comprehensive-guide-to-ft_irc/
@@ -6,7 +6,25 @@ HELPFUL LINKS:
 - Socket explanation (boring slides, but actually not bad. also remember we should use TCP and that means no datagram socket):
 	https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf
 
+- Step-by-step guide to the project:
+	https://medium.com/@afatir.ahmedfatir/small-irc-server-ft-irc-42-network-7cee848de6f9
+	
+- How IRC works with official links to RFC
+	 http://chi.cs.uchicago.edu/chirc/irc.html
+	 
+- Some good TIPs for the road map at the bottom:
+	https://github.com/marineks/Ft_irc
 
+
+
+LINKS FOR REFERENCE WHILE CODING:
+
+
+- Beej's Guide to network programming (too long to read, but maybe we can check it while coding as reference):
+	https://beej.us/guide/bgnet/pdf/bgnet_a4_c_1.pdf
+	
+- For commands and correct syntaxes (we dont need to read them all):
+	https://modern.ircdocs.horse/
 
 
 
