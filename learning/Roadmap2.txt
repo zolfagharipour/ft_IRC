@@ -1,0 +1,42 @@
+ 📫 Tips
+
+A suggestion of project roadmap : 
+1- Begin by establishing a working client/server socket connection, 
+2- Then build on that : add the signals handling (CTRL+C, CTRL+D, CTRL+Z); 
+3- Only then begin the client registration system (NICK, USER, PASS), 
+4- The server commands (PING, OPER, KILL...) and 
+5- The channel operations commands (JOIN, PART, INVITE, KICK, PRIVMSG, NOTICE...).
+
+
+
+Help, my code works perfectly with irssi but not with nc! If you have this kind of issue, this is because,
+like us, you made the mistake of coding with irssi first and not nc 😬 Keep in mind that nc is very "minimalist"
+compared to irssi. That means that irssi will send you everything at once : the command, and the CRLF ending (\r\n).
+It will also append the : in some cases (for instance TOPIC #channel :message).
+
+This is not the case with nc : you will have to concatenate the messages sent by the Client until you find the proper "end" (the CRLF).
+That means that you should have a (read) buffer ==for each client== connected to your server. Bonus: this will take care of he CTRL+D signal too! 😏
+
+So now, if you follow us, you should guess that, for each client, you will need a (send) buffer as well!
+This will be very efficient in taking care of the CTRL+Z signal 😇 . Don't forget to also check the POLLIN and POLLOUT revents in your server loop...
+
+How to know how to correctly format a RPL to be understood by your IRC client of reference (for instance, irssi) ? .
+
+Join an existing server (try /connect DALNET), then enter the command /RAWLOG OPEN debug.log (more doc),
+and try the commands you're having some troubles with. This will open a log file in your workspace containing
+the all the exact client/server interactions for these commands, such as :
+
+ // [...]
+ << JOIN #help // from the client
+ >> :nickname!username@host JOIN :#help // reply from the server
+ // [...]
+
+Voilà ! Now you know you forgot the : before the channel name! ;)
+
+Okay, now you have a good format but the code is not clean at all? Try to use dynamic macros in this way (we guarantee this is a life changer/saver!) :
+
+  #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
+  #define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
+  // [...]
+  #define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
+

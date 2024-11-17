@@ -6,14 +6,13 @@ LINKS FOR BRGINNING:
 - Socket explanation (boring slides, but actually not bad. also remember we should use TCP and that means no datagram socket):
 	https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf
 
-- Step-by-step guide to the project:
+- Step-by-step guide to the project(i think after studying the subject this is
+the path we should take):
 	https://medium.com/@afatir.ahmedfatir/small-irc-server-ft-irc-42-network-7cee848de6f9
 	
 - How IRC works with official links to RFC
 	 http://chi.cs.uchicago.edu/chirc/irc.html
 	 
-- Some good TIPs for the road map at the bottom:
-	https://github.com/marineks/Ft_irc
 
 
 
@@ -39,7 +38,7 @@ THINGS TO STUDY:
 
 
 1. sockets;
-	1.1 what inblocking options exist;
+	1.1 what non-blocking options exist;
 2. clients;
 	2.1 what clients exist;
 		these clients pops up in my research quite often: HexChat, irssi, WeeChat
