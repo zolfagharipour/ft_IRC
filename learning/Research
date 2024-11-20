@@ -39,9 +39,12 @@ THINGS TO STUDY:
 
 1. sockets;
 	1.1 what non-blocking options exist;
+	1.2 it seems epoll works for others, what is it and why not poll;
 2. clients;
 	2.1 what clients exist;
 		these clients pops up in my research quite often: HexChat, irssi, WeeChat
 	2.2 what client is on the 42 PCs;
 	2.3 what client other chose;
 3. alternatives to try & catch;
+	3.1 what functions are throwing exceptions and if we can stop them from throwing;
+	3.2 which throws are better to be allowed;
