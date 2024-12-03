@@ -53,17 +53,20 @@ int main() {
 
     std::cout << "Client connected" << std::endl;
 
-    // Read data from the client
-    ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
-    if (bytes_read < 0) {
-        perror("read");
-        close(client_fd);
-        close(server_fd);
-        return 1;
-    }
+    while(1){
+        // Read data from the client
+        ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
+        if (bytes_read < 0) {
+            perror("read");
+            close(client_fd);
+            close(server_fd);
+            return 1;
+        }
 
-    buffer[bytes_read] = '\0'; // Null-terminate the buffer
-    std::cout << "Received message: " << buffer << std::endl;
+        buffer[bytes_read] = '\0'; // Null-terminate the buffer
+        std::cout << "Received message: " << buffer << std::endl;
+
+    }
 
     // Close the client and server sockets
     close(client_fd);
