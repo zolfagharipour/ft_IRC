@@ -15,10 +15,10 @@ private:
 	std::vector<Client>				_clients;
 	std::vector<struct pollfd>		_pollFd;
 
-	int		clientRegister();
-	int		clientCommunicate();
-	int		removeFds();
-	int		closeFds();
+	void		clientRegister();
+	void		clientCommunicate(size_t i);
+	void		closeFds();
+	void		removeClient(int fd);
 	
 	void		SocketInit();
 public:
