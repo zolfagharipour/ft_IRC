@@ -7,7 +7,7 @@ CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
 # AR		=	ar rc
 RM		=	rm -f
 
-SRC		=	main.cpp server.cpp client.cpp
+SRC		=	$(wildcard *.cpp) 
 
 OBJS	=	$(SRC:.cpp=.o)
 
