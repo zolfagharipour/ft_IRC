@@ -3,7 +3,7 @@
 void	Server::handler(int signum) {
 	(void)signum;
 	_signal = true;
-	std::cout << "Signal received: Server stopped" << std::endl;
+	std::cout << "\nSignal received: Server stopped" << std::endl;
 }
 
 void Server::signalMonitor () {

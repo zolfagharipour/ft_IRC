@@ -32,7 +32,9 @@ void	Server::_clientRegister() {
 	newPoll.events = POLLIN;
 	newPoll.revents = 0;
 	_pollFd.push_back(newPoll);
+
 	std::cout << "Client is registered" << std::endl;
+	send (cliFd, ":irc.example.com 001 moamad :Welcome to the IRCcom Network, moamad", 58, 0);
 }
 
 void	Server::_clientCommunicate(size_t i) {
@@ -47,7 +49,7 @@ void	Server::_clientCommunicate(size_t i) {
 	}
 	else {
 		buff[bytesRead] = '\0';
-		std::cout << "Client: " << buff;
+		std::cout << "$ " << buff;
 	}
 
 }
