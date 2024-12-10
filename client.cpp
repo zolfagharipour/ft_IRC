@@ -1,31 +1,47 @@
 #include "client.hpp"
 
-Client::Client () {
-    //sth with IP?
-    //sth with Fd?
-    // std::cout << "Client constructed" << std::endl;
+Client::Client() : Fd (-1), _authenticated(false) {};
+
+Client::Client(int fd, const std::string &ipAddress) : Fd(fd), IPadd(ipAddress), _authenticated(false) {}
+
+int Client::GetFd() {return Fd;} //-> getter for fd
+
+std::string &Client::getNickName() {
+    return _nickName;
 }
 
-Client::~Client() {
-    // std::cout << "Client destructed" << std::endl;
+std::string &Client::getUserName() {
+    return _userName;
 }
 
-int Client::getFd() {
-    return this->fd;
+bool    Client::isAuthenticated() {
+    return _authenticated; 
 }
 
-/*
-int Client::getIp() {
-    return this->IpAddr;
-}
-*/
-
-void Client::setFd(int fd) {
-    this->fd = fd;
+void Client::setFd(int fd){
+    Fd = fd;
 }
 
-/*
-void Client::setIpAddr(std::string ip) {
-    this->IpAddr = ip;
+void Client::setIpAdd(std::string ipadd){
+    IPadd = ipadd;
 }
-*/
+
+void	Client::joinChannel(Channel *channel) {
+    
+}
+
+void	Client::leaveChannel(Channel *channel) {
+
+}
+
+bool	Client::isInChannel(Channel *channel) {
+    if (_channels.find(channel))
+}
+
+void	Client::setOPStatus(Channel *channel, bool status) {
+
+}
+
+bool	Client::isOP(Channel *channel) {
+
+}

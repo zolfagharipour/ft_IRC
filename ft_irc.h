@@ -17,5 +17,7 @@
 # include <sys/poll.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <set>
+# include <map>
 
 #endif

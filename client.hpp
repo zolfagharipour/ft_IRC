@@ -1,4 +1,8 @@
-#include "ft_irc.hpp"
+#ifndef CLIENT_HPP
+# define CLIENT_HPP
+
+#include "ft_irc.h"
+#include "channel.hpp"
 
 class Client //-> class for client
 {
@@ -7,14 +11,13 @@ class Client //-> class for client
 		std::string IPadd; //-> client ip address
 
 		
-		std::string	_nickName;
-		std::string _userName;
-		// ??std::string _password;
-		bool		_authenticated;
+		std::string					_nickName;
+		std::string 				_userName;
+		bool						_authenticated;
 		
-		std::map<std::string, bool>	_opStatus; //key = channel name, value: if client is channel op
-		std::set<std::string>		_channels; //which channels the client joined
-		
+		std::map<Channel *, bool>	_opStatus; //key = channel name, value: if client is channel op
+		std::set<Channel *>			_channels; //which channels the client joined
+
 	public:
 		Client(); //-> default constructor
 		Client(int fd, const std::string &ipAddress);
@@ -29,10 +32,12 @@ class Client //-> class for client
 		void setIpAdd(std::string ipadd){IPadd = ipadd;} //-> setter for ipadd
 		// void setAuthenticated(bool status) {_authenticated = status; };
 		
-		void	joinChannel(std::string &channel);
-		void	leaveChannel(std::string &channel);
-		bool	isInChannel(std::string &channel);
+		void	joinChannel(Channel *channel);
+		void	leaveChannel(Channel *channel);
+		bool	isInChannel(Channel *channel);
 
-		void	setOPStatus(std::string &channel, bool status);
-		bool	isOP(std::string &channel);
+		void	setOPStatus(Channel *channel, bool status);
+		bool	isOP(Channel *channel);
 };
+
+#endif
