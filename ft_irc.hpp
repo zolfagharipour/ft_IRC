@@ -12,6 +12,8 @@
 # include <poll.h> //-> for poll()
 # include <csignal> //-> for signal()
 # include <string.h>
+# include <set>
+# include <map>
 //-------------------------------------------------------//
 # define RED "\e[1;31m" //-> for red color
 # define WHI "\e[0;37m" //-> for white color
