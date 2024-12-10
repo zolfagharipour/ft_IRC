@@ -8,7 +8,6 @@ int	main(){
         Server server;
         server.signalMonitor();
         server.ServerInit();
-        server.~Server();
     } catch(std::exception &e) {
         std::cout << "ERROR: " << std::endl;
     }

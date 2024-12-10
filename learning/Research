@@ -42,3 +42,10 @@ THINGS TO STUDY:
 3. alternatives to try & catch;
 	3.1 what functions are throwing exceptions and if we can stop them from throwing;
 	3.2 which throws are better to be allowed;
+
+
+
+THINGS TO-DO;
+
+1. register client properly in IRC server (welcome msg 001)
+	https://dd.ircdocs.horse/refs/numerics/001

@@ -3,11 +3,11 @@
 Client::Client () {
     //sth with IP?
     //sth with Fd?
-    std::cout << "Client constructed" << std::endl;
+    // std::cout << "Client constructed" << std::endl;
 }
 
 Client::~Client() {
-    std::cout << "Client destructed" << std::endl;
+    // std::cout << "Client destructed" << std::endl;
 }
 
 int Client::getFd() {

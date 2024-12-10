@@ -3,8 +3,8 @@
 
 # include "ft_irc.h"
 # include "client.hpp"
-#include <netinet/in.h>
-#include <sys/poll.h>
+# include <netinet/in.h>
+# include <sys/poll.h>
 
 class Server
 {
@@ -15,19 +15,20 @@ private:
 	std::vector<Client>				_clients;
 	std::vector<struct pollfd>		_pollFd;
 
-	int		clientRegister();
-	int		clientCommunicate();
-	int		removeFds();
-	int		closeFds();
+	void		_clientRegister();
+	void		_clientCommunicate( size_t i );
+	void		_closeFds();
+	void		_removeClient( int fd );
 	
-	void		SocketInit();
+	void		_SocketInit();
 public:
 	Server();
+	Server( int port );
 	~Server();
 	
 	void		ServerInit();
 	void		signalMonitor();
-	static void	handler(int signum);
+	static void	handler( int signum );
 };
 
 #endif
