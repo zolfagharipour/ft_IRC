@@ -55,9 +55,9 @@ void	Server::_clientCommunicate(size_t i) {
 			std::cout << "CAP sent" << std::endl;
 		}
 		else if (!strncmp(buff, "USER", 3)){
-			send (_pollFd[i].fd, ":myserver 001 mzolfagh :Welcome to the IRCcom Network, mzolfagh", 64, 0);
-			send (_pollFd[i].fd, ":myserver 002 mzolfagh :Your host is myserver, running version 1.0", 67, 0);
-			send (_pollFd[i].fd, ":myserver 003 mzolfagh :This server was created Tue Nov 30 2011 at 11:11:25 CET", 80, 0);
+			send (_pollFd[i].fd, ":myserver 001 mzolfagh :Welcome to the IRCcom Network, mzolfagh\r\n", 66, 0);
+			send (_pollFd[i].fd, ":myserver 002 mzolfagh :Your host is myserver, running version 1.0\r\n", 69, 0);
+			send (_pollFd[i].fd, ":myserver 003 mzolfagh :This server was created Tue Nov 30 2011 at 11:11:25 CET\r\n", 82, 0);
 			std::cout << "--WELCOME BURT SENT--" << std::endl;
 			// send (cliFd, ":myserver 004 mzolfagh <servername> <version> <available umodes> <available cmodes> [<cmodes with param>]", 58, 0);
 
