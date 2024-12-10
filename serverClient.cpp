@@ -51,7 +51,7 @@ void	Server::_clientCommunicate(size_t i) {
 		buff[bytesRead] = '\0';
 		std::cout << "$ " << buff;
 		if (!strncmp(buff, "CAP", 3)){
-			send (_pollFd[i].fd, ":your.server.name CAP mzolfagh END\r\n", 37, 0);
+			send (_pollFd[i].fd, ":myserver CAP mzolfagh END\r\n", 37, 0);
 			std::cout << "CAP sent" << std::endl;
 		}
 		else if (!strncmp(buff, "USER", 3)){
