@@ -20,7 +20,7 @@ class Client //-> class for client
 
 	public:
 		Client(); //-> default constructor
-		Client(int fd, const std::string &ipAddress);
+		Client( int fd, const std::string &ipAddress );
 		
 		int GetFd() {return Fd;} //-> getter for fd
 		std::string &getNickName() {return _nickName; };
@@ -28,16 +28,16 @@ class Client //-> class for client
 		// std::string &getIPAdress() {return IPadd; };
 		bool		isAuthenticated() {return _authenticated; }; //for each join etc command authentication needs to be checked
 
-		void setFd(int fd){Fd = fd;} //-> setter for fd
-		void setIpAdd(std::string ipadd){IPadd = ipadd;} //-> setter for ipadd
+		void setFd( int fd ){Fd = fd;} //-> setter for fd
+		void setIpAdd( std::string ipadd ){IPadd = ipadd;} //-> setter for ipadd
 		// void setAuthenticated(bool status) {_authenticated = status; };
 		
-		void	joinChannel(Channel *channel);
-		void	leaveChannel(Channel *channel);
-		bool	isInChannel(Channel *channel);
+		void	joinChannel( Channel *channel );
+		void	leaveChannel( Channel *channel );
+		bool	isInChannel( Channel *channel );
 
-		void	setOPStatus(Channel *channel, bool status);
-		bool	isOP(Channel *channel);
+		void	setOPStatus( Channel *channel, bool status );
+		bool	isOP( Channel *channel );
 };
 
 #endif

@@ -17,7 +17,7 @@ class Channel {
     public:
         Channel() {};
         //what initiated to? more arguments?
-        Channel(const std::string &name);
+        Channel( const std::string &name );
 
         //getters
         const std::string             &getName();
@@ -29,20 +29,21 @@ class Channel {
         //void  setTopic(const std::string &topic);
 
         //user management
-        bool    addUser(Client *client);
-        void    removeUser(Client *client);
-        bool    isUserInChannel(std::string &nickname);
+        bool    addUser( Client *client );
+        void    removeUser( Client *client );
+        bool    isUserInChannel(std::string &nickname );
 
         //OP MANAGEMENT
-        void    addOperator(Client *client);
-        void    removeOperator(Client *client);
-        bool    isOperator(Client *client);
+        void    addOperator( Client *client );
+        void    removeOperator( Client *client );
+        bool    isOperator( Client *client );
 
         //Mode
-        void    setInviteOnly(bool inviteOnly);
-        void    setUserLimit(int max);
+        void    setInviteOnly( bool inviteOnly );
+        void    setUserLimit( int max );
 
 
 };
+
 
 #endif

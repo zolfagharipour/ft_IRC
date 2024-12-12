@@ -1,20 +1,17 @@
 #include "channel.hpp"
 
-Channel::Channel(std::string &name) : {
-    _name = name;
-    _inviteOnly = false;
-    _userLimit = -1;
-}
+Channel::Channel( const std::string &name ) :
+		_name(name), _inviteOnly(false), _userLimit(-1) { }
 
 /*default ocnstructor missing*/
 /*destructor missing*/
 
 //getters
-const std::string Channel::getName() {
+const std::string&  Channel::getName(){
     return _name;
 }
 
-const std::string Channel::getTopic() {
+const std::string&  Channel::getTopic() {
     return _topic;
 }
 
