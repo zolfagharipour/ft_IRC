@@ -14,6 +14,9 @@ private:
 	static int						_signal;
 	std::vector<Client>				_clients;
 	std::vector<struct pollfd>		_pollFd;
+	
+	/*constructor add*/
+	std::set<Channel *>				_channels;
 
 	void		_clientRegister();
 	void		_clientCommunicate( size_t i );

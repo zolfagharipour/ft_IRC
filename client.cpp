@@ -4,7 +4,11 @@
 
 Client::Client() : Fd (-1), _authenticated(false) {};
 
-Client::Client(int fd, const std::string &ipAddress) : Fd(fd), IPadd(ipAddress), _authenticated(false) {}
+Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::string username) : Fd(fd), IPadd(ipAddress), _authenticated(false) {
+    _userName = username;
+    _nickName = nickname;
+    std::cout << username << ": " << "client created!" << std::endl;
+}
 
 /*destructor missing*/
 
@@ -34,7 +38,9 @@ void Client::setIpAdd(std::string ipadd){
 
 /*if channel does not exist yet, create it and make *this op
 otherwise just add this client*/
+/*SHOULD BE A SERVER FUNCTION*/
 void	Client::joinChannel(Channel *channel) {
+
     if (_channels.find(channel) == _channels.end()) {
         _channels.insert(channel);
         _opStatus[channel] = false;
@@ -49,7 +55,7 @@ void	Client::leaveChannel(Channel *channel) {
     if (_channels.find(channel) != _channels.end()) {
         _channels.erase(channel);
         _opStatus.erase(channel);
-        channels->removeUser(this);
+        channel->removeUser(this);
     }
 }
 
@@ -70,5 +76,7 @@ void	Client::setOPStatus(Channel *channel, bool status) {
 /*correct implementation?*/
 bool	Client::isOP(Channel *channel) {
     if (_channels.find(channel) != _channels.end())
-        return _opStatus[channel].second;
+        return _opStatus[channel];
+    else
+        return false;
 }

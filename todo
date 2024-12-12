@@ -1,0 +1,3 @@
+change member functions of client and channel to be in the correct place, e.g. join/leave channel in server class isntead of client class
+make sure server class holds ptr to clients and channels
+what happens with private messages - find out

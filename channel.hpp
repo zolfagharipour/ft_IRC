@@ -4,6 +4,8 @@
 #include "ft_irc.h"
 #include "client.hpp"
 
+class Client;
+
 class Channel {
     private:
         std::string _name;
@@ -17,7 +19,7 @@ class Channel {
     public:
         Channel() {};
         //what initiated to? more arguments?
-        Channel( const std::string &name );
+        Channel(const std::string &name );
 
         //getters
         const std::string             &getName();
@@ -31,7 +33,7 @@ class Channel {
         //user management
         bool    addUser( Client *client );
         void    removeUser( Client *client );
-        bool    isUserInChannel(std::string &nickname );
+        bool    isUserInChannel( std::string &nickname );
 
         //OP MANAGEMENT
         void    addOperator( Client *client );
