@@ -28,7 +28,7 @@ class Client
 		Client();
 		Client( int fd, const std::string &ipAddress, std::string nickname, std::string username );
 		
-		int GetFd();
+		int getFd();
 		std::string &getNickName();
 		std::string &getUserName();
 		// std::string &getIPAdress() {return IPadd; };

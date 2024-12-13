@@ -32,7 +32,7 @@ const std::map<std::string, Client*> &Channel::getUsers() {
 
 //user management
 bool    Channel::addUser(Client *client) {
-    if (_userLimit > 0 && _users.size() >= _userLimit)
+    if (_userLimit > 0 && _users.size() >= (size_t)_userLimit)
         return false;
         /*how is this supposed to be saved*/
     std::cout << client->getNickName() << ": added to channel: " << this->getName() << std::endl;
@@ -80,7 +80,7 @@ void    Channel::setInviteOnly(bool inviteOnly) {
 }
 
 void    Channel::setUserLimit(int max) {
-    if (max >= 0 && max < _users.size())
+    if (max >= 0 && max < (int)_users.size())
         std::cerr << "ERROR: user limit cannot be lower than current amount of users" << std::endl;
     else
         _userLimit = max;

@@ -50,14 +50,15 @@ void	Server::_clientCommunicate(size_t i) {
 	else {
 		buff[bytesRead] = '\0';
 		std::cout << "$ " << buff;
-		if (!strncmp(buff, "CAP", 3)){
-			send (_pollFd[i].fd, ":myserver CAP mzolfagh END\r\n", 37, 0);
-			std::cout << "CAP sent" << std::endl;
+		if (!strncmp(buff, "USER", 3)){
+			send (_pollFd[i].fd, ":myserver CAP * LS\r\n", 21, 0);
+		
 		}
-		else if (!strncmp(buff, "USER", 3)){
+		if (!strncmp(buff, "CAP", 3)){
+			// send (_pollFd[i].fd, ":myserver CAP END\r\n", 20, 0);
 			send (_pollFd[i].fd, ":myserver 001 mzolfagh :Welcome to the IRCcom Network, mzolfagh\r\n", 66, 0);
-			send (_pollFd[i].fd, ":myserver 002 mzolfagh :Your host is myserver, running version 1.0\r\n", 69, 0);
-			send (_pollFd[i].fd, ":myserver 003 mzolfagh :This server was created Tue Nov 30 2011 at 11:11:25 CET\r\n", 82, 0);
+			// send (_pollFd[i].fd, ":myserver 002 mzolfagh :Your host is myserver, running version 1.0\r\n", 69, 0);
+			// send (_pollFd[i].fd, ":myserver 003 mzolfagh :This server was created Tue Nov 30 2011 at 11:11:25 CET\r\n", 82, 0);
 			std::cout << "--WELCOME BURT SENT--" << std::endl;
 			// send (cliFd, ":myserver 004 mzolfagh <servername> <version> <available umodes> <available cmodes> [<cmodes with param>]", 58, 0);
 

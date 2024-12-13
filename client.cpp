@@ -12,7 +12,7 @@ Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::
 
 /*destructor missing*/
 
-int Client::GetFd() {
+int Client::getFd() {
     return Fd;
 }
 
