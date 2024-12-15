@@ -30,6 +30,7 @@ class Client
 
 		void 		setFd( int fd );
 		void 		setIpAdd( std::string ipadd );
+		void		setNick( std::string nick );
 
 		void						addBuff( std::string buff );
 		void						clearBuff();

@@ -28,6 +28,14 @@ private:
 	
 	void		_SocketInit();
 	void		_serverRespond();
+	void		_parser( std::vector<std::string> &cmds, int client );
+	
+
+	// RESPONDS
+	void	_capResp( std::vector<std::string> &cmds, int client );
+	void	_userResp( std::vector<std::string> &cmds, int client );
+	void	_nickResp( std::vector<std::string> &cmds, int client );
+
 public:
 	Server();
 	Server( int port );

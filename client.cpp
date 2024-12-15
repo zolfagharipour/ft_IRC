@@ -2,7 +2,7 @@
 
 /*don't i need to initiate the _opStatus and _channel anyhow?*/
 
-Client::Client() : Fd (-1), _authenticated(false) {};
+Client::Client() : Fd (-1), _authenticated(false), _nickName("*") {};
 
 Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::string username) : Fd(fd), IPadd(ipAddress), _authenticated(false) {
     _userName = username;
@@ -34,6 +34,9 @@ void Client::setFd(int fd){
 
 void Client::setIpAdd(std::string ipadd){
     IPadd = ipadd;
+}
+void    Client::setNick( std::string nick ){
+    _nickName = nick;
 }
 
 void		Client::addBuff( std::string buff ){
