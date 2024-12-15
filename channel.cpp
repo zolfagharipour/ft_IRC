@@ -37,12 +37,10 @@ Client *Channel::getOperator( ) {
 }
 
 //user management
-bool    Channel::addUser( Client *client ) {
-    if (_userLimit > 0 && _users.size() >= _userLimit) {
-        std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
-        return false ;
-    }
-    
+bool    Channel::addUser(Client *client) {
+    if (_userLimit > 0 && _users.size() >= (size_t)_userLimit)
+        return false;
+        /*how is this supposed to be saved*/
     std::cout << client->getNickName() << ": added to channel: " << this->getName() << std::endl;
     _users[client->getNickName()] = client;
     return true ;
