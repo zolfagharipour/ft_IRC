@@ -1,3 +1,40 @@
 change member functions of client and channel to be in the correct place, e.g. join/leave channel in server class isntead of client class
 make sure server class holds ptr to clients and channels
 what happens with private messages - find out
+
+
+
+Then, you have to implement the commands that are specific to channel
+operators:
+∗ KICK - Eject a client from the channel
+∗ INVITE - Invite a client to a channel
+∗ TOPIC - Change or view the channel topic
+∗ MODE - Change the channel’s mode:
+· i: Set/remove Invite-only channel
+· t: Set/remove the restrictions of the TOPIC command to channel
+operators
+· k: Set/remove the channel key (password)
+· o: Give/take channel operator privilege
+- l: Set/remove the user limit to channel
+
+
+#define REQUIRE_OPERATOR(client, channel, action)                   \
+    if (!(channel)->hasPermission(client)) {                        \
+        std::cerr << (client)->getNickName()                        \
+                  << " does not have permission to " << (action)    \
+                  << " in channel " << (channel)->getName() << std::endl; \
+        return false;                                               \
+    }
+
+bool Channel::kickUser(Client *operatorClient, Client *targetClient) {
+    REQUIRE_OPERATOR(operatorClient, this, "kick users");
+
+    if (_users.erase(targetClient->getNickName())) {
+        _operators.erase(targetClient); // Remove from operators if they are one
+        std::cout << targetClient->getNickName() << " has been kicked from channel " << _name << std::endl;
+        return true;
+    }
+
+    std::cerr << targetClient->getNickName() << " is not in channel " << _name << std::endl;
+    return false;
+}
