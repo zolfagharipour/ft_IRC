@@ -1,7 +1,7 @@
 NAME		=	IRC
 INC			= 	ft_irc.h
 CXX			=	c++
-CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
+CXXFLAGS	=	-g#-Wall -Wextra -Werror -std=c++98
 
 
 # AR		=	ar rc

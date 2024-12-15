@@ -19,5 +19,6 @@
 # include <fcntl.h>
 # include <set>
 # include <map>
+# include <sstream>
 
 #endif

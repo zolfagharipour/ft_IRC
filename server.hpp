@@ -27,6 +27,7 @@ private:
 	void		_removeClient( int fd );
 	
 	void		_SocketInit();
+	void		_serverRespond();
 public:
 	Server();
 	Server( int port );
@@ -46,6 +47,8 @@ public:
 
 	//debug
 	void		printChannels();
+
+	
 };
 
 #endif

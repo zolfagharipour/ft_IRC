@@ -12,11 +12,6 @@ Server::~Server()
 	// removeClient()
 }
 
-void	Server::_closeFds() {
-	for (size_t i = 0; i < _pollFd.size(); ++i)
-		close (_pollFd[i].fd);
-	_pollFd.clear();
-}
 
 void	Server::joinChannel(Client &client, const std::string &channelName, std::string key) {
 	Channel *channel;

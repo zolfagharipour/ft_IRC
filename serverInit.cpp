@@ -51,8 +51,9 @@ void Server::ServerInit() {
 				    _clientRegister();
 				}
 				else {
-
 					_clientCommunicate(i);
+
+					_serverRespond();
 				}
 			}
 		}

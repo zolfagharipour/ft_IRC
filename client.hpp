@@ -15,6 +15,9 @@ class Client
 		std::string	_nickName;
 		std::string	_userName;
 		bool		_authenticated;
+		std::string	_buff;
+		std::vector<std::string>	_vectorCMD;
+
 
 	public:
 		Client();
@@ -27,6 +30,11 @@ class Client
 
 		void 		setFd( int fd );
 		void 		setIpAdd( std::string ipadd );
+
+		void						addBuff( std::string buff );
+		void						clearBuff();
+		std::string					&getBuff();
+		std::vector<std::string>	&getCommand();
 };
 
 #endif

@@ -2,10 +2,9 @@
 
 
 void	Server::_closeFds() {
-	for (size_t i = 0; i < _clients.size(); i++){
-		close (_clients[i].getFd());
-	}
-	close (_serFd);
+	for (size_t i = 0; i < _pollFd.size(); ++i)
+		close (_pollFd[i].fd);
+	_pollFd.clear();
 }
 
 void	Server::_removeClient(int fd) {

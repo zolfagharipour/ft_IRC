@@ -38,8 +38,9 @@ void	Server::_clientRegister() {
 }
 
 void	Server::_clientCommunicate(size_t i) {
-	char	buff[512];
-	int		bytesRead;
+	char		buff[512];
+	int			bytesRead;
+
 
 	bytesRead = recv(_pollFd[i].fd, buff, sizeof(buff) - 1, 0);
 	if (bytesRead <= 0) {
@@ -49,20 +50,22 @@ void	Server::_clientCommunicate(size_t i) {
 	}
 	else {
 		buff[bytesRead] = '\0';
-		std::cout << "$ " << buff;
-		if (!strncmp(buff, "USER", 3)){
-			send (_pollFd[i].fd, ":myserver CAP * LS\r\n", 21, 0);
-		
-		}
-		if (!strncmp(buff, "CAP", 3)){
-			// send (_pollFd[i].fd, ":myserver CAP END\r\n", 20, 0);
-			send (_pollFd[i].fd, ":myserver 001 mzolfagh :Welcome to the IRCcom Network, mzolfagh\r\n", 66, 0);
-			// send (_pollFd[i].fd, ":myserver 002 mzolfagh :Your host is myserver, running version 1.0\r\n", 69, 0);
-			// send (_pollFd[i].fd, ":myserver 003 mzolfagh :This server was created Tue Nov 30 2011 at 11:11:25 CET\r\n", 82, 0);
-			std::cout << "--WELCOME BURT SENT--" << std::endl;
-			// send (cliFd, ":myserver 004 mzolfagh <servername> <version> <available umodes> <available cmodes> [<cmodes with param>]", 58, 0);
-
-		}
+		std::string	sBuff = buff;
+		std::cout << "$ " << sBuff;
+		_clients[i - 1].addBuff(sBuff);
+		// if (!strncmp(buff, "CAP", 3)){
+		// 	send (_pollFd[i].fd, "CAP * LS\r\n:myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 63, 0);
+		// 	std::cout << "---WELCOME MSG SENT---" << std::endl;
+		// }
+		// else if (!strncmp(buff, "NICK", 3)){
+		// 	// send (_pollFd[i].fd, "CAP * LS :\r\n", 28, 0);
+		// 	// send (_pollFd[i].fd, ":myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 53, 0);
+		// 	// send (_pollFd[i].fd, ":myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 53, 0);
+		// 	// send (cliFd, ":irc.example.com 001 moamad :Welcome to the IRCcom Network, moamad", 58, 0);
+		// 	// send (cliFd, ":irc.example.com 001 moamad :Welcome to the IRCcom Network, moamad", 58, 0);
+		// }
+		// else{
+		// }
 	}
 
 }
