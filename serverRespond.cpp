@@ -27,14 +27,18 @@ void	Server::_userResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() < 2 || _clients[client].getNickName() == "*")
 		return ;
 	_clients[client].registered();
+	std::cout << "\n>>" << _pollFd[client + 1].fd << std::endl;
 	_numericReply(client, "001", "");
 }
 
 void	Server::_pingResp( std::vector<std::string> &cmds, int client ){
-		std::string respond = "PONG";
+		std::string respond = "PONG ";
 
-		if (cmds.size() > 1)
-			respond += " " + cmds[1];
+		if (cmds.size() < 2){
+			_numericReply(client, "409", "");
+			return ;
+		}
+		respond += cmds[1];
 		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
 		std::cout << "\n>> " << respond;
 }
@@ -59,6 +63,8 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_userResp(cmds, client);
 	else if (cmds[0] == "PING")
 		_pingResp(cmds, client);
+	else if (cmds[0] == "PRIVMSG")
+		_privMsgResp(cmds, client);
 
 }
 

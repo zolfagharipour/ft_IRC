@@ -45,6 +45,10 @@ private:
 	void	_nickResp( std::vector<std::string> &cmds, int client );
 	void	_passResp( std::vector<std::string> &cmds, int client );
 	void	_pingResp( std::vector<std::string> &cmds, int client );
+	void	_privMsgResp( std::vector<std::string> &cmds, int client );
+
+	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
+
 
 public:
 	Server();
