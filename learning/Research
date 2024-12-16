@@ -49,3 +49,27 @@ THINGS TO-DO;
 
 1. register client properly in IRC server (welcome msg 001)
 	https://dd.ircdocs.horse/refs/numerics/001
+
+
+	CAP
+	PASS
+	NICK 
+USER
+JOIN
+PART
+PRIVMSG
+NOTICE
+	QUIT
+	PING
+	PONG
+MODE
+TOPIC
+KICK
+INVITE
+
+	PARSING:
+		https://datatracker.ietf.org/doc/html/rfc2812#section-1.2
+	NUMERICS & ERRORS:
+		https://datatracker.ietf.org/doc/html/rfc2812#section-5
+
+when NICK changes, broadcast it.

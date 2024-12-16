@@ -4,59 +4,62 @@
 
 void	Server::_capResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() > 1 && cmds[1] == "LS"){
-		std::string respond = "CAP * LS\r\n";
+		// std::string respond = "CAP * LS\r\n";
+		std::string respond = "CAP * LS :\r\n";
 		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
-		std::cout << "---CAP SENT---" << std::endl; 
-	}
-	else if (cmds.size() > 1 && cmds[1] == "END"){
-		// DO ANYTHING?
+		std::cout << "\n>> " << respond;
 	}
 }
-
-
-void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
-	std::string	respond;
-
+void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() < 2)
 		return ;
-	for (int i = 0; i < _clients.size(); i++){
-		if (_clients[i].getNickName() == cmds[1]){
-			respond = "myserver 433 " + _clients[client].getNickName() + cmds[1] + " :Nickname is already in use";
-			send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
-			return ;
-		}
+	if (cmds[1] == _password){
+		_clients[client].authenticate();
+		return ;
 	}
-	_clients[client].setNick(cmds[1]);
+	_numericReply(client, "464", "");
+	// _removeClient(_clients[client].getFd());
 }
-
 
 void	Server::_userResp( std::vector<std::string> &cmds, int client ){
 	std::string	respond;
 
-	if (cmds.size() < 2)
+	if (cmds.size() < 2 || _clients[client].getNickName() == "*")
 		return ;
-	respond = ":myserver 001 " + _clients[client].getNickName() + " :Welcome to the MyIrc, " + _clients[client].getNickName() + "\r\n";
-	send (_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
-	std::cout << "---WELCOME SENT---" << std::endl; 
+	_clients[client].registered();
+	_numericReply(client, "001", "");
+}
+
+void	Server::_pingResp( std::vector<std::string> &cmds, int client ){
+		std::string respond = "PONG";
+
+		if (cmds.size() > 1)
+			respond += " " + cmds[1];
+		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
+		std::cout << "\n>> " << respond;
 }
 
 
 
-
-
-
-
-
-
 void	Server::_parser( std::vector<std::string> &cmds, int client ){
-	if (cmds[0] == "CAP"){
-		// std::cout << "cap starts" << std::endl;
-		_capResp(cmds, client);
+	if (!_clients[client].isAuthenticated()
+			&& cmds[0] != "CAP" && cmds[0] != "PASS" && cmds[0] != "JOIN"){
+		_numericReply(client, "464", "");
+		// _removeClient(_clients[client].getFd());
+		return ;
 	}
+
+	if (cmds[0] == "CAP")
+		_capResp(cmds, client);
+	else if(cmds[0] == "PASS")
+		_passResp(cmds, client);
 	else if (cmds[0] == "NICK")
 		_nickResp(cmds, client);
 	else if (cmds[0] == "USER")
 		_userResp(cmds, client);
+	else if (cmds[0] == "PING")
+		_pingResp(cmds, client);
+
 }
 
 
@@ -70,14 +73,6 @@ void	Server::_serverRespond(){
 			_parser(cmds, i);
 			_clients[i].clearBuff();
 			cmds = _clients[i].getCommand();
-			// std::cout << "\n\n-------------start\n";
-
-			// for (int j = 0; j < cmds.size(); j++){
-			// 	std::cout << "** " << cmds[j] << std::endl;
-			// 	if (cmds[j] == "CAP")
-			// 		send (_pollFd[i + 1].fd, "CAP * LS\r\n:myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 63, 0);
-			// }
-			// std::cout << "-------------ends\n\n";
 		}
 		std::cout << std::endl;
 	}

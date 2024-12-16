@@ -15,6 +15,7 @@ class Client
 		std::string	_nickName;
 		std::string	_userName;
 		bool		_authenticated;
+		bool		_registered;
 		std::string	_buff;
 		std::vector<std::string>	_vectorCMD;
 
@@ -27,10 +28,13 @@ class Client
 		std::string &getNickName();
 		std::string &getUserName();
 		bool		isAuthenticated();
+		bool		isRegistered();
 
 		void 		setFd( int fd );
 		void 		setIpAdd( std::string ipadd );
 		void		setNick( std::string nick );
+		void		authenticate();
+		void		registered();
 
 		void						addBuff( std::string buff );
 		void						clearBuff();

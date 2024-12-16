@@ -2,7 +2,7 @@
 
 int Server::_signal = false;
 
-Server::Server() : _port(6667){ }
+Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
 
 Server::Server( int port ) : _port(port) { }
 
