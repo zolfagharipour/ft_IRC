@@ -4,7 +4,7 @@
 void	Server::_sendMsg( std::vector<std::string> &cmds, int sender, int target ){
 	std::string respond;
 
-	respond = "PRIVMSG " + _clients[target].getNickName();
+	respond =  ":" + _clients[sender].getNickName() + " PRIVMSG " + _clients[target].getNickName();
 	for (int i = 2; i < cmds.size(); i++){
 		respond += " " + cmds[i];
 	}

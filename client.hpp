@@ -1,8 +1,8 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-#include "ft_irc.h"
-#include "channel.hpp"
+# include "ft_irc.h"
+# include "channel.hpp"
 
 class Channel;
 
@@ -14,6 +14,7 @@ class Client
 		std::string IPadd;
 		std::string	_nickName;
 		std::string	_userName;
+		std::string	_realName;
 		bool		_authenticated;
 		bool		_registered;
 		std::string	_buff;
@@ -27,12 +28,15 @@ class Client
 		int getFd();
 		std::string &getNickName();
 		std::string &getUserName();
+		std::string &getRealName();
 		bool		isAuthenticated();
 		bool		isRegistered();
 
 		void 		setFd( int fd );
 		void 		setIpAdd( std::string ipadd );
-		void		setNick( std::string nick );
+		void		setNickName( std::string nick );
+		void		setUserName( std::string nick );
+		void		setRealName( std::string nick );
 		void		authenticate();
 		void		registered();
 

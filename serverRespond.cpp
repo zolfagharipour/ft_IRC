@@ -22,12 +22,25 @@ void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 }
 
 void	Server::_userResp( std::vector<std::string> &cmds, int client ){
-	std::string	respond;
+	std::string	realName;
 
-	if (cmds.size() < 2 || _clients[client].getNickName() == "*")
+	if (cmds.size() < 5 || _clients[client].getNickName() == "*"
+			|| cmds[4][0] != ':'){
+		_numericReply(client, "461", "");
 		return ;
+	}
+	else if (_clients[client].isRegistered()){
+		_numericReply(client, "462", "");
+		return ;
+	}
+
+	realName = cmds[4].substr(1);
+	for (int i = 5; i < cmds.size(); i++){
+		realName += " " + cmds[i];
+	}
+	_clients[client].setUserName(cmds[1]);
+	_clients[client].setRealName(realName);
 	_clients[client].registered();
-	std::cout << "\n>>" << _pollFd[client + 1].fd << std::endl;
 	_numericReply(client, "001", "");
 }
 

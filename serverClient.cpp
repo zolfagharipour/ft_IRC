@@ -53,19 +53,6 @@ void	Server::_clientCommunicate(size_t i) {
 		std::string	sBuff = buff;
 		std::cout << "$ " << sBuff;
 		_clients[i - 1].addBuff(sBuff);
-		// if (!strncmp(buff, "CAP", 3)){
-		// 	send (_pollFd[i].fd, "CAP * LS\r\n:myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 63, 0);
-		// 	std::cout << "---WELCOME MSG SENT---" << std::endl;
-		// }
-		// else if (!strncmp(buff, "NICK", 3)){
-		// 	// send (_pollFd[i].fd, "CAP * LS :\r\n", 28, 0);
-		// 	// send (_pollFd[i].fd, ":myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 53, 0);
-		// 	// send (_pollFd[i].fd, ":myserver 001 moamad :Welcome to the MyIrc, moamad\r\n", 53, 0);
-		// 	// send (cliFd, ":irc.example.com 001 moamad :Welcome to the IRCcom Network, moamad", 58, 0);
-		// 	// send (cliFd, ":irc.example.com 001 moamad :Welcome to the IRCcom Network, moamad", 58, 0);
-		// }
-		// else{
-		// }
 	}
 
 }

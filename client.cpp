@@ -24,8 +24,12 @@ std::string &Client::getUserName() {
     return _userName;
 }
 
+std::string &Client::getRealName() {
+    return _realName;
+}
+
 bool    Client::isAuthenticated() {
-    return _authenticated; 
+    return _authenticated;
 }
 
 bool    Client::isRegistered() {
@@ -40,8 +44,16 @@ void Client::setIpAdd(std::string ipadd){
     IPadd = ipadd;
 }
 
-void    Client::setNick( std::string nick ){
+void    Client::setNickName( std::string nick ){
     _nickName = nick;
+}
+
+void    Client::setUserName( std::string user ){
+    _userName = user;
+}
+
+void    Client::setRealName( std::string name ){
+    _realName = name;
 }
 
 void    Client::authenticate(){

@@ -18,19 +18,23 @@ void	Server::_numericReply( int client, std::string numeric, std::string channel
 		respond += " :No origin specified\r\n";
 	else if (numeric == "401")
 		respond += " :No such nick/channel\r\n";
-		// name of the client should add here
+		// real nickname has to be added
 	else if (numeric == "411")
 		respond += " :No recipient given (PRIVMSG)\r\n";
 	else if (numeric == "431")
 		respond += " :No nickname given\r\n";
 	else if (numeric == "432")
 		respond += " :Erroneous nickname\r\n";
+		// real nickname has to be added
 	else if (numeric == "433")
 		respond += " :Nickname is already in use\r\n";
+		// real nickname has to be added
 	else if (numeric == "451")
 		respond += " :You have not registered\r\n";
 	else if (numeric == "461")
 		respond += " PRIVMSG :Not enough parameters\r\n";
+	else if (numeric == "462")
+		respond += " :Unauthorized command (already registered)\r\n";
 	else if (numeric == "464")
 		respond += " :Password incorrect\r\n";
 

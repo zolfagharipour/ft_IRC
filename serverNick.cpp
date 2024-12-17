@@ -50,5 +50,5 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 			return ;
 		}
 	}
-	_clients[client].setNick(nick);
+	_clients[client].setNickName(nick);
 }
