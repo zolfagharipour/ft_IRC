@@ -2,7 +2,7 @@
 
 int Server::_signal = false;
 
-Server::Server() : _port(6667){ }
+Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
 
 Server::Server( int port ) : _port(port) { }
 
@@ -10,12 +10,6 @@ Server::~Server()
 {
 	_closeFds();
 	// removeClient()
-}
-
-void	Server::_closeFds() {
-	for (size_t i = 0; i < _pollFd.size(); ++i)
-		close (_pollFd[i].fd);
-	_pollFd.clear();
 }
 
 void	Server::joinChannel(Client &client, const std::string &channelName, std::string key) {
