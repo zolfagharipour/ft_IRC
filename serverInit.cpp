@@ -52,7 +52,6 @@ void Server::ServerInit() {
 				}
 				else {
 					_clientCommunicate(i);
-
 					_serverRespond();
 				}
 			}

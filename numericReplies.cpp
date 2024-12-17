@@ -5,8 +5,8 @@ void	Server::_numericReply( int client, std::string numeric, std::string channel
 	std::string nick = _clients[client].getNickName();
 	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
 	
-	if (channel.size() < 0)
-		nick = "#" + channel;
+	// if (channel.size() < 0)
+	// 	nick = "#" + channel;
 
 
 
