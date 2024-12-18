@@ -32,7 +32,7 @@ private:
 	void		_SocketInit();
 	void		_serverRespond();
 	void		_parser( std::vector<std::string> &cmds, int client );
-	void		_numericReply( int clientFd, std::string numeric, std::string channel );
+	void		_numericReply( Client *client, std::string numeric, std::string channel ){
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
 
