@@ -17,11 +17,12 @@ class Channel {
         int                             _userLimit;
         bool                            _userLimitRestricted;
         std::string                     _key;
+        std::string                     _serverName;
 
     public:
         Channel() {};
         //what initiated to? more arguments?
-        Channel(const std::string &name );
+        Channel(const std::string &name, std::string serverName );
 
         //getters
         const std::string                       &getName();
@@ -65,8 +66,8 @@ class Channel {
         //debug
         void    printUsers();
 
+	void		_numericReply( Client *client, std::string numeric, std::string channel );
 
-};
-
+    };
 
 #endif

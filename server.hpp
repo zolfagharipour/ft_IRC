@@ -30,7 +30,7 @@ private:
 	void		_SocketInit();
 	void		_serverRespond();
 	void		_parser( std::vector<std::string> &cmds, int client );
-	void		_numericReply( int clientFd, std::string numeric, std::string channel );
+	void		_numericReply( Client *client, std::string numeric, std::string channel );
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
 
@@ -44,6 +44,8 @@ private:
 	void	_passResp( std::vector<std::string> &cmds, int client );
 	void	_pingResp( std::vector<std::string> &cmds, int client );
 	void	_privMsgResp( std::vector<std::string> &cmds, int client );
+	void	_joinResp( std::vector<std::string> &cmds, int client );
+
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
 
@@ -60,7 +62,7 @@ public:
 	Channel *getChannel( std::string channelName);
 
 	//channel management
-	void		joinChannel( Client &client, const std::string &channelName, std::string key );
+	void		joinChannel( Client *client, const std::string &channelName, std::string key );
 	void		leaveChannel( Client &client, const std::string &channelName );
 	void		addChannel( Channel *);
 	void		addChannel( std::string name );

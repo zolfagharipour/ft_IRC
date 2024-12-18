@@ -1,15 +1,13 @@
 #include "server.hpp"
 #include "ft_irc.h"
 
-void	Server::_numericReply( int client, std::string numeric, std::string channel ){
-	std::string nick = _clients[client].getNickName();
+void	Server::_numericReply( Client *client, std::string numeric, std::string channel ){
+	std::string nick = client->getNickName();
 	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
 	
-	// if (channel.size() < 0)
-	// 	nick = "#" + channel;
-
-
-
+	if (channel.size() < 0) {
+		respond += "#" + channel;
+	}
 
 	// FUNCTIONPOINTER AND FOR LOOP
 	if (numeric == "001")
@@ -37,10 +35,13 @@ void	Server::_numericReply( int client, std::string numeric, std::string channel
 		respond += " :Unauthorized command (already registered)\r\n";
 	else if (numeric == "464")
 		respond += " :Password incorrect\r\n";
+	else if (numeric == "473")
+		respond += " :Cannot join channel (+i)\r\n";
+	else if (numeric == "475")
+		respond += " :Cannot join channel (+k)\r\n";
 
-
-
-	send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
+	/*might be wrong*/
+	send(client->getFd(), respond.data(), respond.size(), 0);
 	
 	std::cout << "\n>> " << respond;
 

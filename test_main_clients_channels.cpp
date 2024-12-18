@@ -3,15 +3,15 @@
 #include "server.hpp"
 #include <iostream>
 
-int chatgpt_main();
+// int chatgpt_main();
 
-int main() {
-    chatgpt_main();
-    return 0;
-    // Server server(6667);
+// int main() {
+//     chatgpt_main();
+//     return 0;
+//     // Server server(6667);
 
-    // Client Hugo(1, "111.111.1.1", "Hugo", "Hugo Bond");
-    // Hugo.setFd(1);
+//     // Client Hugo(1, "111.111.1.1", "Hugo", "Hugo Bond");
+//     // Hugo.setFd(1);
 
     // Client Alice(1, "222.222.2.2", "Alice", "Alice Wonderland");
     // Alice.setFd(4);
@@ -101,101 +101,101 @@ int main() {
     // // channel2.inviteUser(&Alice, &Hugo);
     // server.joinChannel(Hugo, channel2.getName(), "");
     // return 0;
-}
+// }
 
-int chatgpt_main() {
-    Server server(6667);
+// int chatgpt_main() {
+//     Server server;
 
-    // Create clients
-    Client Hugo(1, "111.111.1.1", "Hugo", "Hugo Bond");
-    Hugo.setFd(1);
+//     // Create clients
+//     Client Hugo(1, "111.111.1.1", "Hugo", "Hugo Bond");
+//     Hugo.setFd(1);
 
-    Client Alice(1, "222.222.2.2", "Alice", "Alice Wonderland");
-    Alice.setFd(4);
+//     Client Alice(1, "222.222.2.2", "Alice", "Alice Wonderland");
+//     Alice.setFd(4);
 
-    Client Joye(1, "322.222.2.2", "Joye", "Joye Buster");
-    Joye.setFd(6);
+//     Client Joye(1, "322.222.2.2", "Joye", "Joye Buster");
+//     Joye.setFd(6);
 
-    // Create and add a channel to the server
-    Channel memesChannel("memes");
-    server.addChannel(&memesChannel);
+//     // Create and add a channel to the server
+//     Channel memesChannel("memes", );
+//     server.addChannel(&memesChannel);
 
-    std::cout << "\n=====================\n";
-    std::cout << "   TESTING CHANNELS  \n";
-    std::cout << "=====================\n";
+//     std::cout << "\n=====================\n";
+//     std::cout << "   TESTING CHANNELS  \n";
+//     std::cout << "=====================\n";
 
-    // Test: Join, leave, and print users
-    server.joinChannel(Alice, memesChannel.getName(), "");
-    server.joinChannel(Hugo, memesChannel.getName(), "");
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     // Test: Join, leave, and print users
+//     server.joinChannel(&Alice, memesChannel.getName(), "");
+//     server.joinChannel(&Hugo, memesChannel.getName(), "");
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    server.leaveChannel(Hugo, memesChannel.getName());
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     server.leaveChannel(Hugo, memesChannel.getName());
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    server.leaveChannel(Alice, memesChannel.getName());
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     server.leaveChannel(Alice, memesChannel.getName());
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    std::cout << "\n=====================\n";
-    std::cout << "   TESTING MODES     \n";
-    std::cout << "=====================\n";
+//     std::cout << "\n=====================\n";
+//     std::cout << "   TESTING MODES     \n";
+//     std::cout << "=====================\n";
 
-    // Add users again
-    server.joinChannel(Alice, memesChannel.getName(), "");
-    server.joinChannel(Hugo, memesChannel.getName(), "");
-    server.joinChannel(Joye, memesChannel.getName(), "");
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     // Add users again
+//     server.joinChannel(&Alice, memesChannel.getName(), "");
+//     server.joinChannel(&Hugo, memesChannel.getName(), "");
+//     server.joinChannel(&Joye, memesChannel.getName(), "");
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    // Test: User limit restriction
-    memesChannel.setUserLimitRestriction(&Alice, true); // Alice is not an operator; should fail
-    memesChannel.setUserLimit(&Hugo, 2);                // Hugo sets the limit to 2
-    std::cout << "\n";
+//     // Test: User limit restriction
+//     memesChannel.setUserLimitRestriction(&Alice, true); // Alice is not an operator; should fail
+//     memesChannel.setUserLimit(&Hugo, 2);                // Hugo sets the limit to 2
+//     std::cout << "\n";
 
-    // Test: Topic restriction
-    memesChannel.setTopicRestriction(&Alice, true);     // Alice is not an operator; should fail
-    memesChannel.setTopic(&Hugo, "This is fun");        // Hugo sets the topic
-    std::cout << "\n";
+//     // Test: Topic restriction
+//     memesChannel.setTopicRestriction(&Alice, true);     // Alice is not an operator; should fail
+//     memesChannel.setTopic(&Hugo, "This is fun");        // Hugo sets the topic
+//     std::cout << "\n";
 
-    // Test: Operator privilege
-    memesChannel.changeOperatorPrivilege(&Hugo, &Joye, 1); // Hugo makes Joye an operator
-    memesChannel.printUsers();
-    memesChannel.changeOperatorPrivilege(&Alice, &Joye, 0); // Alice removes Joye as operator; should fail
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     // Test: Operator privilege
+//     memesChannel.changeOperatorPrivilege(&Hugo, &Joye, 1); // Hugo makes Joye an operator
+//     memesChannel.printUsers();
+//     memesChannel.changeOperatorPrivilege(&Alice, &Joye, 0); // Alice removes Joye as operator; should fail
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    // Test: KICK command
-    memesChannel.kickUser(&Hugo, &Joye); // Hugo kicks Joye
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     // Test: KICK command
+//     memesChannel.kickUser(&Hugo, &Joye); // Hugo kicks Joye
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    // Test: Set/remove key
-    memesChannel.setKey(&Alice, "secret");               // Hugo sets a key
-    memesChannel.setKey(&Hugo, "");                     // Hugo removes the key
-    server.joinChannel(Hugo, memesChannel.getName(), ""); // Hugo rejoins without a key
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     // Test: Set/remove key
+//     memesChannel.setKey(&Alice, "secret");               // Hugo sets a key
+//     memesChannel.setKey(&Hugo, "");                     // Hugo removes the key
+//     server.joinChannel(&Hugo, memesChannel.getName(), ""); // Hugo rejoins without a key
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    // Test: Invite-only channel
-    memesChannel.setInviteOnly(&Hugo, true);             // Hugo enables invite-only mode
-    server.joinChannel(Alice, memesChannel.getName(), "hi"); // Alice tries to join with incorrect key; should fail
-    memesChannel.printUsers();
-    std::cout << "\n";
-    std::cout << "\n";
+//     // Test: Invite-only channel
+//     memesChannel.setInviteOnly(&Hugo, true);             // Hugo enables invite-only mode
+//     server.joinChannel(&Alice, memesChannel.getName(), "hi"); // Alice tries to join with incorrect key; should fail
+//     memesChannel.printUsers();
+//     std::cout << "\n";
+//     std::cout << "\n";
 
-    memesChannel.inviteUser(&Hugo, &Joye);              // Hugo invites Joye
-    std::cout << "\n";
+//     memesChannel.inviteUser(&Hugo, &Joye);              // Hugo invites Joye
+//     std::cout << "\n";
     
-    server.joinChannel(Joye, memesChannel.getName(), ""); // Joye joins successfully
-    memesChannel.printUsers();
-    std::cout << "\n";
+//     server.joinChannel(&Joye, memesChannel.getName(), ""); // Joye joins successfully
+//     memesChannel.printUsers();
+//     std::cout << "\n";
 
-    std::cout << "=====================\n";
-    std::cout << "   TESTING COMPLETE  \n";
-    std::cout << "=====================\n";
+//     std::cout << "=====================\n";
+//     std::cout << "   TESTING COMPLETE  \n";
+//     std::cout << "=====================\n";
 
-    return 0;
+//     return 0;
 
-}
+// }

@@ -19,7 +19,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 	std::string	respond = _clients[client].getNickName();
 
 	if (cmds.size() < 3 ||  cmds[2][0] != ':'){
-		_numericReply(client, "411", "");
+		_numericReply(&_clients[client], "411", "");
 		return ;
 	}
 
@@ -30,5 +30,5 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 			return ;
 		}
 	}
-	_numericReply(client, "401", "");
+	_numericReply(&_clients[client], "401", "");
 }

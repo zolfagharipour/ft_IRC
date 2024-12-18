@@ -12,7 +12,7 @@ Server::~Server()
 	// removeClient()
 }
 
-void	Server::joinChannel(Client &client, const std::string &channelName, std::string key) {
+void	Server::joinChannel(Client *client, const std::string &channelName, std::string key) {
 	Channel *channel;
 	
 	//does the channel exist?
@@ -20,31 +20,37 @@ void	Server::joinChannel(Client &client, const std::string &channelName, std::st
 	if (it != this->_channels.end())
 		channel = it->second;
 	else {
-		channel = new Channel(channelName);
+		channel = new Channel(channelName, _serverName);
 		this->_channels[channelName] = channel;
-		std::cout << "Channel: " << channelName << " created by " << client.getNickName() << std::endl;
+		/*BROADCAST!*/
+		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
+		std::cout << broadcast << std::endl;
+		std::cout << "sideinfo: Channel: " << channelName << " created by " << client->getNickName() << std::endl;
 	}
 
 	//is client in channel?
-	if (channel->userExists(client.getNickName())) {
-		std::cerr << "ERROR: client " << client.getNickName() << " is already in channel" << std::endl;
+	if (channel->userExists(client->getNickName())) {
+		
+		std::cerr << "ERROR: client " << client->getNickName() << " is already in channel" << std::endl;
 		return ;
 	}
 	
 	//can client join channel?
 	if (channel->getInviteOnly()) {
-		std::cerr << "ERROR: channel " << channel->getName() << " is invite only" << std::endl;
+		_numericReply(client, "473", channelName);
+		// std::cerr << "ERROR: channel " << channel->getName() << " is invite only" << std::endl;
 		return ;
 	}
+
 	if (!channel->getKey().empty() && key != channel->getKey()) {
-        std::cerr << client.getNickName() << " provided incorrect key for channel: " << channel->getName() << std::endl;
-        return ;
+        std::cerr << client->getNickName() << " provided incorrect key for channel: " << channel->getName() << std::endl;
+        _numericReply(client, "475", channelName );
+		return ;
     }
 
-
-	if (channel->addUser(&client)) {
+	if (channel->addUser(client)) {
 		if (channel->getUsers().size() == 1)
-			channel->addOperator(&client);
+			channel->addOperator(client);
 	}
 }
 
@@ -82,7 +88,7 @@ void	Server::addChannel(Channel *channel) {
 }
 
 void	Server::addChannel(std::string name) {
-	Channel channel(name);
+	Channel channel(name, _serverName);
 	_channels[channel.getName()] = &channel;
 	std::cout << "Channel " << channel.getName() << " added on server" << std::endl;
 }

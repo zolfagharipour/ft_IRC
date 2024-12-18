@@ -1,8 +1,9 @@
 #include "channel.hpp"
 
-Channel::Channel( const std::string &name ) :
+Channel::Channel( const std::string &name, std::string serverName ) :
 		_name(name), _inviteOnly(false), _userLimit(-1), _topicRestricted(false) {
         _userLimitRestricted = false;
+        _serverName = serverName;
         std::cout << name << ": " << "Channel created!" << std::endl;
 }
 
@@ -39,7 +40,8 @@ Client *Channel::getOperator( ) {
 //user management
 bool    Channel::addUser( Client *client ) {
     if (_userLimit > 0 && _users.size() >= _userLimit) {
-        std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
+        _numericReply(client, "471", this->_name);
+        // std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
         return false ;
     }
     
@@ -236,4 +238,24 @@ void    Channel::printUsers() {
         std::cout << " ";
     }
     std::cout << std::endl;
+}
+
+
+void	Channel::_numericReply( Client *client, std::string numeric, std::string channel ){
+	std::string nick = client->getNickName();
+	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
+	
+	if (channel.size() < 0) {
+		respond += "#" + channel;
+	}
+
+	// FUNCTIONPOINTER AND FOR LOOP
+	else if (numeric == "471")
+		respond += " :Cannot join channel (+l)\r\n";
+
+	/*might be wrong*/
+	send(client->getFd(), respond.data(), respond.size(), 0);
+	
+	std::cout << "\n>> " << respond;
+
 }

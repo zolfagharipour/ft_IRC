@@ -38,3 +38,18 @@ bool Channel::kickUser(Client *operatorClient, Client *targetClient) {
     std::cerr << targetClient->getNickName() << " is not in channel " << _name << std::endl;
     return false;
 }
+
+
+/*broadcast for join function*/
+    channel topic
+    channel __TIMESTAMP__
+
+
+irssi
+
+any comment starts with a slash
+/connect 127.0.0.1 6667 00
+
+>> (we send)
+& (we receive from client)
+/JOIN helloworld
