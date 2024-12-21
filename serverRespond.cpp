@@ -18,7 +18,7 @@ void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 		return ;
 	}
 	_numericReply(&_clients[client], "464", "");
-	// _removeClient(_clients[client].getFd());
+	_removeClient(_clients[client].getFd());
 }
 
 void	Server::_userResp( std::vector<std::string> &cmds, int client ){
@@ -83,17 +83,16 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 
 
 
-void	Server::_serverRespond(){
+void	Server::_serverRespond( int client ){
 	std::vector<std::string>	cmds;
+	
+	cmds = _clients[client].getCommand();
 
-	for (int i = 0; i <_clients.size(); i++){
-		cmds = _clients[i].getCommand();
-		while (cmds.size()){
-			_parser(cmds, i);
-			_clients[i].clearBuff();
-			cmds = _clients[i].getCommand();
-		}
-		std::cout << std::endl;
+	while (cmds.size()){
+		_parser(cmds, client);
+		_clients[client].clearBuff();
+		cmds = _clients[client].getCommand();
 	}
+	std::cout << std::endl;
 }
 

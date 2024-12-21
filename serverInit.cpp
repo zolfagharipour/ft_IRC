@@ -38,23 +38,64 @@ void	Server::_SocketInit() {
 	std::cout << "Server socket created; waiting for a connection..." << std::endl;
 }
 
+// void Server::ServerInit() {
+// 	_SocketInit();
+
+// 	while (!_signal) {
+// 		if (poll(&_pollFd[0], _pollFd.size(), -1) < 0 && !_signal) {
+// 			throw (std::runtime_error("poll() failed"));
+//         }
+// 		for (size_t i = 0; i < _pollFd.size(); i++) {
+// 			if (_pollFd[i].revents & POLLIN) {
+// 				if (_pollFd[i].fd == _serFd) {
+// 				    _clientRegister();
+// 				}
+// 				else {
+// 					_clientCommunicate(i);
+// 					_serverRespond();
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+void	Server::_ServerLoop( int pollIndx ) {
+	size_t	i = 0;
+	nfds_t	loopEnd = _pollFd.size();
+	int		timOut = -1;
+	
+	
+	if (pollIndx != -1){
+		i = pollIndx;
+		loopEnd = 1; 
+		timOut = 100;
+		_pollFd[i].events = POLLOUT;
+	}
+	if (poll(&_pollFd[i], loopEnd, timOut) < 0 && !_signal) {
+		// throw (std::runtime_error("poll() failed"));
+		return ;
+	}
+	for (; i < loopEnd; i++) {
+		if (_pollFd[i].revents & POLLIN) {
+			if (_pollFd[i].fd == _serFd) {
+				_clientRegister();
+			}
+			else {
+				_clientCommunicate(i);
+			}
+		}
+		if (_pollFd[i].revents & POLLOUT) {
+			_serverRespond(i - 1);
+			_pollFd[i].events = POLLIN;
+		}
+	}
+}
+
 void Server::ServerInit() {
 	_SocketInit();
 
 	while (!_signal) {
-		if (poll(&_pollFd[0], _pollFd.size(), -1) < 0 && !_signal) {
-			throw (std::runtime_error("poll() failed"));
-        }
-		for (size_t i = 0; i < _pollFd.size(); i++) {
-			if (_pollFd[i].revents & POLLIN) {
-				if (_pollFd[i].fd == _serFd) {
-				    _clientRegister();
-				}
-				else {
-					_clientCommunicate(i);
-					_serverRespond();
-				}
-			}
-		}
+		_ServerLoop(-1);
 	}
 }
+

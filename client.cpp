@@ -82,6 +82,8 @@ std::vector<std::string>	&Client::getCommand(){
     std::istringstream          ss;
     size_t                      pos;
 
+    if (_buff.size() <= 0)
+        return (_vectorCMD);
     pos = _buff.find("\r\n");
     if (pos != std::string::npos){
         command = _buff.substr(0, pos);
