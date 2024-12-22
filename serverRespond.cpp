@@ -4,12 +4,12 @@
 
 void	Server::_capResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() > 1 && cmds[1] == "LS"){
-		// std::string respond = "CAP * LS\r\n";
 		std::string respond = "CAP * LS :\r\n";
 		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
 		std::cout << "\n>> " << respond;
 	}
 }
+
 void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() < 2)
 		return ;
@@ -18,7 +18,7 @@ void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 		return ;
 	}
 	_numericReply(&_clients[client], "464", "");
-	_removeClient(_clients[client].getFd());
+	// _removeClient(_clients[client].getFd());
 }
 
 void	Server::_userResp( std::vector<std::string> &cmds, int client ){
@@ -51,7 +51,7 @@ void	Server::_pingResp( std::vector<std::string> &cmds, int client ){
 			_numericReply(&_clients[client], "409", "");
 			return ;
 		}
-		respond += cmds[1];
+		respond += cmds[1] + "\r\n";
 		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
 		std::cout << "\n>> " << respond;
 }
