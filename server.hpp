@@ -28,9 +28,10 @@ private:
 	void		_removeClient( int fd );
 	
 	void		_SocketInit();
-	void		_serverRespond();
+	void		_serverRespond( int client );
+	void		_ServerLoop( int pollIndx );
 	void		_parser( std::vector<std::string> &cmds, int client );
-	void		_numericReply( int clientFd, std::string numeric, std::string channel );
+	void		_numericReply( Client *client, std::string numeric, std::string channel );
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
 
@@ -54,6 +55,7 @@ public:
 	~Server();
 	
 	void		ServerInit();
+
 	void		signalMonitor();
 	static void	handler( int signum );
 
