@@ -34,7 +34,6 @@ void	Server::_clientRegister() {
 	_pollFd.push_back(newPoll);
 
 	std::cout << "Client is registered" << std::endl;
-	
 }
 
 void	Server::_clientCommunicate(size_t i) {
@@ -44,8 +43,8 @@ void	Server::_clientCommunicate(size_t i) {
 
 	bytesRead = recv(_pollFd[i].fd, buff, sizeof(buff) - 1, 0);
 	if (bytesRead <= 0) {
-		_removeClient(_pollFd[i].fd);
 		close (_pollFd[i].fd);
+		_removeClient(_pollFd[i].fd);
 		std::cerr << "client dissconnected" << std::endl;
 	}
 	else {
@@ -54,6 +53,7 @@ void	Server::_clientCommunicate(size_t i) {
 		std::cout << "$ " << sBuff;
 		_clients[i - 1].addBuff(sBuff);
 	}
-
+	std::cout << "server loop with: " << i << std::endl;
+	_ServerLoop(i);
 }
 

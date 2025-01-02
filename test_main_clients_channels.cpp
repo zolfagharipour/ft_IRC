@@ -1,7 +1,7 @@
-#include "client.hpp"
-#include "channel.hpp"
-#include "server.hpp"
-#include <iostream>
+// #include "client.hpp"
+// #include "channel.hpp"
+// #include "server.hpp"
+// #include <iostream>
 
 // int chatgpt_main();
 
@@ -13,89 +13,89 @@
 //     // Client Hugo(1, "111.111.1.1", "Hugo", "Hugo Bond");
 //     // Hugo.setFd(1);
 
-    // Client Alice(1, "222.222.2.2", "Alice", "Alice Wonderland");
-    // Alice.setFd(4);
+//     // Client Alice(1, "222.222.2.2", "Alice", "Alice Wonderland");
+//     // Alice.setFd(4);
 
-    // Client Joye(1, "322.222.2.2", "Joye", "Joye Buster");
-    // Joye.setFd(6);
+//     // Client Joye(1, "322.222.2.2", "Joye", "Joye Buster");
+//     // Joye.setFd(6);
 
-    // Channel channel2("memes");
-    // server.addChannel(&channel2);
+//     // Channel channel2("memes");
+//     // server.addChannel(&channel2);
 
 
-    // std::cout << std::endl;
+//     // std::cout << std::endl;
 
-    // /*++++++++++++++++++*/
-    // /*TESTING limits etc*/
-    // /*++++++++++++++++++*/
+//     // /*++++++++++++++++++*/
+//     // /*TESTING limits etc*/
+//     // /*++++++++++++++++++*/
 
-    // // server.joinChannel(Hugo, channel.getName());
-    // // server.joinChannel(Alice, channel.getName());
-    // // std::cout << std::endl;
+//     // // server.joinChannel(Hugo, channel.getName());
+//     // // server.joinChannel(Alice, channel.getName());
+//     // // std::cout << std::endl;
 
-    // // channel.printUsers();    
-    // // server.leaveChannel(Hugo, channel.getName());
-    // // channel.printUsers();    
+//     // // channel.printUsers();    
+//     // // server.leaveChannel(Hugo, channel.getName());
+//     // // channel.printUsers();    
     
-    // // server.leaveChannel(Alice, channel.getName());
+//     // // server.leaveChannel(Alice, channel.getName());
     
-    // // std::cout << std::endl;
+//     // // std::cout << std::endl;
 
-    // /*++++++++++++++++++*/
-    // /*TESTING MODES etc+*/
-    // /*++++++++++++++++++*/
+//     // /*++++++++++++++++++*/
+//     // /*TESTING MODES etc+*/
+//     // /*++++++++++++++++++*/
 
-    // server.printChannels();
+//     // server.printChannels();
 
-    // std::cout << std::endl;
-    // server.joinChannel(Alice, channel2.getName(), "");
-    // server.joinChannel(Hugo, channel2.getName(), "");
-    // server.joinChannel(Joye, channel2.getName(), "");
+//     // std::cout << std::endl;
+//     // server.joinChannel(Alice, channel2.getName(), "");
+//     // server.joinChannel(Hugo, channel2.getName(), "");
+//     // server.joinChannel(Joye, channel2.getName(), "");
     
 
-    // channel2.printUsers();
-    // std::cout << std::endl;
+//     // channel2.printUsers();
+//     // std::cout << std::endl;
 
-    // /*MODE: set/remove User Limit Restriction*/
-    // channel2.setUserLimitRestriction(&Alice, true);
-    // channel2.setUserLimit(&Hugo, 2);
-    // std::cout << std::endl;
+//     // /*MODE: set/remove User Limit Restriction*/
+//     // channel2.setUserLimitRestriction(&Alice, true);
+//     // channel2.setUserLimit(&Hugo, 2);
+//     // std::cout << std::endl;
 
-    // /*MODE: set/remove Topic Restriction*/
-    // channel2.setTopicRestriction(&Alice, true);
-    // channel2.setTopic(&Hugo, "This is fun");
-    // std::cout << std::endl;
+//     // /*MODE: set/remove Topic Restriction*/
+//     // channel2.setTopicRestriction(&Alice, true);
+//     // channel2.setTopic(&Hugo, "This is fun");
+//     // std::cout << std::endl;
     
-    // /*MODE: give/take OP privilege*/
-    // channel2.changeOperatorPrivilege(&Alice, &Joye, 1);
-    // channel2.changeOperatorPrivilege(&Hugo, &Joye, 1);
-    // channel2.printUsers();
-    // channel2.changeOperatorPrivilege(&Alice, &Joye, 0);
-    // channel2.printUsers();
-    // std::cout << std::endl;
+//     // /*MODE: give/take OP privilege*/
+//     // channel2.changeOperatorPrivilege(&Alice, &Joye, 1);
+//     // channel2.changeOperatorPrivilege(&Hugo, &Joye, 1);
+//     // channel2.printUsers();
+//     // channel2.changeOperatorPrivilege(&Alice, &Joye, 0);
+//     // channel2.printUsers();
+//     // std::cout << std::endl;
 
-    // /*KICK*/
-    // channel2.kickUser(&Alice, &Joye);
-    // std::cout << std::endl;
+//     // /*KICK*/
+//     // channel2.kickUser(&Alice, &Joye);
+//     // std::cout << std::endl;
 
-    // /*MODE: set/remove Invite-only channel*/
-    // channel2.printUsers();
-    // channel2.setInviteOnly(&Alice, true);
-    // std::cout << std::endl;
+//     // /*MODE: set/remove Invite-only channel*/
+//     // channel2.printUsers();
+//     // channel2.setInviteOnly(&Alice, true);
+//     // std::cout << std::endl;
 
-    // server.joinChannel(Alice, channel2.getName(), "hi");
-    // std::cout << std::endl;
+//     // server.joinChannel(Alice, channel2.getName(), "hi");
+//     // std::cout << std::endl;
 
-    // channel2.kickUser(&Alice, &Hugo);
-    // channel2.printUsers();
+//     // channel2.kickUser(&Alice, &Hugo);
+//     // channel2.printUsers();
 
-    // channel2.inviteUser(&Alice, &Joye);
-    // channel2.printUsers();
-    // std::cout << std::endl;
+//     // channel2.inviteUser(&Alice, &Joye);
+//     // channel2.printUsers();
+//     // std::cout << std::endl;
 
 
-    // /*MODE: set/remove key*/
-    // channel2.setInviteOnly(&Alice, false);
+//     // /*MODE: set/remove key*/
+//     // channel2.setInviteOnly(&Alice, false);
 
     // channel2.setKey(&Alice, "");
     // // channel2.inviteUser(&Alice, &Hugo);

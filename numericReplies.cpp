@@ -9,7 +9,7 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 		respond += "#" + channel;
 	}
 
-	// FUNCTIONPOINTER AND FOR LOOP
+	// FUNCTIONPOINTER AND FOR-LOOP
 	if (numeric == "001")
 		respond += " :Welcome to the MyIrc\r\n";
 	else if (numeric == "409")

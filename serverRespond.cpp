@@ -4,7 +4,6 @@
 
 void	Server::_capResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() > 1 && cmds[1] == "LS"){
-		// std::string respond = "CAP * LS\r\n";
 		std::string respond = "CAP * LS :\r\n";
 		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
 		std::cout << "\n>> " << respond;
@@ -18,7 +17,7 @@ void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 		_clients[client].authenticate();
 		return ;
 	}
-	_numericReply(&_clients[client] , "464", "");
+	_numericReply(&_clients[client], "464", "");
 	// _removeClient(_clients[client].getFd());
 }
 
@@ -52,7 +51,7 @@ void	Server::_pingResp( std::vector<std::string> &cmds, int client ){
 			_numericReply(&_clients[client], "409", "");
 			return ;
 		}
-		respond += cmds[1];
+		respond += cmds[1] + "\r\n";
 		send(_pollFd[client + 1].fd, respond.data(), respond.size(), 0);
 		std::cout << "\n>> " << respond;
 }
@@ -99,17 +98,16 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 
 
 
-void	Server::_serverRespond(){
+void	Server::_serverRespond( int client ){
 	std::vector<std::string>	cmds;
+	
+	cmds = _clients[client].getCommand();
 
-	for (int i = 0; i <_clients.size(); i++){
-		cmds = _clients[i].getCommand();
-		while (cmds.size()){
-			_parser(cmds, i);
-			_clients[i].clearBuff();
-			cmds = _clients[i].getCommand();
-		}
-		std::cout << std::endl;
+	while (cmds.size()){
+		_parser(cmds, client);
+		_clients[client].clearBuff();
+		cmds = _clients[client].getCommand();
 	}
+	std::cout << std::endl;
 }
 
