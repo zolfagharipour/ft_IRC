@@ -12,6 +12,8 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 	// FUNCTIONPOINTER AND FOR-LOOP
 	if (numeric == "001")
 		respond += " :Welcome to the MyIrc\r\n";
+	else if (numeric == "403")
+		respond += " :No such channel\r\n";
 	else if (numeric == "409")
 		respond += " :No origin specified\r\n";
 	else if (numeric == "401")
@@ -27,6 +29,10 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 	else if (numeric == "433")
 		respond += " :Nickname is already in use\r\n";
 		// real nickname has to be added
+	else if (numeric == "442")
+		respond += " :Your're not on that channel\r\n";
+	else if (numeric == "443")
+		respond += " :is already on channel\r\n";
 	else if (numeric == "451")
 		respond += " :You have not registered\r\n";
 	else if (numeric == "461")

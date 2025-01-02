@@ -66,7 +66,7 @@ class Channel {
         //debug
         void    printUsers();
 
-	void		_numericReply( Client *client, std::string numeric, std::string channel );
+	    void	_numericReply( Client *client, std::string numeric, std::string channel );
 
     };
 

@@ -4,7 +4,6 @@ Channel::Channel( const std::string &name, std::string serverName ) :
 		_name(name), _inviteOnly(false), _userLimit(-1), _topicRestricted(false) {
         _userLimitRestricted = false;
         _serverName = serverName;
-        std::cout << name << ": " << "Channel created!" << std::endl;
 }
 
 /*default ocnstructor missing*/

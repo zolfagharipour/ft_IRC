@@ -65,7 +65,7 @@ public:
 
 	//channel management
 	void		joinChannel( Client *client, const std::string &channelName, std::string key );
-	void		leaveChannel( Client &client, const std::string &channelName );
+	void		leaveChannel( Client *client, const std::string &channelName );
 	void		addChannel( Channel *);
 	void		addChannel( std::string name );
 

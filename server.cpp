@@ -12,9 +12,14 @@ Server::~Server()
 	// removeClient()
 }
 
-void	Server::joinChannel(Client *client, const std::string &channelName, std::string key) {
+void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {
 	Channel *channel;
 	
+	if (channelName.empty() || channelName[0] != '#') {
+		std::cout << "Is the following supposed to be printed?" << std::endl;
+		_numericReply(client, "403", channelName);
+	}
+
 	//does the channel exist?
 	auto it = this->_channels.find(channelName);
 	if (it != this->_channels.end())
@@ -22,23 +27,27 @@ void	Server::joinChannel(Client *client, const std::string &channelName, std::st
 	else {
 		channel = new Channel(channelName, _serverName);
 		this->_channels[channelName] = channel;
-		/*BROADCAST!*/
-		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
+		
+		/*************************************** */
+		/*broadcast!*/
+		/*************************************** */
+		
+		std::string broadcast = ":" + client->getNickName() + "! " + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
 		std::cout << broadcast << std::endl;
-		std::cout << "sideinfo: Channel: " << channelName << " created by " << client->getNickName() << std::endl;
 	}
 
 	//is client in channel?
 	if (channel->userExists(client->getNickName())) {
-		
-		std::cerr << "ERROR: client " << client->getNickName() << " is already in channel" << std::endl;
+		/*proper numeric reply error*/
+		_numericReply(client, "443", channelName);
+		//is already in channel
 		return ;
 	}
 	
 	//can client join channel?
 	if (channel->getInviteOnly()) {
 		_numericReply(client, "473", channelName);
-		// std::cerr << "ERROR: channel " << channel->getName() << " is invite only" << std::endl;
+		//is invite only
 		return ;
 	}
 
@@ -51,26 +60,47 @@ void	Server::joinChannel(Client *client, const std::string &channelName, std::st
 	if (channel->addUser(client)) {
 		if (channel->getUsers().size() == 1)
 			channel->addOperator(client);
+		
+		/*************************************** */
+		/*Broadcast: user added to channel*/
+		/*************************************** */
 	}
 }
 
-void	Server::leaveChannel(Client &client, const std::string &channelName) {
+void	Server::leaveChannel(Client *client, const std::string &channelName) {
 	auto it = _channels.find(channelName);
-	if (it != _channels.end()) {
-		Channel *channel = it->second;
-		if (channel->userExists(client.getNickName())) {
-			channel->removeUser(&client);
-			std::cout << client.getNickName() << " left channel " << channel->getName() << std::endl;
-			if (channel->isOperator(&client))
-				channel->removeOperator(&client);
-		}
-		Client *op = channel->getOperator();
-		if (!op) {
-			if (!channel->getUsers().empty()) {
-				Client *nextClient = channel->getUsers().begin()->second;
-				channel->addOperator(nextClient);
-			}
-		}
+	if (it == _channels.end()) {
+		_numericReply(client, "403", channelName);
+		return ;
+	}
+
+	Channel *channel = it->second;
+
+	if (!channel->userExists(client->getNickName())) {
+		_numericReply(client, "442", channelName);
+		return ;
+	}
+
+	/**************************************+ */
+	/*Broadcast Parting mesage to other users in channel*/
+	/**************************************+ */
+	
+	channel->removeUser(client);
+	std::cout << client->getNickName() << " left channel " << channel->getName() << std::endl;
+	
+	if (channel->isOperator(client))
+		channel->removeOperator(client);
+	
+	/*check if new operator needed*/
+	if (!channel->getOperator() && !channel->getUsers().empty()) {
+		Client *nextClient = channel->getUsers().begin()->second;
+		channel->addOperator(nextClient);
+	}
+
+	if (channel->getUsers().empty()) {
+		delete channel;
+		_channels.erase(it);
+		std::cout << "Channel " << channelName << "has been deleted because it's now empty" << std::endl;
 	}
 }
 
@@ -84,7 +114,7 @@ Channel *Server::getChannel( std::string channelName) {
 
 void	Server::addChannel(Channel *channel) {
 	_channels[channel->getName()] = channel;
-	// std::cout << "Channel " << channel->getName() << " added on server" << std::endl;
+	//added on server
 }
 
 void	Server::addChannel(std::string name) {
@@ -96,7 +126,7 @@ void	Server::addChannel(std::string name) {
 void	Server::printChannels() {
     std::cout << "Channels on the server:\t\t";
     for (std::map<std::string, Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
-        std::cout << it->first << " "; // Print the nickname
+        std::cout << it->first << " ";// Print the nickname
     }
     std::cout << std::endl;
 }
