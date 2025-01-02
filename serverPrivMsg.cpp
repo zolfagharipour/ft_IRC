@@ -9,7 +9,6 @@ void	Server::_sendMsg( std::vector<std::string> &cmds, int sender, int target ){
 		respond += " " + cmds[i];
 	}
 	respond += "\r\n";
-	// send(_pollFd[target + 1].fd, "\r\n", 2, 0);
 	send(_pollFd[target + 1].fd, respond.data(), respond.size(), 0);
 	std::cout << "\n>> " << respond;
 }
