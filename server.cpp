@@ -15,11 +15,12 @@ Server::~Server()
 void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {
 	Channel *channel;
 	
-	if (channelName.empty() || channelName[0] != '#') {
+	if (channelName.empty()) {
 		std::cout << "Is the following supposed to be printed?" << std::endl;
 		_numericReply(client, "403", channelName);
 	}
-
+	else if (channelName[0] != '#')
+		std::cout << "here" << std::endl;
 	//does the channel exist?
 	auto it = this->_channels.find(channelName);
 	if (it != this->_channels.end())
@@ -32,7 +33,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		/*broadcast!*/
 		/*************************************** */
 		
-		std::string broadcast = ":" + client->getNickName() + "! " + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
+		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
 		std::cout << broadcast << std::endl;
 	}
 
@@ -52,12 +53,23 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	}
 
 	if (!channel->getKey().empty() && key != channel->getKey()) {
-        std::cerr << client->getNickName() << " provided incorrect key for channel: " << channel->getName() << std::endl;
         _numericReply(client, "475", channelName );
 		return ;
     }
 
 	if (channel->addUser(client)) {
+
+		/****************** */
+		/*Broadcast!*/
+		/****************** */
+
+		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
+		std::cout << broadcast << std::endl;
+		// if (channel->getTopic())
+	    //     _numericReply(client, "332", channelName );
+        // _numericReply(client, "475", channelName );
+		// _numericReply(client, "332", channelName);
+
 		if (channel->getUsers().size() == 1)
 			channel->addOperator(client);
 		

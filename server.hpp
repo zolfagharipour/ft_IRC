@@ -46,6 +46,7 @@ private:
 	void	_pingResp( std::vector<std::string> &cmds, int client );
 	void	_privMsgResp( std::vector<std::string> &cmds, int client );
 	void	_joinResp( std::vector<std::string> &cmds, int client );
+	void	_partResp( std::vector<std::string> &cmds, int client );
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );

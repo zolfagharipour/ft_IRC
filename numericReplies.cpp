@@ -1,17 +1,28 @@
 #include "server.hpp"
 #include "ft_irc.h"
 
-void	Server::_numericReply( Client *client, std::string numeric, std::string channel ){
+void	Server::_numericReply( Client *client, std::string numeric, std::string channel ) {
 	std::string nick = client->getNickName();
+
 	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
 	
-	if (channel.size() < 0) {
+	if (channel.size() > 0) {
 		respond += "#" + channel;
 	}
+
+	Channel *channelPtr;
+
+	auto it = _channels.find(channel);
+	if (it != _channels.end())
+		channelPtr = it->second;
+	else
+		std::cout << "channel " << channel << " does not exist" << std::endl;
 
 	// FUNCTIONPOINTER AND FOR-LOOP
 	if (numeric == "001")
 		respond += " :Welcome to the MyIrc\r\n";
+	if (numeric == "332" && channelPtr->getTopic() != "no topic set")
+		respond = respond + " :" + channelPtr->getTopic() + "\r\n";
 	else if (numeric == "403")
 		respond += " :No such channel\r\n";
 	else if (numeric == "409")
@@ -35,8 +46,9 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 		respond += " :is already on channel\r\n";
 	else if (numeric == "451")
 		respond += " :You have not registered\r\n";
+	//2 versions of 461 part && pricmsg
 	else if (numeric == "461")
-		respond += " PRIVMSG :Not enough parameters\r\n";
+		respond += "PRIVMSG :Not enough parameters\r\n";
 	else if (numeric == "462")
 		respond += " :Unauthorized command (already registered)\r\n";
 	else if (numeric == "464")
@@ -50,5 +62,4 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 	send(client->getFd(), respond.data(), respond.size(), 0);
 	
 	std::cout << "\n>> " << respond;
-
 }

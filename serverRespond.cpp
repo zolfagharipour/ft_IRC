@@ -70,6 +70,66 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 	/*error code here?*/
 }
 
+void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
+	//  if (_channels.empty()) {
+    //     std::cout << "No channels available." << std::endl;
+    //     return;
+    // }
+
+    // std::cout << "List of all channels:" << std::endl;
+    // for (const auto &entry : _channels) {
+    //     std::cout << "- " << entry.first << std::endl; // Print the key (channel name)
+    // }
+	
+	if ( !_clients[client].isRegistered() )
+		return ;
+
+	std::cout << "check1" << std::endl;
+	if (cmds.size() < 2) {
+		_numericReply(&_clients[client], "461", "");
+		return ;
+	}
+	std::cout << "check2" << std::endl;
+
+	std::string channelName = cmds[1];
+	if (!channelName.empty() && channelName[0] == '#') {
+		channelName = channelName.substr(1);
+	std::cout << "check3" << std::endl;
+
+	}
+
+	auto it = _channels.find(channelName);
+	if (it == _channels.end()) {
+	// 		 if (_channels.empty()) {
+    //     std::cout << "No channels available." << std::endl;
+    //     return;
+    // }
+
+    // std::cout << "List of all channels:" << std::endl;
+    // for (const auto &entry : _channels) {
+    //     std::cout << "- " << entry.first << std::endl; // Print the key (channel name)
+    // }
+		_numericReply(&_clients[client], "403", channelName);
+		std::cout << "check4" << std::endl;
+		
+		return ;
+	}
+
+	Channel *channel = it->second;
+	if (!channel->userExists(_clients[client].getNickName()))
+		_numericReply(&_clients[client], "442", channelName);
+
+	channel->removeUser(&_clients[client]);
+
+    /*********************** */
+    // Broadcast PART message to other channel members
+    /*********************** */
+    // If the channel is now empty, delete it
+    if (channel->getUsers().empty()) {
+        _channels.erase(channelName);
+        delete channel;
+    }
+}
 
 void	Server::_parser( std::vector<std::string> &cmds, int client ){
 	if (!_clients[client].isAuthenticated()
@@ -93,7 +153,8 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_privMsgResp(cmds, client);
 	else if (cmds[0] == "JOIN")
 		_joinResp(cmds, client);
-
+	else if (cmds[0] == "PART")
+		_partResp(cmds, client);
 }
 
 

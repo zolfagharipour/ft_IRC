@@ -43,8 +43,6 @@ bool    Channel::addUser( Client *client ) {
         // std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
         return false ;
     }
-    
-    std::cout << client->getNickName() << ": added to channel: " << this->getName() << std::endl;
     _users[client->getNickName()] = client;
     return true ;
 }
