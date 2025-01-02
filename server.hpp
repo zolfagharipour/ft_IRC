@@ -49,7 +49,7 @@ private:
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
-
+	void	_broadcast( std::vector<std::string> &cmds, std::string chName );
 
 public:
 	Server();
