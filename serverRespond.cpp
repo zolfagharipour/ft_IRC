@@ -66,7 +66,7 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 	}
 	std::string ChannelName, key;
 	ChannelName =cmds[1].substr(1);
-	joinChannel(&_clients[client], ChannelName, cmds[2]);
+	joinChannel(&_clients[client], ChannelName, cmds[1]);
 	/*error code here?*/
 }
 
