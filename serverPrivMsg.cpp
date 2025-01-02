@@ -26,7 +26,7 @@ void	Server::_broadcast( std::vector<std::string> &cmds, std::string chName ){
 		clieName = _clients[i].getNickName();
 		if (channel->isUserInChannel(clieName)){
 			respond = ":" + clieName + "!" + _clients[i].getRealName() + 
-					" PRIVMSG #" + chName + " :" + cmds[2];
+					" PRIVMSG #" + chName + " " + cmds[2];
 			for (int i = 3; i < cmds.size(); i++){
 				respond += " " + cmds[i];
 			}
