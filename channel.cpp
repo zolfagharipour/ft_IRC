@@ -39,7 +39,7 @@ Client *Channel::getOperator( ) {
 //user management
 bool    Channel::addUser( Client *client ) {
     if (_userLimit > 0 && _users.size() >= _userLimit) {
-        _numericReply(client, "471", this->_name);
+        numericReply(client, "471", this->_name);
         // std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
         return false ;
     }
@@ -238,7 +238,7 @@ void    Channel::printUsers() {
 }
 
 
-void	Channel::_numericReply( Client *client, std::string numeric, std::string channel ){
+void	Channel::numericReply( Client *client, std::string numeric, std::string channel ){
 	std::string nick = client->getNickName();
 	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
 	
@@ -261,13 +261,19 @@ void	Channel::_broadcast( std::string message, std::string senderNick ){
 	std::map<std::string, Client*>::iterator it = _users.find(senderNick);
 	std::string		respond = ":" + senderNick + "!";
 	Client			*sender;
+	Server			server;
 	
-	if (it != _users.end()){
-		sender = it->second;
-		respond += sender->getUserName() + " " + message + "\r\n";
+	if (it == _users.end()){
+   		std::cout << "broadcast didnt find the user" << std::endl;
+
+		return ;
 	}
+		
+	sender = it->second;
+	respond += sender->getUserName() + " " + message + "\r\n";
+	
 	if (!isUserInChannel(senderNick)){
-		_numericReply(sender, "404", getName());
+		server.numericReply(sender, "404", getName());
 		return ;
 	}
 	for (std::map<std::string, Client*>::iterator it = _users.begin(); it != _users.end(); ++it) {

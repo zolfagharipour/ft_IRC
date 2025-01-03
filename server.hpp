@@ -34,7 +34,6 @@ private:
 	void		_serverRespond( int client );
 	void		_ServerLoop( int pollIndx );
 	void		_parser( std::vector<std::string> &cmds, int client );
-	void		_numericReply( Client *client, std::string numeric, std::string channel );
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
 
@@ -75,6 +74,7 @@ public:
 
 	//debug
 	void		printChannels();
+	void		numericReply( Client *client, std::string numeric, std::string channel );
 };
 
 #endif

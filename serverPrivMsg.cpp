@@ -19,7 +19,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 	std::string	respond;
 
 	if (cmds.size() < 3 ||  cmds[2][0] != ':'){
-		_numericReply(&_clients[client], "411", "");
+		numericReply(&_clients[client], "411", "");
 		return ;
 	}
 	if (cmds[1][0] == '#'){
@@ -28,7 +28,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 		if (it != _channels.end())
 			channel = it->second;
 		else{
-			_numericReply(&_clients[client], "403", chName);
+			numericReply(&_clients[client], "403", chName);
 			return ;
 		}
 		respond =  " PRIVMSG #" + chName;
@@ -45,5 +45,5 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 			return ;
 		}
 	}
-	_numericReply(&_clients[client], "401", "");
+	numericReply(&_clients[client], "401", "");
 }

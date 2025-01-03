@@ -17,7 +17,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	
 	if (channelName.empty()) {
 		std::cout << "Is the following supposed to be printed?" << std::endl;
-		_numericReply(client, "403", channelName);
+		numericReply(client, "403", channelName);
 	}
 	else if (channelName[0] != '#')
 		std::cout << "here" << std::endl;
@@ -40,20 +40,20 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	//is client in channel?
 	if (channel->userExists(client->getNickName())) {
 		/*proper numeric reply error*/
-		_numericReply(client, "443", channelName);
+		numericReply(client, "443", channelName);
 		//is already in channel
 		return ;
 	}
 	
 	//can client join channel?
 	if (channel->getInviteOnly()) {
-		_numericReply(client, "473", channelName);
+		numericReply(client, "473", channelName);
 		//is invite only
 		return ;
 	}
 
 	if (!channel->getKey().empty() && key != channel->getKey()) {
-        _numericReply(client, "475", channelName );
+        numericReply(client, "475", channelName );
 		return ;
     }
 
@@ -66,9 +66,9 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
 		std::cout << broadcast << std::endl;
 		// if (channel->getTopic())
-	    //     _numericReply(client, "332", channelName );
-        // _numericReply(client, "475", channelName );
-		// _numericReply(client, "332", channelName);
+	    //     numericReply(client, "332", channelName );
+        // numericReply(client, "475", channelName );
+		// numericReply(client, "332", channelName);
 
 		if (channel->getUsers().size() == 1)
 			channel->addOperator(client);
@@ -82,14 +82,14 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 void	Server::leaveChannel(Client *client, const std::string &channelName) {
 	auto it = _channels.find(channelName);
 	if (it == _channels.end()) {
-		_numericReply(client, "403", channelName);
+		numericReply(client, "403", channelName);
 		return ;
 	}
 
 	Channel *channel = it->second;
 
 	if (!channel->userExists(client->getNickName())) {
-		_numericReply(client, "442", channelName);
+		numericReply(client, "442", channelName);
 		return ;
 	}
 

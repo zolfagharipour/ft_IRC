@@ -29,13 +29,13 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 	std::string	respond, nick;
 
 	if (cmds.size() < 2){
-		_numericReply(&_clients[client], "431", "");
+		numericReply(&_clients[client], "431", "");
 		// if (!_clients[client].isRegistered())
 		// 	_removeClient(_clients[client].getFd());
 		return ;
 	}
 	if (!_nickValidity(cmds[1])){
-		_numericReply(&_clients[client], "432", "");
+		numericReply(&_clients[client], "432", "");
 		// if (!_clients[client].isRegistered())
 		// 	_removeClient(_clients[client].getFd());
 		return ;
@@ -44,7 +44,7 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 	
 	for (int i = 0; i < _clients.size(); i++){
 		if (_clients[i].getNickName() == nick){
-			_numericReply(&_clients[client], "433", "");
+			numericReply(&_clients[client], "433", "");
 			// if (!_clients[client].isRegistered())
 			// 	_removeClient(_clients[client].getFd());
 			return ;

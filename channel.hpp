@@ -70,7 +70,7 @@ class Channel {
 
 		// messaging
 		void	_broadcast( std::string message, std::string senderName );
-	    void	_numericReply( Client *client, std::string numeric, std::string channel );
+	    void	numericReply( Client *client, std::string numeric, std::string channel );
 
     };
 

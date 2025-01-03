@@ -1,7 +1,7 @@
 #include "server.hpp"
 #include "ft_irc.h"
 
-void	Server::_numericReply( Client *client, std::string numeric, std::string channel ) {
+void	Server::numericReply( Client *client, std::string numeric, std::string channel ) {
 	std::string nick = client->getNickName();
 
 	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
@@ -23,8 +23,6 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 		respond += " :Welcome to the MyIrc\r\n";
 	if (numeric == "332" && channelPtr->getTopic() != "no topic set")
 		respond = respond + " :" + channelPtr->getTopic() + "\r\n";
-	else if (numeric == "403")
-		respond += " :No such channel\r\n";
 	else if (numeric == "409")
 		respond += " :No origin specified\r\n";
 	else if (numeric == "401")
@@ -33,7 +31,7 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 	else if (numeric == "403")
 		respond += " :No such channel\r\n";
 	else if (numeric == "404")
-		respond += " :Cannot send to channel\r\n";
+		respond += " :Cannot send to channel\r\n"; 
 	else if (numeric == "411")
 		respond += " :No recipient given (PRIVMSG)\r\n";
 	else if (numeric == "431")
