@@ -18,19 +18,24 @@ void	Server::_broadcast( std::vector<std::string> &cmds, std::string chName, int
 	Channel			*channel;
 	std::string		respond;
 	std::string		clieName;
-	std::string		senderName = _clients[client].getNickName();
+	std::string		senderNick = _clients[client].getNickName();
 	
 	if (it != _channels.end())
 		channel = it->second;
-	else
+	else{
+		_numericReply(&_clients[client], "403", chName);
 		return ;
-	// check if channel name doesnt exist
+	}
+	if (!channel->isUserInChannel(senderNick)){
+		_numericReply(&_clients[client], "404", chName);
+		return ;
+	}
 	for (int i = 0; i < _clients.size(); i++){
 		clieName = _clients[i].getNickName();
 		if (client != i && channel->isUserInChannel(clieName)){
-			respond = ":" + senderName + "!" + _clients[i].getUserName() + 
-					" PRIVMSG #" + chName + " " + cmds[2];
-			for (int i = 3; i < cmds.size(); i++){
+			respond = ":" + senderNick + "!" + _clients[i].getUserName() + 
+					" PRIVMSG #" + chName;
+			for (int i = 2; i < cmds.size(); i++){
 				respond += " " + cmds[i];
 			}
 			respond += "\r\n";
@@ -63,3 +68,22 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 	}
 	_numericReply(&_clients[client], "401", "");
 }
+
+// void	Channel::_broadcast( std::string message, std::string senderNick ){
+// 	std::map<std::string, Client*>::iterator it = _users.find(senderNick);
+// 	std::string		respond = ":" + senderNick + "!";
+// 	Client			*sender;
+	
+// 	if (it != _users.end()){
+// 		sender = it->second;
+// 		respond += sender->getUserName() + " " + message + "\r\n";
+// 	}
+// 	if (!isUserInChannel(senderNick)){
+// 		_numericReply(sender, "404", getName());
+// 		return ;
+// 	}
+// 	for (std::map<std::string, Client*>::iterator it = _users.begin(); it != _users.end(); ++it) {
+// 		if (it->first != senderNick)
+// 			send(it->second->getFd(), respond.data(), respond.size(), 0);
+// 	}
+// }
