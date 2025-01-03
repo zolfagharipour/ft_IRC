@@ -7,6 +7,9 @@
 # include <netinet/in.h>
 # include <sys/poll.h>
 
+class Client;
+class Channel;
+
 class Server
 {
 private:
@@ -49,7 +52,7 @@ private:
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
-	void	_broadcast( std::vector<std::string> &cmds, std::string chName, int client );
+	// void	_broadcast( std::vector<std::string> &cmds, std::string chName, int client );
 
 public:
 	Server();

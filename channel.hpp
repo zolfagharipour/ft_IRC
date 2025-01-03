@@ -9,7 +9,6 @@ class Client;
 
 class Channel {
     private:
-		// Server							*_server;
         std::string                     _name;
         std::string                     _topic;
         bool                            _topicRestricted;
