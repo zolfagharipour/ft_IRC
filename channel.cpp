@@ -256,3 +256,22 @@ void	Channel::_numericReply( Client *client, std::string numeric, std::string ch
 	std::cout << "\n>> " << respond;
 
 }
+
+void	Channel::_broadcast( std::string message, std::string senderNick ){
+	std::map<std::string, Client*>::iterator it = _users.find(senderNick);
+	std::string		respond = ":" + senderNick + "!";
+	Client			*sender;
+	
+	if (it != _users.end()){
+		sender = it->second;
+		respond += sender->getUserName() + " " + message + "\r\n";
+	}
+	if (!isUserInChannel(senderNick)){
+		_numericReply(sender, "404", getName());
+		return ;
+	}
+	for (std::map<std::string, Client*>::iterator it = _users.begin(); it != _users.end(); ++it) {
+		if (it->first != senderNick)
+			send(it->second->getFd(), respond.data(), respond.size(), 0);
+	}
+}

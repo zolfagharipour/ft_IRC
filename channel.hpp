@@ -3,6 +3,7 @@
 
 #include "ft_irc.h"
 #include "client.hpp"
+#include "server.hpp"
 
 class Client;
 
@@ -66,6 +67,9 @@ class Channel {
         //debug
         void    printUsers();
 
+
+		// messaging
+		void	_broadcast( std::string message, std::string senderName );
 	    void	_numericReply( Client *client, std::string numeric, std::string channel );
 
     };

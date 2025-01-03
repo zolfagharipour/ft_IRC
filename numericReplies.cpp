@@ -30,6 +30,10 @@ void	Server::_numericReply( Client *client, std::string numeric, std::string cha
 	else if (numeric == "401")
 		respond += " :No such nick/channel\r\n";
 		// real nickname has to be added
+	else if (numeric == "403")
+		respond += " :No such channel\r\n";
+	else if (numeric == "404")
+		respond += " :Cannot send to channel\r\n";
 	else if (numeric == "411")
 		respond += " :No recipient given (PRIVMSG)\r\n";
 	else if (numeric == "431")

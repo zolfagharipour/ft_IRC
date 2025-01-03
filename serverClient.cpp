@@ -53,7 +53,6 @@ void	Server::_clientCommunicate(size_t i) {
 		std::cout << "$ " << sBuff;
 		_clients[i - 1].addBuff(sBuff);
 	}
-	std::cout << "server loop with: " << i << std::endl;
 	_ServerLoop(i);
 }
 

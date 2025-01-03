@@ -67,7 +67,7 @@ void	Server::_ServerLoop( int pollIndx ) {
 	
 	if (pollIndx != -1){
 		i = pollIndx;
-		loopEnd = 1; 
+		loopEnd = 1;
 		timOut = 100;
 		_pollFd[i].events = POLLOUT;
 	}
