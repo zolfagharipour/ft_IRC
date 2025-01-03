@@ -43,7 +43,13 @@ bool    Channel::addUser( Client *client ) {
         // std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
         return false ;
     }
-    _users[client->getNickName()] = client;
+	_users.insert(std::make_pair(client->getNickName(), client));
+	std::cout << "sth else: " << client->getFd() << std::endl;
+
+	std::cout << "NICKNAME SAVED AS: " << client->getNickName() << std::endl;
+			std::string	respond = "join #" + getName();
+		_broadcast(respond, client->getNickName());
+    // _users[client->getNickName()] = client;
     return true ;
 }
 
@@ -264,20 +270,24 @@ void	Channel::_broadcast( std::string message, std::string senderNick ){
 	Server			server;
 	
 	if (it == _users.end()){
-   		std::cout << "broadcast didnt find the user" << std::endl;
-
+		std::cout << "BROADCAST DIDNT FIND USER: " << senderNick << std::endl;
 		return ;
 	}
 		
 	sender = it->second;
-	respond += sender->getUserName() + " " + message + "\r\n";
+	if (message.size())
+		respond += sender->getUserName() + " " + message + "\r\n";
+	else
+		respond += sender->getUserName() + "\r\n";
 	
 	if (!isUserInChannel(senderNick)){
 		server.numericReply(sender, "404", getName());
 		return ;
 	}
-	for (std::map<std::string, Client*>::iterator it = _users.begin(); it != _users.end(); ++it) {
-		if (it->first != senderNick)
-			send(it->second->getFd(), respond.data(), respond.size(), 0);
+	for (std::map<std::string, Client*>::iterator itt = _users.begin(); itt != _users.end(); ++itt) {
+		if (itt->first != senderNick){
+			send(itt->second->getFd(), respond.data(), respond.size(), 0);
+			std::cout << "\n>> " << respond;
+		}
 	}
 }

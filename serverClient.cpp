@@ -24,7 +24,6 @@ void	Server::_clientRegister() {
 		throw (std::runtime_error("socket option failed to set on non-block"));
 	}
 
-
 	newClient.setFd(cliFd);
 	_clients.push_back(newClient);
 

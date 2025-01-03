@@ -27,14 +27,17 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		channel = it->second;
 	else {
 		channel = new Channel(channelName, _serverName);
-		this->_channels[channelName] = channel;
-		
+		// this->_channels[channelName] = channel;
+		_channels.insert(std::make_pair(channelName, channel));
+
+		// std::string	respond = "join #" + channel->getName();
+		// channel->_broadcast(respond, client->getNickName());
 		/*************************************** */
 		/*broadcast!*/
 		/*************************************** */
 		
-		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
-		std::cout << broadcast << std::endl;
+		// std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
+		// std::cout << broadcast << std::endl;
 	}
 
 	//is client in channel?
@@ -56,15 +59,16 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
         numericReply(client, "475", channelName );
 		return ;
     }
+	std::cout << "sth else: " << client->getFd() << std::endl;
 
-	if (channel->addUser(client)) {
+	channel->addUser(client);
 
 		/****************** */
 		/*Broadcast!*/
 		/****************** */
 
-		std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
-		std::cout << broadcast << std::endl;
+		// std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
+		// std::cout << broadcast << std::endl;
 		// if (channel->getTopic())
 	    //     numericReply(client, "332", channelName );
         // numericReply(client, "475", channelName );
@@ -76,7 +80,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		/*************************************** */
 		/*Broadcast: user added to channel*/
 		/*************************************** */
-	}
+	// }
 }
 
 void	Server::leaveChannel(Client *client, const std::string &channelName) {

@@ -59,7 +59,7 @@ void	Server::_pingResp( std::vector<std::string> &cmds, int client ){
 void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 	if ( !_clients[client].isRegistered() )
 		return ;
-	if (cmds.size() < 2 || (cmds.size() <  3 && cmds[1].size() < 1
+	if (cmds.size() < 2 || (cmds.size() < 3 && cmds[1].size() < 1
 		&& cmds[1][0] == ':' )) {
 		numericReply(&_clients[client], "461", "");
 		return ;
@@ -114,7 +114,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	for (int i = 2; i < cmds.size(); i++){
 		respond += " " + cmds[i];
 	}
-    std::cout << _clients[client].getNickName() << std::endl;
+	
 	channel->_broadcast(respond, _clients[client].getNickName());
     /*********************** */
     // Broadcast PART message to other channel members

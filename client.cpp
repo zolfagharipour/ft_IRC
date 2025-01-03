@@ -37,7 +37,7 @@ bool    Client::isRegistered() {
 }
 
 void Client::setFd(int fd){
-    Fd = fd;
+    this->Fd = fd;
 }
 
 void Client::setIpAdd(std::string ipadd){
