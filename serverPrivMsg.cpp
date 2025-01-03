@@ -13,19 +13,22 @@ void	Server::_sendMsg( std::vector<std::string> &cmds, int sender, int target ){
 	std::cout << "\n>> " << respond;
 }
 
-void	Server::_broadcast( std::vector<std::string> &cmds, std::string chName ){
+void	Server::_broadcast( std::vector<std::string> &cmds, std::string chName, int client ){
 	std::map<std::string, Channel*>::iterator it = _channels.find(chName);
 	Channel			*channel;
 	std::string		respond;
 	std::string		clieName;
+	std::string		senderName = _clients[client].getNickName();
 	
 	if (it != _channels.end())
 		channel = it->second;
+	else
+		return ;
 	// check if channel name doesnt exist
 	for (int i = 0; i < _clients.size(); i++){
 		clieName = _clients[i].getNickName();
-		if (channel->isUserInChannel(clieName)){
-			respond = ":" + clieName + "!" + _clients[i].getRealName() + 
+		if (client != i && channel->isUserInChannel(clieName)){
+			respond = ":" + senderName + "!" + _clients[i].getUserName() + 
 					" PRIVMSG #" + chName + " " + cmds[2];
 			for (int i = 3; i < cmds.size(); i++){
 				respond += " " + cmds[i];
@@ -48,7 +51,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 	}
 	if (cmds[1][0] == '#'){
 		std::string	chName = cmds[1].substr(1);
-		_broadcast(cmds, chName);
+		_broadcast(cmds, chName, client);
 		return ;
 	}
 	std::string nick = _nickLower(cmds[1]);
