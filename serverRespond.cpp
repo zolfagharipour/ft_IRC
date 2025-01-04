@@ -107,6 +107,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	channel->_broadcast(respond, _clients[client].getNickName());
 	respond = ":" + _clients[client].getNickName() + "!" + _clients[client].getUserName() + "@localhost " + respond + "\r\n";
 	send(_clients[client].getFd(), respond.data(), respond.size(), 0);
+
 	std::cout << "\n>>> " << respond;
 	channel->removeUser(&_clients[client]);
     

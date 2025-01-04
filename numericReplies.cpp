@@ -16,7 +16,7 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 	if (it != _channels.end())
 		channelPtr = it->second;
 	else
-		std::cout << "channel " << channel << " does not exist" << std::endl;
+		std::cout << "(channel " << channel << " does not exist (yet) )" << std::endl;
 
 	// FUNCTIONPOINTER AND FOR-LOOP
 	if (numeric == "001")

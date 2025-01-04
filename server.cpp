@@ -15,12 +15,8 @@ Server::~Server()
 void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {
 	Channel *channel;
 	
-	if (channelName.empty()) {
-		std::cout << "Is the following supposed to be printed?" << std::endl;
+	if (channelName.empty())
 		numericReply(client, "403", channelName);
-	}
-	else if (channelName[0] != '#')
-		std::cout << "here" << std::endl;
 
 	//does the channel exist?
 	auto it = this->_channels.find(channelName);
@@ -50,7 +46,6 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
         numericReply(client, "475", channelName );
 		return ;
     }
-	std::cout << "sth else: " << client->getFd() << std::endl;
 
 	channel->addUser(client);
 	if (channel->getUsers().size() == 1)

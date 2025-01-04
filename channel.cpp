@@ -44,9 +44,8 @@ bool    Channel::addUser( Client *client ) {
         return false ;
     }
 	_users.insert(std::make_pair(client->getNickName(), client));
-	std::cout << "sth else: " << client->getFd() << std::endl;
 
-	std::cout << "NICKNAME SAVED AS: " << client->getNickName() << std::endl;
+	std::cout << "(NICKNAME SAVED AS: " << client->getNickName() << ")" << std::endl;
 			std::string	respond = "join #" + getName();
 		_broadcast(respond, client->getNickName());
     // _users[client->getNickName()] = client;
@@ -68,7 +67,7 @@ bool    Channel::isUserInChannel(std::string &nickname) {
 void    Channel::addOperator(Client *client) {
     if (_users.find(client->getNickName()) != _users.end()) {
         _operators.insert(client);
-        std::cout << client->getNickName() << " is now OP of " << this->getName() << std::endl;
+        std::cout << "(" << client->getNickName() << " is now OP of #" << this->getName() << ")" << std::endl;
     }
     else
         std::cout << "ERROR: cannot add " << client->getNickName() << " as OP" << std::endl;
