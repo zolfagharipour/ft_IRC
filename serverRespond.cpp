@@ -71,7 +71,6 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 }
 
 void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
-	std::string	respond;
 	
 	if ( !_clients[client].isRegistered() )
 		return ;
@@ -109,16 +108,26 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	if (!channel->userExists(_clients[client].getNickName()))
 		numericReply(&_clients[client], "442", channelName);
 
-	channel->removeUser(&_clients[client]);
+
+	//parting message
+	std::string nick = _clients[client].getNickName();
+	std::string channelNewName = channelName;
+	if (channelName.size() > 0)
+		channelNewName = "#" + channelName;
+	std::string	respond = ":" + nick + "!" + _clients[client].getUserName() + " PART " + channelNewName;
+
+	send(_clients[client].getFd(), respond.data(), respond.size(), 0);
+	std::cout << respond << std::endl;
+	std::cout << "\n>> " << respond;
+	//parting message 
+	
 	respond = "PART #" + channel->getName();
 	for (int i = 2; i < cmds.size(); i++){
 		respond += " " + cmds[i];
 	}
-	
 	channel->_broadcast(respond, _clients[client].getNickName());
-    /*********************** */
-    // Broadcast PART message to other channel members
-    /*********************** */
+	channel->removeUser(&_clients[client]);
+    
     // If the channel is now empty, delete it
     if (channel->getUsers().empty()) {
         _channels.erase(channelName);
