@@ -21,23 +21,14 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	}
 	else if (channelName[0] != '#')
 		std::cout << "here" << std::endl;
+
 	//does the channel exist?
 	auto it = this->_channels.find(channelName);
 	if (it != this->_channels.end())
 		channel = it->second;
 	else {
 		channel = new Channel(channelName, _serverName);
-		// this->_channels[channelName] = channel;
 		_channels.insert(std::make_pair(channelName, channel));
-
-		// std::string	respond = "join #" + channel->getName();
-		// channel->_broadcast(respond, client->getNickName());
-		/*************************************** */
-		/*broadcast!*/
-		/*************************************** */
-		
-		// std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
-		// std::cout << broadcast << std::endl;
 	}
 
 	//is client in channel?
@@ -62,25 +53,8 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	std::cout << "sth else: " << client->getFd() << std::endl;
 
 	channel->addUser(client);
-
-		/****************** */
-		/*Broadcast!*/
-		/****************** */
-
-		// std::string broadcast = ":" + client->getNickName() + "!" + client->getRealName() + "@" + _serverName + " JOIN " + channelName;
-		// std::cout << broadcast << std::endl;
-		// if (channel->getTopic())
-	    //     numericReply(client, "332", channelName );
-        // numericReply(client, "475", channelName );
-		// numericReply(client, "332", channelName);
-
-		if (channel->getUsers().size() == 1)
-			channel->addOperator(client);
-		
-		/*************************************** */
-		/*Broadcast: user added to channel*/
-		/*************************************** */
-	// }
+	if (channel->getUsers().size() == 1)
+		channel->addOperator(client);
 }
 
 void	Server::leaveChannel(Client *client, const std::string &channelName) {
@@ -96,10 +70,6 @@ void	Server::leaveChannel(Client *client, const std::string &channelName) {
 		numericReply(client, "442", channelName);
 		return ;
 	}
-
-	/**************************************+ */
-	/*Broadcast Parting mesage to other users in channel*/
-	/**************************************+ */
 	
 	channel->removeUser(client);
 	std::cout << client->getNickName() << " left channel " << channel->getName() << std::endl;

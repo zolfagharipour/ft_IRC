@@ -75,60 +75,41 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	if ( !_clients[client].isRegistered() )
 		return ;
 
-	// std::cout << "check1" << std::endl;
 	if (cmds.size() < 2) {
 		numericReply(&_clients[client], "461", "");
 		return ;
 	}
-	// std::cout << "check2" << std::endl;
 
 	std::string channelName = cmds[1];
 	if (!channelName.empty() && channelName[0] == '#')
 		channelName = channelName.substr(1);
-	// std::cout << "check3" << std::endl;
-
-	// }
 
 	auto it = _channels.find(channelName);
 	if (it == _channels.end()) {
 		if (_channels.empty()) {
-        // std::cout << "No channels available." << std::endl;
 		numericReply(&_clients[client], "403", channelName);
         return;
     	}
 	}
 
-    // std::cout << "List of all channels:" << std::endl;
-    // for (const auto &entry : _channels) {
-    //     std::cout << "- " << entry.first << std::endl; // Print the key (channel name)
-    // }
-	// std::cout << "check4" << std::endl;
-
 	Channel *channel = it->second;
 	if (!channel->userExists(_clients[client].getNickName()))
 		numericReply(&_clients[client], "442", channelName);
 
-
-	//parting message
 	std::string nick = _clients[client].getNickName();
-	std::string channelNewName = channelName;
-	if (channelName.size() > 0)
-		channelNewName = "#" + channelName;
-	std::string	respond = ":" + nick + "!" + _clients[client].getUserName() + " PART " + channelNewName;
+	std::string	respond; //= ":" + nick + "!" + _clients[client].getUserName() + " PART #" + channelName;
 
-	send(_clients[client].getFd(), respond.data(), respond.size(), 0);
-	std::cout << respond << std::endl;
-	std::cout << "\n>> " << respond;
-	//parting message 
 	
 	respond = "PART #" + channel->getName();
 	for (int i = 2; i < cmds.size(); i++){
 		respond += " " + cmds[i];
 	}
 	channel->_broadcast(respond, _clients[client].getNickName());
+	respond = ":" + _clients[client].getNickName() + "!" + _clients[client].getUserName() + "@localhost " + respond + "\r\n";
+	send(_clients[client].getFd(), respond.data(), respond.size(), 0);
+	std::cout << "\n>>> " << respond;
 	channel->removeUser(&_clients[client]);
     
-    // If the channel is now empty, delete it
     if (channel->getUsers().empty()) {
         _channels.erase(channelName);
         delete channel;
@@ -139,7 +120,6 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 	if (!_clients[client].isAuthenticated()
 			&& cmds[0] != "CAP" && cmds[0] != "PASS" && cmds[0] != "JOIN"){
 		numericReply(&_clients[client], "464", "");
-		// _removeClient(_clients[client].getFd());
 		return ;
 	}
 
