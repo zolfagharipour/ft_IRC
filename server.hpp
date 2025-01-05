@@ -18,7 +18,7 @@ private:
 	int									_serFd;
 	const int							_port;
 	static int							_signal;
-	std::vector<Client>					_clients;
+	std::vector<Client*>				_clients;
 	std::vector<struct pollfd>			_pollFd;
 	std::map<std::string, Channel *>	_channels; //map of channel name to channel
 	

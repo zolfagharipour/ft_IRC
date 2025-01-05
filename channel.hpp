@@ -22,8 +22,10 @@ class Channel {
 
     public:
         Channel() {};
+        Channel( const Channel& other );
         //what initiated to? more arguments?
         Channel(const std::string &name, std::string serverName );
+        Channel& operator=( const Channel& other );
 
         //getters
         const std::string                       &getName();

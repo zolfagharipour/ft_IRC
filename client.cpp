@@ -10,6 +10,24 @@ Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::
     std::cout << username << ": " << "client created! Username: " << _userName << " Nickname: " << _nickName << std::endl;
 }
 
+Client::Client( const Client& other ) {
+	*this = other;
+}
+
+Client&	Client::operator=( const Client& other ){
+	if (this == &other)
+		return (*this);
+	Fd = other.Fd;
+	IPadd = other.IPadd;
+	_nickName = other._nickName;
+	_userName = other._userName;
+	_realName = other._realName;
+	_authenticated = other._authenticated;
+	_registered = other._registered;
+	_buff = other._buff;
+	_vectorCMD = other._vectorCMD;
+	return *this;
+}
 /*destructor missing*/
 
 int Client::getFd() {

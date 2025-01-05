@@ -23,7 +23,9 @@ class Client
 
 	public:
 		Client();
+		Client( const Client& otehr );
 		Client( int fd, const std::string &ipAddress, std::string nickname, std::string username );
+		Client&	operator=( const Client& otehr );
 		
 		int getFd();
 		std::string &getNickName();

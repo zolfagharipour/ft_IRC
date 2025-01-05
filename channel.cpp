@@ -1,9 +1,41 @@
 #include "channel.hpp"
 
+Channel::Channel( const Channel& other ){
+	*this = other;
+}
+
 Channel::Channel( const std::string &name, std::string serverName ) :
 		_name(name), _inviteOnly(false), _userLimit(-1), _topicRestricted(false) {
         _userLimitRestricted = false;
         _serverName = serverName;
+}
+
+Channel& Channel::operator=(const Channel& other) {
+	if (this != &other) {
+		_name = other._name;
+		_topic = other._topic;
+		_topicRestricted = other._topicRestricted;
+		_inviteOnly = other._inviteOnly;
+		_userLimit = other._userLimit;
+		_userLimitRestricted = other._userLimitRestricted;
+		_key = other._key;
+		_serverName = other._serverName;
+
+		// Clear existing pointers to prevent memory leaks
+		_users.clear();
+		_operators.clear();
+
+		// Deep copy users (shallow copy of Client*)
+		for (const auto& pair : other._users) {
+			_users[pair.first] = pair.second;
+		}
+
+		// Deep copy operators (shallow copy of Client*)
+		for (Client* op : other._operators) {
+			_operators.insert(op);
+		}
+	}
+	return *this;
 }
 
 /*default ocnstructor missing*/
@@ -37,20 +69,7 @@ Client *Channel::getOperator( ) {
 }
 
 //user management
-bool    Channel::addUser( Client *client ) {
-    if (_userLimit > 0 && _users.size() >= _userLimit) {
-        numericReply(client, "471", this->_name);
-        // std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
-        return false ;
-    }
-	_users.insert(std::make_pair(client->getNickName(), client));
 
-	std::cout << "(NICKNAME SAVED AS: " << client->getNickName() << ")" << std::endl;
-			std::string	respond = "join #" + getName();
-		_broadcast(respond, client->getNickName());
-    // _users[client->getNickName()] = client;
-    return true ;
-}
 
 void    Channel::removeUser(Client *client) {
     _users.erase(client->getNickName());
@@ -262,6 +281,22 @@ void	Channel::numericReply( Client *client, std::string numeric, std::string cha
 
 }
 
+bool    Channel::addUser( Client *client ) {
+    if (_userLimit > 0 && _users.size() >= _userLimit) {
+        numericReply(client, "471", this->_name);
+        // std::cerr << "ERROR: user limit reached in channel cannot add: " << client->getNickName() << std::endl;
+        return false ;
+    }
+	_users.insert(std::make_pair(client->getNickName(), client));
+
+	std::cout << "(NICKNAME SAVED AS: " << client->getNickName() << ")" << std::endl;
+	std::string	respond = "JOIN #" + getName();	
+	
+	_broadcast(respond, client->getNickName());
+    // _users[client->getNickName()] = client;
+    return true ;
+}
+
 void	Channel::_broadcast( std::string message, std::string senderNick ){
 	std::map<std::string, Client*>::iterator it = _users.find(senderNick);
 	std::string		respond = ":" + senderNick + "!";
@@ -284,9 +319,9 @@ void	Channel::_broadcast( std::string message, std::string senderNick ){
 		return ;
 	}
 	for (std::map<std::string, Client*>::iterator itt = _users.begin(); itt != _users.end(); ++itt) {
-		if (itt->first != senderNick){
-			send(itt->second->getFd(), respond.data(), respond.size(), 0);
-			std::cout << "\n>> " << respond;
-		}
+		Client*	receiver = itt->second;
+
+		send(receiver->getFd(), respond.data(), respond.size(), 0);
+		std::cout << "\n>> " << respond << "\tFD: " << receiver->getFd() << std::endl;
 	}
 }

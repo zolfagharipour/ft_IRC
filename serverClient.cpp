@@ -1,7 +1,7 @@
 #include "server.hpp"
 
 void	Server::_clientRegister() {
-	Client				newClient;
+	Client				*newClient = new Client();
 	struct pollfd       newPoll;
 	struct sockaddr_in	cliSock;
 	socklen_t			sockLen = sizeof(cliSock);
@@ -24,8 +24,9 @@ void	Server::_clientRegister() {
 		throw (std::runtime_error("socket option failed to set on non-block"));
 	}
 
-	newClient.setFd(cliFd);
+	newClient->setFd(cliFd);
 	_clients.push_back(newClient);
+	// delete newClient;
 
 	newPoll.fd = cliFd;
 	newPoll.events = POLLIN;
@@ -50,7 +51,7 @@ void	Server::_clientCommunicate(size_t i) {
 		buff[bytesRead] = '\0';
 		std::string	sBuff = buff;
 		std::cout << "$ " << sBuff;
-		_clients[i - 1].addBuff(sBuff);
+		_clients[i - 1]->addBuff(sBuff);
 	}
 	_ServerLoop(i);
 }
