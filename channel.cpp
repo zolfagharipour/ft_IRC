@@ -38,6 +38,19 @@ Channel& Channel::operator=(const Channel& other) {
 	return *this;
 }
 
+Channel::~Channel(){
+	// for (std::map<std::string, Client*>::iterator it = _users.begin(); it != _users.end(); ++it) {
+	// 	// delete it->second;
+	// 	_users.erase(it->first);
+	// }
+	// for (std::set<Client*>::iterator it = _operators.begin(); it != _operators.end(); ++it) {
+	// 	_operators.erase(it);
+	// }
+	_users.clear();
+	_operators.clear();
+}
+
+
 /*default ocnstructor missing*/
 /*destructor missing*/
 
@@ -292,19 +305,19 @@ bool    Channel::addUser( Client *client ) {
 	std::cout << "(NICKNAME SAVED AS: " << client->getNickName() << ")" << std::endl;
 	std::string	respond = "JOIN #" + getName();	
 	
-	_broadcast(respond, client->getNickName());
+	_broadcast(respond, client->getNickName(), true);
     // _users[client->getNickName()] = client;
     return true ;
 }
 
-void	Channel::_broadcast( std::string message, std::string senderNick ){
+void	Channel::_broadcast( std::string message, std::string senderNick, bool selfEcho ){
 	std::map<std::string, Client*>::iterator it = _users.find(senderNick);
 	std::string		respond = ":" + senderNick + "!";
 	Client			*sender;
 	Server			server;
 	
 	if (it == _users.end()){
-		std::cout << "BROADCAST DIDN'T FIND USER: " << senderNick << std::endl;
+		server.numericReply(sender, "404", getName());
 		return ;
 	}
 		
@@ -318,10 +331,20 @@ void	Channel::_broadcast( std::string message, std::string senderNick ){
 		server.numericReply(sender, "404", getName());
 		return ;
 	}
-	for (std::map<std::string, Client*>::iterator itt = _users.begin(); itt != _users.end(); ++itt) {
-		Client*	receiver = itt->second;
-
-		send(receiver->getFd(), respond.data(), respond.size(), 0);
-		std::cout << "\n>> " << respond << "\tFD: " << receiver->getFd() << std::endl;
+	if (selfEcho){
+		for (std::map<std::string, Client*>::iterator itt = _users.begin(); itt != _users.end(); ++itt) {
+			Client*	receiver = itt->second;
+			send(receiver->getFd(), respond.data(), respond.size(), 0);
+			std::cout << "\n>> " << respond << "\tFD: " << receiver->getFd() << std::endl;
+		}
+	}
+	else{
+		for (std::map<std::string, Client*>::iterator itt = _users.begin(); itt != _users.end(); ++itt) {
+			Client*	receiver = itt->second;
+			if (receiver->getNickName() != senderNick){
+				send(receiver->getFd(), respond.data(), respond.size(), 0);
+				std::cout << "\n>> " << respond << "\tFD: " << receiver->getFd() << std::endl;
+			}
+		}
 	}
 }

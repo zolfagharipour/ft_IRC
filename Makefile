@@ -28,3 +28,8 @@ fclean: 	clean
 			$(RM) $(NAME)
 
 re:			clean all
+
+test: ${NAME}
+	clear && valgrind -s --leak-check=full --leak-check=full --show-leak-kinds=all --track-fds=yes ./IRC
+
+

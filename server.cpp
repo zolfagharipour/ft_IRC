@@ -6,10 +6,15 @@ Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
 
 Server::Server( int port ) : _port(port) { }
 
-Server::~Server()
-{
+Server::~Server(){
 	_closeFds();
-	// removeClient()
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();) {
+		delete it->second;
+		it = _channels.erase(it);
+	}
+	for (size_t i = 0; i < _clients.size(); i++) {
+		delete _clients[i];
+	}
 }
 
 void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {

@@ -35,7 +35,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 		for (int i = 2; i < cmds.size(); i++){
 			respond += " " + cmds[i];
 		}
-		channel->_broadcast(respond, _clients[client]->getNickName());
+		channel->_broadcast(respond, _clients[client]->getNickName(), false);
 		return ;
 	}
 	std::string nick = _nickLower(cmds[1]);

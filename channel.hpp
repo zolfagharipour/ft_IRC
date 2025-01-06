@@ -26,6 +26,7 @@ class Channel {
         //what initiated to? more arguments?
         Channel(const std::string &name, std::string serverName );
         Channel& operator=( const Channel& other );
+        ~Channel();
 
         //getters
         const std::string                       &getName();
@@ -71,7 +72,7 @@ class Channel {
 
 
 		// messaging
-		void	_broadcast( std::string message, std::string senderName );
+		void	_broadcast( std::string message, std::string senderName, bool selfEcho );
 	    void	numericReply( Client *client, std::string numeric, std::string channel );
 
     };

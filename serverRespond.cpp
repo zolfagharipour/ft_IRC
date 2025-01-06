@@ -150,6 +150,14 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 			delete channel;
 		}
 	}
+	channel->_broadcast(respond, _clients[client]->getNickName(), true);
+
+	channel->removeUser(_clients[client]);
+    
+    if (channel->getUsers().empty()) {
+        _channels.erase(channelName);
+        delete channel;
+    }
 }
 
 void	Server::_parser( std::vector<std::string> &cmds, int client ){
