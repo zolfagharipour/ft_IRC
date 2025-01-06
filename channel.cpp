@@ -317,7 +317,7 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 	Server			server;
 	
 	if (it == _users.end()){
-		std::cout << "BROADCAST DIDNT FIND USER: " << senderNick << std::endl;
+		server.numericReply(sender, "404", getName());
 		return ;
 	}
 		
