@@ -39,13 +39,6 @@ Channel& Channel::operator=(const Channel& other) {
 }
 
 Channel::~Channel(){
-	// for (std::map<std::string, Client*>::iterator it = _users.begin(); it != _users.end(); ++it) {
-	// 	// delete it->second;
-	// 	_users.erase(it->first);
-	// }
-	// for (std::set<Client*>::iterator it = _operators.begin(); it != _operators.end(); ++it) {
-	// 	_operators.erase(it);
-	// }
 	_users.clear();
 	_operators.clear();
 }
@@ -320,10 +313,10 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 	}
 		
 	sender = it->second;
+	respond += sender->getUserName();
 	if (message.size())
-		respond += sender->getUserName() + " " + message + "\r\n";
-	else
-		respond += sender->getUserName() + "\r\n";
+		respond += " " + message;
+	respond += "\r\n";
 	
 	if (!isUserInChannel(senderNick)){
 		server.numericReply(sender, "404", getName());

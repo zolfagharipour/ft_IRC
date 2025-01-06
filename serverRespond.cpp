@@ -150,8 +150,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 
 void	Server::_parser( std::vector<std::string> &cmds, int client ){
 	if (!_clients[client]->isAuthenticated()
-			&& cmds[0] != "CAP" && cmds[0] != "PASS" && cmds[0] != "JOIN"){
-		numericReply(_clients[client], "464", "");
+			&& cmds[0] != "CAP" && cmds[0] != "PASS"){
 		return ;
 	}
 
