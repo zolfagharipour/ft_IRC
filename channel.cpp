@@ -99,7 +99,6 @@ bool    Channel::isUserInChannel(std::string &nickname) {
 void    Channel::addOperator(Client *client) {
     if (_users.find(client->getNickName()) != _users.end()) {
         _operators.insert(client);
-        std::cout << "(" << client->getNickName() << " is now OP of #" << this->getName() << ")" << std::endl;
     }
     else
         std::cout << "ERROR: cannot add " << client->getNickName() << " as OP" << std::endl;
@@ -302,7 +301,6 @@ bool    Channel::addUser( Client *client ) {
     }
 	_users.insert(std::make_pair(client->getNickName(), client));
 
-	std::cout << "(NICKNAME SAVED AS: " << client->getNickName() << ")" << std::endl;
 	std::string	respond = "JOIN #" + getName();	
 	
 	_broadcast(respond, client->getNickName(), true);
@@ -335,7 +333,7 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 		for (std::map<std::string, Client*>::iterator itt = _users.begin(); itt != _users.end(); ++itt) {
 			Client*	receiver = itt->second;
 			send(receiver->getFd(), respond.data(), respond.size(), 0);
-			std::cout << "\n>> " << respond << "\tFD: " << receiver->getFd() << std::endl;
+            std::cout << "\n>> " << respond;
 		}
 	}
 	else{
@@ -343,7 +341,7 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 			Client*	receiver = itt->second;
 			if (receiver->getNickName() != senderNick){
 				send(receiver->getFd(), respond.data(), respond.size(), 0);
-				std::cout << "\n>> " << respond << "\tFD: " << receiver->getFd() << std::endl;
+	            std::cout << "\n>> " << respond;
 			}
 		}
 	}

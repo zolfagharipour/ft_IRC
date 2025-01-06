@@ -4,10 +4,10 @@
 void	Server::numericReply( Client *client, std::string numeric, std::string channel ) {
 	std::string nick = client->getNickName();
 
-	std::string	respond = ":" + _serverName + " " + numeric + " " + nick + " ";
+	std::string	respond = ":" + _serverName + " " + numeric + " " + nick;
 	
 	if (channel.size() > 0) {
-		respond += "#" + channel;
+		respond += " #" + channel;
 	}
 
 	Channel *channelPtr;
@@ -15,8 +15,6 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 	auto it = _channels.find(channel);
 	if (it != _channels.end())
 		channelPtr = it->second;
-	else
-		std::cout << "(channel " << channel << " does not exist (yet) )" << std::endl;
 
 	// FUNCTIONPOINTER AND FOR-LOOP
 	if (numeric == "001")

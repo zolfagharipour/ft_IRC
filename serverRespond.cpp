@@ -67,6 +67,7 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 
 	std::vector<std::string> channelList;
 	std::vector<std::string> keyList;
+
 	std::stringstream ss(cmds[1]);
 	std::string channelName;
 
@@ -81,7 +82,7 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 		while(std::getline(keyStream, key, ','))
 			keyList.push_back(key);
 	}
-	
+
 	for (size_t i = 0; i < channelList.size(); ++i) {
 		std::string currentChannelname = channelList[i];
 		std::string key = (i < keyList.size()) ? keyList[i] : "";
@@ -120,7 +121,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 		std::map<std::string, Channel*>::iterator it = _channels.find(currentChannelName);
 		if (it == _channels.end()) {
 			numericReply(_clients[client], "403", currentChannelName);
-        	return;
+        	continue ;
 		}
 
 		Channel *channel = it->second;
@@ -137,12 +138,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 			}
 		}
 
-		channel->_broadcast(partMessage, _clients[client]->getNickName());
-		
-		partMessage = ":" + nick + "!" + _clients[client]->getUserName() + "@localhost " + partMessage + "\r\n";
-		send(_clients[client]->getFd(), partMessage.data(), partMessage.size(), 0);
-
-		std::cout << "\n>>> " << partMessage;
+		channel->_broadcast(partMessage, _clients[client]->getNickName(), true);
 		channel->removeUser(_clients[client]);
 		
 		if (channel->getUsers().empty()) {
@@ -150,14 +146,6 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 			delete channel;
 		}
 	}
-	channel->_broadcast(respond, _clients[client]->getNickName(), true);
-
-	channel->removeUser(_clients[client]);
-    
-    if (channel->getUsers().empty()) {
-        _channels.erase(channelName);
-        delete channel;
-    }
 }
 
 void	Server::_parser( std::vector<std::string> &cmds, int client ){
