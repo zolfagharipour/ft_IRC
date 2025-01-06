@@ -304,7 +304,7 @@ void	Channel::_broadcast( std::string message, std::string senderNick ){
 	Server			server;
 	
 	if (it == _users.end()){
-		std::cout << "BROADCAST DIDNT FIND USER: " << senderNick << std::endl;
+		std::cout << "BROADCAST DIDN'T FIND USER: " << senderNick << std::endl;
 		return ;
 	}
 		

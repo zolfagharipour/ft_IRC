@@ -64,57 +64,92 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 		numericReply(_clients[client], "461", "");
 		return ;
 	}
-	std::string ChannelName, key;
-	ChannelName =cmds[1].substr(1);
-	joinChannel(_clients[client], ChannelName, cmds[1]);
-	/*error code here?*/
+
+	std::vector<std::string> channelList;
+	std::vector<std::string> keyList;
+	std::stringstream ss(cmds[1]);
+	std::string channelName;
+
+	while (std::getline(ss, channelName, ',')) {
+		if (!channelName.empty() && channelName[0] == '#')
+			channelList.push_back(channelName.substr(1));
+	}
+
+	if (cmds.size() > 2) {
+		std::stringstream keyStream(cmds[2]);
+		std::string key;
+		while(std::getline(keyStream, key, ','))
+			keyList.push_back(key);
+	}
+	
+	for (size_t i = 0; i < channelList.size(); ++i) {
+		std::string currentChannelname = channelList[i];
+		std::string key = (i < keyList.size()) ? keyList[i] : "";
+		joinChannel(_clients[client], currentChannelname, key);
+	}
 }
 
 void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	
+	std::string nick = _clients[client]->getNickName();
+	std::vector<std::string> channels;
+	
 	if ( !_clients[client]->isRegistered() )
 		return ;
-
 	if (cmds.size() < 2) {
 		numericReply(_clients[client], "461", "");
 		return ;
 	}
 
-	std::string channelName = cmds[1];
-	if (!channelName.empty() && channelName[0] == '#')
-		channelName = channelName.substr(1);
+	//store channels that should be parted in a vector, get rid of #
+	std::string channelNames = cmds[1];
+	if (!channelNames.empty()) {
+		std::stringstream ss(channelNames);
+		std::string channel;
 
-	auto it = _channels.find(channelName);
-	if (it == _channels.end()) {
-		if (_channels.empty()) {
-		numericReply(_clients[client], "403", channelName);
-        return;
-    	}
+		while (std::getline(ss, channel, ',')) {
+			if (!channel.empty() && channel[0] == '#')
+				channels.push_back(channel.substr(1));
+		}
 	}
 
-	Channel *channel = it->second;
-	if (!channel->userExists(_clients[client]->getNickName()))
-		numericReply(_clients[client], "442", channelName);
+	//iteratre though all channels, separated by comma
+	for (size_t i = 0; i < channels.size(); ++i) {
+		std::string currentChannelName = channels[i];
 
-	std::string nick = _clients[client]->getNickName();
-	std::string	respond; //= ":" + nick + "!" + _clients[client].getUserName() + " PART #" + channelName;
+		std::map<std::string, Channel*>::iterator it = _channels.find(currentChannelName);
+		if (it == _channels.end()) {
+			numericReply(_clients[client], "403", currentChannelName);
+        	return;
+		}
 
-	
-	respond = "PART #" + channel->getName();
-	for (int i = 2; i < cmds.size(); i++){
-		respond += " " + cmds[i];
+		Channel *channel = it->second;
+		if (!channel->userExists(_clients[client]->getNickName()))
+			numericReply(_clients[client], "442", currentChannelName);
+
+		std::string partMessage = "PART #" + currentChannelName;
+		if (cmds.size() > 2) {
+			partMessage += " ";
+			for (size_t i = 2; i < cmds.size(); i++) {
+				if (i > 3)
+					partMessage += " ";
+				partMessage += cmds[i];
+			}
+		}
+
+		channel->_broadcast(partMessage, _clients[client]->getNickName());
+		
+		partMessage = ":" + nick + "!" + _clients[client]->getUserName() + "@localhost " + partMessage + "\r\n";
+		send(_clients[client]->getFd(), partMessage.data(), partMessage.size(), 0);
+
+		std::cout << "\n>>> " << partMessage;
+		channel->removeUser(_clients[client]);
+		
+		if (channel->getUsers().empty()) {
+			_channels.erase(currentChannelName);
+			delete channel;
+		}
 	}
-	channel->_broadcast(respond, _clients[client]->getNickName());
-	respond = ":" + _clients[client]->getNickName() + "!" + _clients[client]->getUserName() + "@localhost " + respond + "\r\n";
-	send(_clients[client]->getFd(), respond.data(), respond.size(), 0);
-
-	std::cout << "\n>>> " << respond;
-	channel->removeUser(_clients[client]);
-    
-    if (channel->getUsers().empty()) {
-        _channels.erase(channelName);
-        delete channel;
-    }
 }
 
 void	Server::_parser( std::vector<std::string> &cmds, int client ){

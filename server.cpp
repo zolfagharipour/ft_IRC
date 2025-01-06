@@ -45,6 +45,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	if (!channel->getKey().empty() && key != channel->getKey()) {
         numericReply(client, "475", channelName );
 		return ;
+
     }
 
 	channel->addUser(client);
