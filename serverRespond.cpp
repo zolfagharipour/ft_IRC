@@ -104,7 +104,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	for (int i = 2; i < cmds.size(); i++){
 		respond += " " + cmds[i];
 	}
-	channel->_broadcast(respond, _clients[client]->getNickName());
+	channel->_broadcast(respond, _clients[client]->getNickName(), true);
 	respond = ":" + _clients[client]->getNickName() + "!" + _clients[client]->getUserName() + "@localhost " + respond + "\r\n";
 	send(_clients[client]->getFd(), respond.data(), respond.size(), 0);
 

@@ -16,6 +16,7 @@ void	Server::_removeClient(int fd) {
 	}
 	for (size_t i = 0; i < _clients.size(); i++) {
 		if (_clients[i]->getFd() == fd) {
+			// delete _clients[i];
 			_clients.erase(_clients.begin() + i);
 		}
 	}
