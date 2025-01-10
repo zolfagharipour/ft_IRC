@@ -36,7 +36,6 @@ private:
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
 
-
 	
 
 	// RESPONDS
@@ -52,7 +51,6 @@ private:
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
-	// void	_broadcast( std::vector<std::string> &cmds, std::string chName, int client );
 
 public:
 	Server();
@@ -64,11 +62,13 @@ public:
 	void		signalMonitor();
 	static void	handler( int signum );
 
-	Channel *getChannel( std::string channelName);
+	Channel *getChannel( std::string channelName );
+	Client *getClient( std::string clientName );
+
+	const std::string	&getName();
 
 	//channel management
 	void		joinChannel( Client *client, const std::string &channelName, std::string key );
-	void		leaveChannel( Client *client, const std::string &channelName );
 	void		addChannel( Channel *);
 	void		addChannel( std::string name );
 

@@ -134,7 +134,6 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 				partMessage += " " + cmds[i];
 		}
 
-		// channel->_broadcast(partMessage, _clients[client]->getNickName(), true);
 		channel->removeUser(_clients[client], partMessage, true);
 		
 		if (channel->getUsers().empty()) {
@@ -180,6 +179,8 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_quitResp(cmds, client);
 		return false;
 	}
+	// remove channel if empty in kickResp
+
 	return (true);
 }
 

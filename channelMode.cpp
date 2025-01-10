@@ -92,8 +92,6 @@ void    Channel::kickUser( Client *sourceClient, Client *targetClient ) {
         std::cerr << targetClient->getNickName() << ": is not in channel: " << this->getName() << std::endl;
         return ;
     }
-    if (this->isOperator(targetClient))
-        this->removeOperator(targetClient);
     this->removeUser(targetClient, "KICK", true);
     std::cout << targetClient->getNickName() << ": has been kicked from channel: " << this->getName() << std::endl;
 
