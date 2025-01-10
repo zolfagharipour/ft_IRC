@@ -44,7 +44,7 @@ void	Server::_clientCommunicate(size_t i) {
 	bytesRead = recv(_pollFd[i].fd, buff, sizeof(buff) - 1, 0);
 	if (bytesRead <= 0) {
 		close (_pollFd[i].fd);
-		_removeClient(_pollFd[i].fd);
+		_removeClient(i - 1);
 		std::cerr << "client dissconnected" << std::endl;
 	}
 	else {

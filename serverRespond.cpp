@@ -125,7 +125,7 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 		}
 
 		Channel *channel = it->second;
-		if (!channel->userExists(_clients[client]->getNickName()))
+		if (!channel->isUserInChannel(_clients[client]->getNickName()))
 			numericReply(_clients[client], "442", currentChannelName);
 
 		std::string partMessage = "PART #" + currentChannelName;

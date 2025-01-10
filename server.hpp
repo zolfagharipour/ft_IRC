@@ -28,7 +28,7 @@ private:
 	void		_clientRegister();
 	void		_clientCommunicate( size_t i );
 	void		_closeFds();
-	void		_removeClient( int fd );
+	void		_removeClient( int client );
 	
 	void		_SocketInit();
 	void		_serverRespond( int client );

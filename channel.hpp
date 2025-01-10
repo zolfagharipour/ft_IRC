@@ -6,9 +6,11 @@
 #include "server.hpp"
 
 class Client;
+class Server;
 
 class Channel {
     private:
+		Server*							_server;
         std::string                     _name;
         std::string                     _topic;
         bool                            _topicRestricted;
@@ -18,13 +20,12 @@ class Channel {
         int                             _userLimit;
         bool                            _userLimitRestricted;
         std::string                     _key;
-        std::string                     _serverName;
 
     public:
         Channel() {};
         Channel( const Channel& other );
         //what initiated to? more arguments?
-        Channel(const std::string &name, std::string serverName );
+        Channel(const std::string &name, Server* server );
         Channel& operator=( const Channel& other );
         ~Channel();
 
@@ -40,7 +41,6 @@ class Channel {
 
 
         //user management
-        bool    userExists(const std::string &nickName);
         bool    addUser( Client *client);
         void    removeUser( Client *client );
         bool    isUserInChannel( std::string &nickname );
@@ -73,7 +73,6 @@ class Channel {
 
 		// messaging
 		void	_broadcast( std::string message, std::string senderName, bool selfEcho );
-	    void	numericReply( Client *client, std::string numeric, std::string channel );
 
     };
 

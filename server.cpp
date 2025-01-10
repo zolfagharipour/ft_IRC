@@ -28,12 +28,12 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	if (it != this->_channels.end())
 		channel = it->second;
 	else {
-		channel = new Channel(channelName, _serverName);
+		channel = new Channel(channelName, this);
 		_channels.insert(std::make_pair(channelName, channel));
 	}
 
 	//is client in channel?
-	if (channel->userExists(client->getNickName())) {
+	if (channel->isUserInChannel(client->getNickName())) {
 		/*proper numeric reply error*/
 		numericReply(client, "443", channelName);
 		//is already in channel
@@ -67,7 +67,7 @@ void	Server::leaveChannel(Client *client, const std::string &channelName) {
 
 	Channel *channel = it->second;
 
-	if (!channel->userExists(client->getNickName())) {
+	if (!channel->isUserInChannel(client->getNickName())) {
 		numericReply(client, "442", channelName);
 		return ;
 	}
@@ -105,7 +105,7 @@ void	Server::addChannel(Channel *channel) {
 }
 
 void	Server::addChannel(std::string name) {
-	Channel channel(name, _serverName);
+	Channel channel(name, this);
 	_channels[channel.getName()] = &channel;
 	std::cout << "Channel " << channel.getName() << " added on server" << std::endl;
 }
