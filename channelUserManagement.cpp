@@ -1,7 +1,15 @@
 #include "channel.hpp"
 
-void    Channel::removeUser(Client *client) {
-    _users.erase(client->getNickName());
+void    Channel::removeUser( Client *client, std::string message, bool selfEcho ) {
+	std::string	senderNick = client->getNickName();
+	if (!isUserInChannel(senderNick))
+		return ;
+	if (message.size())
+		_broadcast(message, senderNick, selfEcho);
+
+	if (isOperator(client))
+		removeOperator(client);
+    _users.erase(senderNick);
 }
 
 bool    Channel::isUserInChannel(std::string &nickname) {

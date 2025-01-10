@@ -27,13 +27,12 @@ private:
 
 	void		_clientRegister();
 	void		_clientCommunicate( size_t i );
-	void		_closeFds();
-	void		_removeClient( int client );
+	void		_removeClient( int client, std::string message );
 	
 	void		_SocketInit();
 	void		_serverRespond( int client );
 	void		_ServerLoop( int pollIndx );
-	void		_parser( std::vector<std::string> &cmds, int client );
+	bool		_parser( std::vector<std::string> &cmds, int client );
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
 
@@ -49,6 +48,7 @@ private:
 	void	_privMsgResp( std::vector<std::string> &cmds, int client );
 	void	_joinResp( std::vector<std::string> &cmds, int client );
 	void	_partResp( std::vector<std::string> &cmds, int client );
+	void	_quitResp( std::vector<std::string> &cmds, int client );
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );

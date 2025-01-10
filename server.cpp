@@ -7,7 +7,9 @@ Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
 Server::Server( int port ) : _port(port) { }
 
 Server::~Server(){
-	_closeFds();
+	for (size_t i = 0; i < _pollFd.size(); ++i)
+		close (_pollFd[i].fd);
+	_pollFd.clear();
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();) {
 		delete it->second;
 		it = _channels.erase(it);
@@ -72,7 +74,7 @@ void	Server::leaveChannel(Client *client, const std::string &channelName) {
 		return ;
 	}
 	
-	channel->removeUser(client);
+	channel->removeUser(client, "LEAVE", true);
 	std::cout << client->getNickName() << " left channel " << channel->getName() << std::endl;
 	
 	if (channel->isOperator(client))

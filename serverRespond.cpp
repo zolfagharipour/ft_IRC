@@ -130,16 +130,12 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 
 		std::string partMessage = "PART #" + currentChannelName;
 		if (cmds.size() > 2) {
-			partMessage += " ";
-			for (size_t i = 2; i < cmds.size(); i++) {
-				if (i > 3)
-					partMessage += " ";
-				partMessage += cmds[i];
-			}
+			for (size_t i = 2; i < cmds.size(); i++)
+				partMessage += " " + cmds[i];
 		}
 
-		channel->_broadcast(partMessage, _clients[client]->getNickName(), true);
-		channel->removeUser(_clients[client]);
+		// channel->_broadcast(partMessage, _clients[client]->getNickName(), true);
+		channel->removeUser(_clients[client], partMessage, true);
 		
 		if (channel->getUsers().empty()) {
 			_channels.erase(currentChannelName);
@@ -148,10 +144,20 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	}
 }
 
-void	Server::_parser( std::vector<std::string> &cmds, int client ){
+void	Server::_quitResp( std::vector<std::string> &cmds, int client ){
+	std::string	respond = "QUIT";
+
+	for (size_t i = 1; i < cmds.size(); i++)
+		respond += " " + cmds[i];
+	if (cmds.size() == 1)
+		respond = "";
+	_removeClient(client, respond);
+}
+
+bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 	if (!_clients[client]->isAuthenticated()
 			&& cmds[0] != "CAP" && cmds[0] != "PASS"){
-		return ;
+		return true ;
 	}
 
 	if (cmds[0] == "CAP")
@@ -170,8 +176,12 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_joinResp(cmds, client);
 	else if (cmds[0] == "PART")
 		_partResp(cmds, client);
+	else if (cmds[0] == "QUIT"){
+		_quitResp(cmds, client);
+		return false;
+	}
+	return (true);
 }
-
 
 
 void	Server::_serverRespond( int client ){
@@ -180,10 +190,10 @@ void	Server::_serverRespond( int client ){
 	cmds = _clients[client]->getCommand();
 
 	while (cmds.size()){
-		_parser(cmds, client);
+		if (!_parser(cmds, client))
+			return;
 		_clients[client]->clearBuff();
 		cmds = _clients[client]->getCommand();
 	}
-	std::cout << std::endl;
 }
 

@@ -53,3 +53,6 @@ any comment starts with a slash
 >> (we send)
 & (we receive from client)
 /JOIN helloworld
+
+
+remove operator has to make new operator;
