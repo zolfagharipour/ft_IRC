@@ -23,8 +23,6 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		respond = respond + " :No topic is set\r\n";
 	else if (numeric == "332")
 		respond = respond + " :" + channelPtr->getTopic() + "\r\n";
-	else if (numeric == "409")
-		respond += " :No origin specified\r\n";
 	else if (numeric == "401")
 		respond += " :No such nick/channel\r\n";
 		// real nickname has to be added
@@ -32,6 +30,8 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		respond += " :No such channel\r\n";
 	else if (numeric == "404")
 		respond += " :Cannot send to channel\r\n"; 
+	else if (numeric == "409")
+		respond += " :No origin specified\r\n";
 	else if (numeric == "411")
 		respond += " :No recipient given (PRIVMSG)\r\n";
 	else if (numeric == "431")

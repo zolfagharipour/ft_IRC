@@ -7,7 +7,9 @@ Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
 Server::Server( int port ) : _port(port) { }
 
 Server::~Server(){
-	_closeFds();
+	for (size_t i = 0; i < _pollFd.size(); ++i)
+		close (_pollFd[i].fd);
+	_pollFd.clear();
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();) {
 		delete it->second;
 		it = _channels.erase(it);
@@ -15,6 +17,27 @@ Server::~Server(){
 	for (size_t i = 0; i < _clients.size(); i++) {
 		delete _clients[i];
 	}
+}
+
+const std::string	&Server::getName(){
+	return _serverName;
+}
+
+Client *Server::getClient( std::string clientName ){
+	std::vector<Client*>::iterator it = _clients.begin();
+	for (; it != _clients.end(); ++it){
+		if ((*it)->getNickName() == clientName)
+			return (*it);
+	}
+	return nullptr;
+}
+
+Channel *Server::getChannel( std::string channelName) {
+	auto it = _channels.find(channelName);
+	if (it != _channels.end())
+		return it->second;
+	else
+		return nullptr;
 }
 
 void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {
@@ -58,46 +81,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		channel->addOperator(client);
 }
 
-void	Server::leaveChannel(Client *client, const std::string &channelName) {
-	auto it = _channels.find(channelName);
-	if (it == _channels.end()) {
-		numericReply(client, "403", channelName);
-		return ;
-	}
 
-	Channel *channel = it->second;
-
-	if (!channel->isUserInChannel(client->getNickName())) {
-		numericReply(client, "442", channelName);
-		return ;
-	}
-	
-	channel->removeUser(client);
-	std::cout << client->getNickName() << " left channel " << channel->getName() << std::endl;
-	
-	if (channel->isOperator(client))
-		channel->removeOperator(client);
-	
-	/*check if new operator needed*/
-	if (!channel->getOperator() && !channel->getUsers().empty()) {
-		Client *nextClient = channel->getUsers().begin()->second;
-		channel->addOperator(nextClient);
-	}
-
-	if (channel->getUsers().empty()) {
-		delete channel;
-		_channels.erase(it);
-		std::cout << "Channel " << channelName << "has been deleted because it's now empty" << std::endl;
-	}
-}
-
-Channel *Server::getChannel( std::string channelName) {
-	auto it = _channels.find(channelName);
-	if (it != _channels.end())
-		return it->second;
-	else
-		return nullptr;
-}
 
 void	Server::addChannel(Channel *channel) {
 	_channels[channel->getName()] = channel;

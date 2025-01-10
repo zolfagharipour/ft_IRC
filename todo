@@ -55,3 +55,5 @@ any comment starts with a slash
 /JOIN helloworld
 
 make sure all places that should be broadcasted to are broadcasted to
+
+operator broadcast?

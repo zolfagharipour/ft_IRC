@@ -42,7 +42,7 @@ class Channel {
 
         //user management
         bool    addUser( Client *client);
-        void    removeUser( Client *client );
+        void    removeUser( Client *client, std::string message, bool selfEcho );
         bool    isUserInChannel( std::string &nickname );
 
         //OP MANAGEMENT

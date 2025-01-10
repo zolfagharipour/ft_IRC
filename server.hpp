@@ -27,16 +27,14 @@ private:
 
 	void		_clientRegister();
 	void		_clientCommunicate( size_t i );
-	void		_closeFds();
-	void		_removeClient( int client );
+	void		_removeClient( int client, std::string message );
 	
 	void		_SocketInit();
 	void		_serverRespond( int client );
 	void		_ServerLoop( int pollIndx );
-	void		_parser( std::vector<std::string> &cmds, int client );
+	bool		_parser( std::vector<std::string> &cmds, int client );
 	std::string& _nickLower( std::string& nick );
 	bool		_nickValidity( std::string& nick );
-
 
 	
 
@@ -51,11 +49,10 @@ private:
 	void	_partResp( std::vector<std::string> &cmds, int client );
 	void	_modeResp( std::vector<std::string> &cmds, int client );
 	void	_topicResp( std::vector<std::string> &cmds, int client );
-
+	void	_quitResp( std::vector<std::string> &cmds, int client );
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
-	// void	_broadcast( std::vector<std::string> &cmds, std::string chName, int client );
 
 public:
 	Server();
@@ -67,11 +64,13 @@ public:
 	void		signalMonitor();
 	static void	handler( int signum );
 
-	Channel *getChannel( std::string channelName);
+	Channel *getChannel( std::string channelName );
+	Client *getClient( std::string clientName );
+
+	const std::string	&getName();
 
 	//channel management
 	void		joinChannel( Client *client, const std::string &channelName, std::string key );
-	void		leaveChannel( Client *client, const std::string &channelName );
 	void		addChannel( Channel *);
 	void		addChannel( std::string name );
 
