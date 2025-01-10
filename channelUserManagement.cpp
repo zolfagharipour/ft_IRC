@@ -8,7 +8,7 @@ void    Channel::removeUser( Client *client, std::string message, bool selfEcho 
 		_broadcast(message, senderNick, selfEcho);
 
 	if (isOperator(client))
-		removeOperator(client);
+		removeOperator(client, "");
     _users.erase(senderNick);
 }
 

@@ -148,6 +148,9 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 	std::string channelName = cmds[1];
 
 	//get clear channel name
+	if (channelName[0] != '#')
+		return ;
+
 	if (!channelName.empty() && channelName[0] == '#')
 			channelName = channelName.substr(1);
 
@@ -211,7 +214,6 @@ void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
     }
 }
 
-void	Server::_parser( std::vector<std::string> &cmds, int client ){
 void	Server::_quitResp( std::vector<std::string> &cmds, int client ){
 	std::string	respond = "QUIT";
 
@@ -243,19 +245,15 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_joinResp(cmds, client);
 	else if (cmds[0] == "PART")
 		_partResp(cmds, client);
-<<<<<<< HEAD
 	else if (cmds[0] == "MODE")
 		_modeResp(cmds, client);
 	else if (cmds[0] == "TOPIC")
 		_topicResp(cmds, client);
-}
-=======
 	else if (cmds[0] == "QUIT"){
 		_quitResp(cmds, client);
 		return false;
 	}
 	// remove channel if empty in kickResp
->>>>>>> 838b403d6c5740163dd147b9cefffb28947f0d5e
 
 	return (true);
 }

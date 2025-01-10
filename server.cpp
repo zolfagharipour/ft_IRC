@@ -78,7 +78,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 
 	channel->addUser(client);
 	if (channel->getUsers().size() == 1)
-		channel->addOperator(client);
+		channel->addOperator(client, "");
 }
 
 

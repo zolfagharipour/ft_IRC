@@ -57,3 +57,5 @@ any comment starts with a slash
 make sure all places that should be broadcasted to are broadcasted to
 
 operator broadcast?
+what if op leaves singular op-ship on free will
+changeOperatorPrivilege:: fix if targetUser is not existent numeric reply will receive something nasty

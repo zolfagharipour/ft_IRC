@@ -44,6 +44,7 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		// real nickname has to be added
 	else if (numeric == "441")
 		respond += " :They aren't on that channel\r\n";
+		// real nickname has to be added
 	else if (numeric == "442")
 		respond += " :Your're not on that channel\r\n";
 	else if (numeric == "443")

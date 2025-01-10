@@ -93,6 +93,8 @@ const std::string &Channel::getTopic() {
 void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds ) {
 
     std::map<std::string, Client *>::iterator it;
+    std::map<std::string, Client *>::iterator it2;
+
 
     if (!hasPersmission(sourceClient)) {
         this->_server->numericReply(sourceClient, "482", this->_name);
@@ -101,6 +103,10 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
 
     for (size_t i = 3; i < cmds.size(); ++i) {
         std::string nickName = cmds[i];
+
+        if (!_server->getClient(nickName))
+            _server->numericReply(sourceClient, "401", "");
+        
         it = _users.find(nickName);
         if (it == _users.end()) {
             _server->numericReply(sourceClient, "441", this->_name);
@@ -110,14 +116,10 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
         std::string clientName = client->getNickName();
         std::string channelName = _name;
 
-        if (!isUserInChannel(client->getNickName())) {
-            _server->numericReply(client, "441", this->_name);
-            return ;
-        }
         if (give)
-            addOperator(client);
+            addOperator(client, sourceClient->getNickName());
         else if (!give)
-            removeOperator(client);
+            removeOperator(client, sourceClient->getNickName());
     }
 }
 
@@ -133,5 +135,4 @@ void    Channel::kickUser( Client *sourceClient, Client *targetClient ) {
     }
     this->removeUser(targetClient, "KICK", true);
     std::cout << targetClient->getNickName() << ": has been kicked from channel: " << this->getName() << std::endl;
-
 }
