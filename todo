@@ -53,3 +53,5 @@ any comment starts with a slash
 >> (we send)
 & (we receive from client)
 /JOIN helloworld
+
+make sure all places that should be broadcasted to are broadcasted to

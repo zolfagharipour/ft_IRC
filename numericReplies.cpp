@@ -19,7 +19,9 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 	// FUNCTIONPOINTER AND FOR-LOOP
 	if (numeric == "001")
 		respond += " :Welcome to the MyIrc\r\n";
-	if (numeric == "332" && channelPtr->getTopic() != "no topic set")
+	else if (numeric == "331")
+		respond = respond + " :No topic is set\r\n";
+	else if (numeric == "332")
 		respond = respond + " :" + channelPtr->getTopic() + "\r\n";
 	else if (numeric == "409")
 		respond += " :No origin specified\r\n";
@@ -40,6 +42,8 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 	else if (numeric == "433")
 		respond += " :Nickname is already in use\r\n";
 		// real nickname has to be added
+	else if (numeric == "441")
+		respond += " :They aren't on that channel\r\n";
 	else if (numeric == "442")
 		respond += " :Your're not on that channel\r\n";
 	else if (numeric == "443")
@@ -57,6 +61,8 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		respond += " :Cannot join channel (+i)\r\n";
 	else if (numeric == "475")
 		respond += " :Cannot join channel (+k)\r\n";
+	else if (numeric == "482")
+		respond += " :You're not a channel operator\r\n";
 
 	/*might be wrong*/
 	send(client->getFd(), respond.data(), respond.size(), 0);

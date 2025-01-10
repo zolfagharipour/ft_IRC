@@ -148,12 +148,79 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 	}
 }
 
+void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
+	Client *clientPtr = _clients[client];
+	std::string channelName = cmds[1];
+
+	//get clear channel name
+	if (!channelName.empty() && channelName[0] == '#')
+			channelName = channelName.substr(1);
+
+	//get channel pointer matched to name
+	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
+	if (it == _channels.end()) {
+		numericReply(_clients[client], "403", channelName);
+		return ;
+	}
+	Channel *channel = it->second;
+
+	if (cmds[2] == "+t")
+		channel->setTopicRestriction(clientPtr, true);
+	else if (cmds[2] == "-t")
+		channel->setTopicRestriction(clientPtr, false);
+	else if (cmds[2] == "+i")
+		channel->setInviteOnly(clientPtr, true);
+	else if (cmds[2] == "-i")
+		channel->setInviteOnly(clientPtr, true);
+	else if (cmds.size() > 3  && cmds[2] == "+k")
+		channel->setKey(clientPtr, cmds[3]);
+	else if (cmds[2] == "-k")
+		channel->removeKey(clientPtr);
+	else if (cmds[2] == "+o")
+		channel->changeOperatorPrivilege(clientPtr, true, cmds);
+	else if (cmds[2] == "-o")
+		channel->changeOperatorPrivilege(clientPtr, false, cmds);
+}
+
+void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
+	Client *clientPtr = _clients[client];
+	std::string channelName = cmds[1];
+
+	//get clear channel name
+	if (!channelName.empty() && channelName[0] == '#')
+			channelName = channelName.substr(1);
+
+	//get channel pointer matched to name
+	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
+	if (it == _channels.end()) {
+		numericReply(_clients[client], "403", channelName);
+		return ;
+	}
+	Channel *channel = it->second;
+	if (cmds.size() == 2) {
+		if (channel->getTopic().empty())
+			numericReply(clientPtr, "331", channelName);
+		else
+			numericReply(clientPtr, "332", channelName);
+	}
+	else {
+		std::string newTopic;
+		for (size_t i = 2; i < cmds.size(); ++i) {
+			if (i > 2)
+				newTopic += " ";
+			newTopic += cmds[i];
+		}
+		if (!newTopic.empty() && newTopic[0] == ':')
+			newTopic = newTopic.substr(1);
+		channel->setTopic(clientPtr, newTopic);
+    }
+}
+
 void	Server::_parser( std::vector<std::string> &cmds, int client ){
 	if (!_clients[client]->isAuthenticated()
 			&& cmds[0] != "CAP" && cmds[0] != "PASS"){
 		return ;
 	}
-
 	if (cmds[0] == "CAP")
 		_capResp(cmds, client);
 	else if(cmds[0] == "PASS")
@@ -170,6 +237,10 @@ void	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_joinResp(cmds, client);
 	else if (cmds[0] == "PART")
 		_partResp(cmds, client);
+	else if (cmds[0] == "MODE")
+		_modeResp(cmds, client);
+	else if (cmds[0] == "TOPIC")
+		_topicResp(cmds, client);
 }
 
 

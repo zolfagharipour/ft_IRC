@@ -49,6 +49,9 @@ private:
 	void	_privMsgResp( std::vector<std::string> &cmds, int client );
 	void	_joinResp( std::vector<std::string> &cmds, int client );
 	void	_partResp( std::vector<std::string> &cmds, int client );
+	void	_modeResp( std::vector<std::string> &cmds, int client );
+	void	_topicResp( std::vector<std::string> &cmds, int client );
+
 
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );

@@ -28,20 +28,3 @@ bool    Channel::hasPersmission(Client *client) {
     else
         return false;
 }
-
-void    Channel::setKey( Client *client, const std::string &key ) {
-    if ( !this->isUserInChannel(client->getNickName( )) ) {
-        std::cerr << client->getNickName() << ": is not in channel: " << this->getName() << std::endl;
-        return ;
-    }
-    
-    if ( !hasPersmission( client ) ) {
-        std::cerr << client->getNickName() << ": no permission to set/remove key in channel: " << this->getName() << std::endl;
-        return ;
-    }
-    this->_key = key;
-    if ( key.empty() )
-        std::cout << "The channel key for: " << this->getName() << " has been removed by " << client->getNickName() << std::endl;
-    else
-        std::cout << "The channel key for: " << this->getName() << " has been set by " << client->getNickName() << std::endl;
-}

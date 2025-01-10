@@ -21,8 +21,10 @@ bool    Channel::addUser( Client *client ) {
 	_users.insert(std::make_pair(client->getNickName(), client));
 
 	std::string	respond = "JOIN #" + getName();	
-	
+
 	_broadcast(respond, client->getNickName(), true);
-    // _users[client->getNickName()] = client;
+    if (!getTopic().empty())
+        _server->numericReply(client, "332", _name);
+
     return true ;
 }

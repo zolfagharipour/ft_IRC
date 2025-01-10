@@ -53,7 +53,6 @@ class Channel {
         bool    hasPersmission( Client *client );
         void    inviteUser( Client *sourceClient, Client *targetClient );
         void    addUserToChannel( Client *client, Client *targetClient );
-        void    setKey( Client *client, const std::string &key );
 
         //Mode
         void    setInviteOnly( Client *client, bool inviteOnly );
@@ -61,7 +60,10 @@ class Channel {
         void    setUserLimitRestriction(Client *client, bool status);
         void    setTopic( Client *client, const std::string &topic );
         void    setTopicRestriction( Client *client, bool status );
-        void    changeOperatorPrivilege( Client *sourceClient, Client *targetClient, bool give );
+        void    changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds );
+        void    setKey( Client *client, std::string key );
+        void    removeKey( Client *client );
+
 
         
         void    kickUser();

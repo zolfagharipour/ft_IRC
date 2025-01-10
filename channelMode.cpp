@@ -1,13 +1,18 @@
 #include "channel.hpp"
 
 void    Channel::setInviteOnly( Client *client, bool inviteOnly ) {
+    std::string clientName = client->getNickName();
+    std::string channelName = _name;
+
     if (!hasPersmission(client)){
-        std::cerr << client->getNickName() << ": no permission to change invite mode" << std::endl;
+        this->_server->numericReply(client, "482", this->_name);
         return ;
     }
     _inviteOnly = inviteOnly;
-    std::cout << "MODE: Invite only mode in channel " << this->getName() << " has been changed by OP" << std::endl;
-
+    if (inviteOnly)
+        _broadcast("MODE #" + channelName + " +i", clientName, true);
+    else
+        _broadcast("MODE #" + channelName + " -i", clientName, true);
 }
 
 void    Channel::setUserLimit( Client *client, int max) {
@@ -23,7 +28,7 @@ void    Channel::setUserLimit( Client *client, int max) {
     }
 }
 
-void    Channel::setUserLimitRestriction(Client *client, bool status) {
+void    Channel::setUserLimitRestriction( Client *client, bool status ) {
     if (!hasPersmission(client)){
         std::cerr << client->getNickName() << ": no permission to change userlimit restriction" << std::endl;
         return ;
@@ -32,57 +37,91 @@ void    Channel::setUserLimitRestriction(Client *client, bool status) {
     std::cout << "The userlimit restriction for channel " << this->getName() << " has been changed by OP" << std::endl;
 }
 
-void    Channel::setTopic(Client *client, const std::string &topic) {
+void    Channel::setTopic( Client *client, const std::string &topic ) {
     if (_topicRestricted && !hasPersmission(client)) {
-        std::cerr << client->getNickName() << ": no permission to change topic" << std::endl;
+        this->_server->numericReply(client, "482", this->_name);
         return ;
     }
     _topic = topic;
-    std::cout << "The topic for channel " << this->getName() << " has been changed by " << client->getNickName() << std::endl;
+    _broadcast("TOPIC #" + _name + " :" + topic, client->getNickName(), true);
 }
 
-void    Channel::setTopicRestriction(Client *client, bool status) {
-    if (!hasPersmission(client)){
-        std::cerr << client->getNickName() << " does not have permission to change topic restriction" << std::endl;
+void    Channel::setKey( Client *client, std::string key ) {
+    std::string clientName = client->getNickName();
+    std::string channelName = _name;
+
+    if (!hasPersmission(client)) {
+        this->_server->numericReply(client, "482", this->_name);
+        return ;
+    }
+    _key = key;
+    _broadcast("MODE #" + channelName + " +k", client->getNickName(), true);
+}
+
+void    Channel::removeKey( Client *client ) {
+    std::string clientName = client->getNickName();
+    std::string channelName = _name;
+
+    if (!hasPersmission(client)) {
+        this->_server->numericReply(client, "482", this->_name);
+        return ;
+    }
+    _key.clear();
+    _broadcast("MODE #" + channelName + " -k", client->getNickName(), true);
+}
+
+void    Channel::setTopicRestriction( Client *client, bool status ) {
+    std::string clientName = client->getNickName();
+    std::string channelName = _name;
+    
+    if (!hasPersmission(client)) {
+        this->_server->numericReply(client, "482", this->_name);
         return ;
     }
     _topicRestricted = status;
-    std::cout << "The topic restriction for channel " << this->getName() << " has been changed by OP" << std::endl;
+    if (status)
+        _broadcast("MODE #" + channelName + " +t", clientName, true);
+    else
+        _broadcast("MODE #" + channelName + " -t", clientName, true);
+    
 }
 
-
 const std::string &Channel::getTopic() {
-    static const std::string tp = "no topic set";
-    if (_topic.empty())
-        return tp;
     return _topic;
 }
 
-void    Channel::changeOperatorPrivilege(Client *sourceClient, Client *targetClient, bool give) {
+void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds ) {
+
+    std::map<std::string, Client *>::iterator it;
+
     if (!hasPersmission(sourceClient)) {
-        std::cerr << sourceClient->getNickName() << ": no permission to moddify operator priviledges in channel: " << this->getName() << std::endl;
+        this->_server->numericReply(sourceClient, "482", this->_name);
         return ;
     }
-    if (!this->isUserInChannel(targetClient->getNickName())) {
-        std::cerr << targetClient->getNickName() << " is not in channel: " << this->getName() << std::endl;
-        return ;
-    }
-    if (give) {
-        if (_operators.insert(targetClient).second)
-            std::cout << targetClient->getNickName() << " has been promoted to operator in channel: " << this->getName() << std::endl;
-        else
-            std::cout << targetClient->getNickName() << " is already operator in channel: " << this->getName() << std::endl;
-    }
-    else if (!give) {
-        if (this->isOperator(targetClient)) {
-            this->removeOperator(targetClient);
-            std::cout << targetClient->getNickName() << " has been demoted from operator in channel: " << this->getName() << std::endl;
+
+    for (size_t i = 3; i < cmds.size(); ++i) {
+        std::string nickName = cmds[i];
+        it = _users.find(nickName);
+        if (it == _users.end()) {
+            _server->numericReply(sourceClient, "441", this->_name);
+            continue ;
         }
-        else
-            std::cout << targetClient->getNickName() << " is no operator and cannot be demoted in channel: " << this->getName() << std::endl;
+        Client *client = it->second;
+        std::string clientName = client->getNickName();
+        std::string channelName = _name;
+
+        if (!isUserInChannel(client->getNickName())) {
+            _server->numericReply(client, "441", this->_name);
+            return ;
+        }
+        if (give)
+            addOperator(client);
+        else if (!give)
+            removeOperator(client);
     }
 }
 
+/*not mode, change file*/
 void    Channel::kickUser( Client *sourceClient, Client *targetClient ) {
     if (!hasPersmission(sourceClient)) {
         std::cerr << sourceClient->getNickName() << ": no permission to kick users from channel: " << this->getName() << std::endl;
