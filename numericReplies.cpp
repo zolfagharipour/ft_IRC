@@ -23,6 +23,9 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		respond = respond + " :No topic is set\r\n";
 	else if (numeric == "332")
 		respond = respond + " :" + channelPtr->getTopic() + "\r\n";
+	else if (numeric == "341")
+		respond = respond + " mz\r\n";
+		//real nick added at nick of invitee
 	else if (numeric == "401")
 		respond += " :No such nick/channel\r\n";
 		// real nickname has to be added

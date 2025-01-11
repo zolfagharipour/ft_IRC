@@ -16,6 +16,7 @@ class Channel {
         bool                            _topicRestricted;
         std::map<std::string, Client*>  _users; //key = nickname, value: client pointer
         std::set<Client *>              _operators;
+        std::set<std::string>              _guestList;
         bool                            _inviteOnly;
         int                             _userLimit;
         bool                            _userLimitRestricted;
@@ -43,6 +44,8 @@ class Channel {
         bool    addUser( Client *client);
         void    removeUser( Client *client, std::string message, bool selfEcho );
         bool    isUserInChannel( std::string &nickname );
+        bool    isGuestList(std::string &nickname);
+        void    removeFromGuestList(std::string nick);
 
         //OP MANAGEMENT
         void    addOperator( Client *client, std::string sourceName );
@@ -51,7 +54,6 @@ class Channel {
         bool    isOperator( Client *client );
         bool    hasPersmission( Client *client );
         void    inviteUser( Client *sourceClient, Client *targetClient );
-        void    addUserToChannel( Client *client, Client *targetClient );
 
         //Mode
         void    setInviteOnly( Client *client, bool inviteOnly );
@@ -63,18 +65,11 @@ class Channel {
         void    setKey( Client *client, std::string key );
         void    removeKey( Client *client );
 
-
-        
-        void    kickUser();
-        void    inviteUser();
-
         //debug
         void    printUsers();
 
-
 		// messaging
 		void	_broadcast( std::string message, std::string senderName, bool selfEcho );
-
     };
 
 #endif

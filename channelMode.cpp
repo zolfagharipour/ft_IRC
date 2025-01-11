@@ -40,7 +40,7 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
  
     _userLimit = limit;
     _userLimitRestricted = true;
-    _broadcast("MODE #" + channelName + " +l", clientName, true);
+    _broadcast("MODE #" + channelName + " +l " + std::to_string(limit), clientName, true);
 }
 
 void    Channel::removeUserLimit( Client *client ) {

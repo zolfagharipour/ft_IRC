@@ -160,28 +160,54 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 		numericReply(_clients[client], "403", channelName);
 		return ;
 	}
+
 	Channel *channel = it->second;
 
-	if (cmds[2] == "+t")
+	if (cmds[2] == "+t\0")
 		channel->setTopicRestriction(clientPtr, true);
-	else if (cmds[2] == "-t")
+	else if (cmds[2] == "-t\0")
 		channel->setTopicRestriction(clientPtr, false);
-	else if (cmds[2] == "+i")
+	else if (cmds[2] == "+i\0")
 		channel->setInviteOnly(clientPtr, true);
-	else if (cmds[2] == "-i")
+	else if (cmds[2] == "-i\0")
 		channel->setInviteOnly(clientPtr, true);
-	else if (cmds.size() > 3  && cmds[2] == "+k")
+	else if (cmds.size() > 3  && cmds[2] == "+k\0")
 		channel->setKey(clientPtr, cmds[3]);
-	else if (cmds[2] == "-k")
+	else if (cmds[2] == "-k\0")
 		channel->removeKey(clientPtr);
-	else if (cmds[2] == "+o")
+	else if (cmds[2] == "+o\0")
 		channel->changeOperatorPrivilege(clientPtr, true, cmds);
-	else if (cmds[2] == "-o")
+	else if (cmds[2] == "-o\0")
 		channel->changeOperatorPrivilege(clientPtr, false, cmds);
-	else if (cmds[2] == "+l")
+	else if (cmds[2] == "+l\0")
 		channel->setUserLimit(clientPtr, cmds);
-	else if (cmds[2] == "-l")
+	else if (cmds[2] == "-l\0")
 		channel->removeUserLimit(clientPtr);
+}
+
+void	Server::_inviteResp( std::vector<std::string> &cmds, int client ) {
+	Client *sourceClient = _clients[client];
+	std::string channelName = cmds[2];
+	std::string nickName = cmds[1];
+
+	if (!channelName.empty() && channelName[0] == '#')
+		channelName = channelName.substr(1);
+
+	std::map<std::string, Channel *>::iterator it = _channels.find(channelName);
+	if (it == _channels.end())  {
+        numericReply(sourceClient, "403", channelName);
+        return ;
+    }
+	
+	Channel *channel = it->second;
+	Client *targetClient = getClient(nickName);
+	
+	if (!targetClient) {
+        numericReply(sourceClient, "401", channelName);
+        return ;
+    }
+
+	channel->inviteUser(sourceClient, targetClient);
 }
 
 void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
@@ -237,6 +263,7 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 			&& cmds[0] != "CAP" && cmds[0] != "PASS"){
 		return true ;
 	}
+
 	if (cmds[0] == "CAP")
 		_capResp(cmds, client);
 	else if(cmds[0] == "PASS")
@@ -261,6 +288,8 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_quitResp(cmds, client);
 		return false;
 	}
+	else if (cmds[0] == "INVITE")
+		_inviteResp(cmds, client);
 	// remove channel if empty in kickResp
 
 	return (true);

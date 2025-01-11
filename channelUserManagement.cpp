@@ -19,6 +19,16 @@ bool    Channel::isUserInChannel(std::string &nickname) {
         return false;
 }
 
+bool    Channel::isGuestList(std::string &nickname) {
+    if (_guestList.find(nickname) != _guestList.end())
+        return true;
+    else
+        return false;
+}
+
+void    Channel::removeFromGuestList(std::string nick) {
+	_guestList.erase(nick);
+}
 
 bool    Channel::addUser( Client *client ) {
     if (_userLimitRestricted && _users.size() >= _userLimit) {

@@ -47,7 +47,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		numericReply(client, "403", channelName);
 
 	//does the channel exist?
-	auto it = this->_channels.find(channelName);
+	std::map<std::string, Channel *>::iterator it = this->_channels.find(channelName);
 	if (it != this->_channels.end())
 		channel = it->second;
 	else {
@@ -62,12 +62,12 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	}
 	
 	//invite only channel?
-	if (channel->getInviteOnly()) {
+	if (channel->getInviteOnly() && !channel->isGuestList(client->getNickName())) {
 		numericReply(client, "473", channelName);
 		return ;
 	}
 
-	if (!channel->getKey().empty() && key != channel->getKey()) {
+	if (!channel->getKey().empty() && key != channel->getKey() && !channel->isGuestList(client->getNickName())) {
         numericReply(client, "475", channelName );
 		return ;
     }
@@ -75,6 +75,8 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	if (!channel->addUser(client))
 		return ;
 
+	if (channel->isGuestList(client->getNickName()))
+		channel->removeFromGuestList(client->getNickName());
 	if (channel->getUsers().size() == 1)
 		channel->addOperator(client, "");
 }

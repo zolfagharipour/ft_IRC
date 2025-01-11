@@ -50,7 +50,7 @@ private:
 	void	_modeResp( std::vector<std::string> &cmds, int client );
 	void	_topicResp( std::vector<std::string> &cmds, int client );
 	void	_quitResp( std::vector<std::string> &cmds, int client );
-
+	void	_inviteResp( std::vector<std::string> &cmds, int client );
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
 
