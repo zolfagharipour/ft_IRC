@@ -178,6 +178,10 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 		channel->changeOperatorPrivilege(clientPtr, true, cmds);
 	else if (cmds[2] == "-o")
 		channel->changeOperatorPrivilege(clientPtr, false, cmds);
+	else if (cmds[2] == "+l")
+		channel->setUserLimit(clientPtr, cmds);
+	else if (cmds[2] == "-l")
+		channel->removeUserLimit(clientPtr);
 }
 
 void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
@@ -202,6 +206,10 @@ void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
 			numericReply(clientPtr, "332", channelName);
 	}
 	else {
+		if (!channel->isUserInChannel(clientPtr->getNickName())) {
+			numericReply(_clients[client], "442", channelName);
+			return ;
+		}
 		std::string newTopic;
 		for (size_t i = 2; i < cmds.size(); ++i) {
 			if (i > 2)

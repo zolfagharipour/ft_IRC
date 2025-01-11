@@ -57,26 +57,24 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 
 	//is client in channel?
 	if (channel->isUserInChannel(client->getNickName())) {
-		/*proper numeric reply error*/
 		numericReply(client, "443", channelName);
-		//is already in channel
 		return ;
 	}
 	
-	//can client join channel?
+	//invite only channel?
 	if (channel->getInviteOnly()) {
 		numericReply(client, "473", channelName);
-		//is invite only
 		return ;
 	}
 
 	if (!channel->getKey().empty() && key != channel->getKey()) {
         numericReply(client, "475", channelName );
 		return ;
-
     }
 
-	channel->addUser(client);
+	if (!channel->addUser(client))
+		return ;
+
 	if (channel->getUsers().size() == 1)
 		channel->addOperator(client, "");
 }

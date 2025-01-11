@@ -51,6 +51,10 @@ int Channel::getUserLimit( ) {
     return _userLimit;
 }
 
+bool Channel::getUserLimitStatus( ) {
+    return _userLimitRestricted;
+}
+
 const std::string Channel::getKey() {
     return _key;
 }

@@ -34,11 +34,10 @@ class Channel {
         const std::string                       &getTopic();
         bool                                    getInviteOnly();
         int                                     getUserLimit();
+        bool                                    getUserLimitStatus();
         Client                                  *getOperator();
         const std::map<std::string, Client*>    &getUsers();
         const std::string                       getKey( );
-
-
 
         //user management
         bool    addUser( Client *client);
@@ -56,8 +55,8 @@ class Channel {
 
         //Mode
         void    setInviteOnly( Client *client, bool inviteOnly );
-        void    setUserLimit( Client *client, int max );
-        void    setUserLimitRestriction(Client *client, bool status);
+        void    setUserLimit( Client *client, std::vector<std::string> &cmds );
+        void    removeUserLimit( Client *client );
         void    setTopic( Client *client, const std::string &topic );
         void    setTopicRestriction( Client *client, bool status );
         void    changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds );

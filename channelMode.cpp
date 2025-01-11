@@ -15,26 +15,45 @@ void    Channel::setInviteOnly( Client *client, bool inviteOnly ) {
         _broadcast("MODE #" + channelName + " -i", clientName, true);
 }
 
-void    Channel::setUserLimit( Client *client, int max) {
-    if (_userLimitRestricted && !hasPersmission(client)) {
-        std::cerr << client->getNickName() << " does not have permission to adjust user limit" << std::endl;
+void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) {
+    std::string clientName = client->getNickName();
+    std::string channelName = _name;
+
+    if (!hasPersmission(client)) {
+        _server->numericReply(client, "482", _name);
         return ;
     }
-    if (max >= 0 && max < _users.size())
-        std::cerr << "ERROR: user limit cannot be lower than current amount of users" << std::endl;
-    else {
-        std::cout << "User limit in channel " << this->getName() << " set to " << max << std::endl;
-        _userLimit = max;
+
+    if (cmds.size() < 4) {
+        _server->numericReply(client, "461", _name);
+        return ;
     }
+
+    int limit;
+    try {
+        limit = std::stoi(cmds[3]);
+        if (limit <= 0)
+            throw std::out_of_range("too small user limit");
+    } catch (const std::exception &e) {
+        return ;
+    }
+ 
+    _userLimit = limit;
+    _userLimitRestricted = true;
+    _broadcast("MODE #" + channelName + " +l", clientName, true);
 }
 
-void    Channel::setUserLimitRestriction( Client *client, bool status ) {
+void    Channel::removeUserLimit( Client *client ) {
+    std::string clientName = client->getNickName();
+    std::string channelName = _name;
+
     if (!hasPersmission(client)){
-        std::cerr << client->getNickName() << ": no permission to change userlimit restriction" << std::endl;
+        this->_server->numericReply(client, "482", this->_name);
         return ;
     }
-    _userLimitRestricted = status;
-    std::cout << "The userlimit restriction for channel " << this->getName() << " has been changed by OP" << std::endl;
+
+    _userLimitRestricted = false;
+    _broadcast("MODE #" + channelName + " -l", clientName, true);
 }
 
 void    Channel::setTopic( Client *client, const std::string &topic ) {
@@ -42,6 +61,9 @@ void    Channel::setTopic( Client *client, const std::string &topic ) {
         this->_server->numericReply(client, "482", this->_name);
         return ;
     }
+    if (_topic == topic)
+        return ;
+
     _topic = topic;
     _broadcast("TOPIC #" + _name + " :" + topic, client->getNickName(), true);
 }

@@ -51,13 +51,15 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		respond += " :is already on channel\r\n";
 	else if (numeric == "451")
 		respond += " :You have not registered\r\n";
-	//2 versions of 461 part && pricmsg
+	//2 versions of 461 part && pricmsg &&& user limit also needs 461
 	else if (numeric == "461")
-		respond += "PRIVMSG :Not enough parameters\r\n";
+		respond += ": PRIVMSG :Not enough parameters\r\n";
 	else if (numeric == "462")
 		respond += " :Unauthorized command (already registered)\r\n";
 	else if (numeric == "464")
 		respond += " :Password incorrect\r\n";
+	else if (numeric == "471")
+		respond += " :Cannot join channel (+l)\r\n";
 	else if (numeric == "473")
 		respond += " :Cannot join channel (+i)\r\n";
 	else if (numeric == "475")

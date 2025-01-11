@@ -59,3 +59,8 @@ make sure all places that should be broadcasted to are broadcasted to
 operator broadcast?
 what if op leaves singular op-ship on free will
 changeOperatorPrivilege:: fix if targetUser is not existent numeric reply will receive something nasty
+pw and user limit: numeric reply when not enough params
+- numeric reply when limit set to lower than users already in the channel
+- numeric reply when limit set invalid (e.g. -1)
+- check that the mode flags are really jsut that e.g. -l2 invalid
+- 461 not sent appropriately
