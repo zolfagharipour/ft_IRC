@@ -72,6 +72,7 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 	std::string channelName;
 
 	while (std::getline(ss, channelName, ',')) {
+		channelName = _lowerCase(channelName);
 		if (!channelName.empty() && channelName[0] == '#')
 			channelList.push_back(channelName.substr(1));
 	}
@@ -86,7 +87,10 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 	for (size_t i = 0; i < channelList.size(); ++i) {
 		std::string currentChannelname = channelList[i];
 		std::string key = (i < keyList.size()) ? keyList[i] : "";
-		joinChannel(_clients[client], currentChannelname, key);
+		if (!_channelNameValidity(currentChannelname))
+			numericReply(_clients[client], "479", currentChannelname);
+		else
+			joinChannel(_clients[client], currentChannelname, key);
 	}
 }
 
@@ -141,6 +145,32 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 			delete channel;
 		}
 	}
+}
+
+void	Server::_kickResp( std::vector<std::string> &cmds, int client ){
+	if (cmds.size() < 3){
+		numericReply(_clients[client], "461", "");
+		return ;
+	}
+	if (cmds[1][0] != '#')
+		return ;
+	Client*	kickedClient = getClient(cmds[2]);
+	if (!kickedClient){
+		numericReply(_clients[client], "401", "");
+		return ;
+	}
+
+	std::string	channelName = cmds[1].substr(1);
+	Channel*	channel = getChannel(channelName);
+	if (!channel){
+		numericReply(_clients[client], "403", channelName);
+		return ;
+	}
+	std::string reason;
+	for (size_t i = 3; i < cmds.size(); i++){
+		reason += " " + cmds[i];
+	}
+	channel->kickUser(_clients[client], kickedClient, reason);
 }
 
 void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
@@ -249,6 +279,8 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 		_modeResp(cmds, client);
 	else if (cmds[0] == "TOPIC")
 		_topicResp(cmds, client);
+	else if (cmds[0] == "KICK")
+		_kickResp(cmds, client);
 	else if (cmds[0] == "QUIT"){
 		_quitResp(cmds, client);
 		return false;

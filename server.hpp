@@ -33,8 +33,9 @@ private:
 	void		_serverRespond( int client );
 	void		_ServerLoop( int pollIndx );
 	bool		_parser( std::vector<std::string> &cmds, int client );
-	std::string& _nickLower( std::string& nick );
+	std::string& _lowerCase( std::string& nick );
 	bool		_nickValidity( std::string& nick );
+	bool		_channelNameValidity( std::string& channelName );
 
 	
 
@@ -49,6 +50,7 @@ private:
 	void	_partResp( std::vector<std::string> &cmds, int client );
 	void	_modeResp( std::vector<std::string> &cmds, int client );
 	void	_topicResp( std::vector<std::string> &cmds, int client );
+	void	_kickResp( std::vector<std::string> &cmds, int client );
 	void	_quitResp( std::vector<std::string> &cmds, int client );
 
 

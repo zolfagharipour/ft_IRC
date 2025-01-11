@@ -62,6 +62,8 @@ void	Server::numericReply( Client *client, std::string numeric, std::string chan
 		respond += " :Cannot join channel (+i)\r\n";
 	else if (numeric == "475")
 		respond += " :Cannot join channel (+k)\r\n";
+	else if (numeric == "479")
+		respond += " :Erroneous channel name\r\n";
 	else if (numeric == "482")
 		respond += " :You're not a channel operator\r\n";
 

@@ -101,3 +101,18 @@ void	Server::printChannels() {
     }
     std::cout << std::endl;
 }
+
+bool	Server::_channelNameValidity( std::string& channelName ){
+    if (channelName.empty() || channelName[0] == ':') {
+        return false;
+    }
+
+	for (size_t i = 1; i < channelName.size(); ++i) {
+        char c = channelName[i];
+        if (c == ' ' || c == ',' || c == '\0' || c == ':') {
+            return false;
+        }
+    }
+
+    return true;
+}

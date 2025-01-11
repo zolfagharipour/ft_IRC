@@ -43,11 +43,12 @@ class Channel {
         //user management
         bool    addUser( Client *client);
         void    removeUser( Client *client, std::string message, bool selfEcho );
+        void    removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho );
         bool    isUserInChannel( std::string &nickname );
 
         //OP MANAGEMENT
         void    addOperator( Client *client, std::string sourceName );
-        void    kickUser( Client *sourceClient, Client *targetClient );
+        void    kickUser( Client *sourceClient, Client *targetClient, std::string message );
         void    removeOperator( Client *client, std::string sourceName );
         bool    isOperator( Client *client );
         bool    hasPersmission( Client *client );
@@ -66,7 +67,6 @@ class Channel {
 
 
         
-        void    kickUser();
         void    inviteUser();
 
         //debug
