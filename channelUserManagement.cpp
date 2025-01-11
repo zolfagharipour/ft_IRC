@@ -12,6 +12,18 @@ void    Channel::removeUser( Client *client, std::string message, bool selfEcho 
     _users.erase(senderNick);
 }
 
+void    Channel::removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho ){
+
+	std::string	senderNick = kicker->getNickName();
+	if (!isUserInChannel(senderNick))
+		return ;
+	if (isOperator(toRemove))
+		removeOperator(toRemove, "");
+	if (message.size())
+		_broadcast(message, senderNick, selfEcho);
+    _users.erase(toRemove->getNickName());
+}
+
 bool    Channel::isUserInChannel(std::string &nickname) {
     if (_users.find(nickname) != _users.end())
         return true;

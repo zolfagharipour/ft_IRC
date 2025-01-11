@@ -38,7 +38,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 		channel->_broadcast(respond, _clients[client]->getNickName(), false);
 		return ;
 	}
-	std::string nick = _nickLower(cmds[1]);
+	std::string nick = _lowerCase(cmds[1]);
 	for (int i = 0; i < _clients.size(); i++){
 		if (_clients[i]->getNickName() == nick){
 			_sendMsg(cmds, client, i);

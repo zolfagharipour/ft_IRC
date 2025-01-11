@@ -146,15 +146,19 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
 }
 
 /*not mode, change file*/
-void    Channel::kickUser( Client *sourceClient, Client *targetClient ) {
-    if (!hasPersmission(sourceClient)) {
-        std::cerr << sourceClient->getNickName() << ": no permission to kick users from channel: " << this->getName() << std::endl;
-        return ;
+void    Channel::kickUser( Client *sourceClient, Client *targetClient, std::string message ) {
+    std::string	respond = "KICK #" + _name + " " + targetClient->getNickName();
+
+	if (!hasPersmission(sourceClient)) {
+        _server->numericReply(sourceClient, "482", _name);
+		return ;
     }
     if (!this->isUserInChannel(targetClient->getNickName())) {
-        std::cerr << targetClient->getNickName() << ": is not in channel: " << this->getName() << std::endl;
+        _server->numericReply(sourceClient, "441", _name);
         return ;
     }
-    this->removeUser(targetClient, "KICK", true);
-    std::cout << targetClient->getNickName() << ": has been kicked from channel: " << this->getName() << std::endl;
+	if (message.size())
+		respond += message;
+	// _broadcast(respond, sourceClient->getNickName(), true)
+    removeUser(targetClient, sourceClient, respond, true);
 }

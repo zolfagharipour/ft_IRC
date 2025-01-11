@@ -2,7 +2,7 @@
 #include "server.hpp"
 
 
-std::string	&Server::_nickLower( std::string& nick ){
+std::string	&Server::_lowerCase( std::string& nick ){
 	for (int i = 0; i < nick.size(); i++){
 		if ((nick[i] >= 'A' && nick[i] <= 'Z') || nick[i] == '[' || nick[i] == ']' || nick[i] == '\\')
 			nick[i] += 32;
@@ -40,7 +40,7 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 		// 	_removeClient(_clients[client].getFd());
 		return ;
 	}
-	nick = _nickLower(cmds[1]);
+	nick = _lowerCase(cmds[1]);
 	
 	for (int i = 0; i < _clients.size(); i++){
 		if (_clients[i]->getNickName() == nick){

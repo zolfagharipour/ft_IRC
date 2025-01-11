@@ -17,16 +17,9 @@ void	Server::_removeClient( int client, std::string message ) {
 			++it;
 	}
 
-	for (size_t i = 0; i < _pollFd.size(); i++) {
-		if (_pollFd[i].fd == _pollFd[client + 1].fd) {
-			_pollFd.erase(_pollFd.begin() + i);
-		}
-	}
-	for (size_t i = 0; i < _clients.size(); i++) {
-		if (_clients[i]->getFd() == _pollFd[client + 1].fd) {
-			close (_clients[i]->getFd());
-			delete _clients[i];
-			_clients.erase(_clients.begin() + i);
-		}
-	}
+	_pollFd.erase(_pollFd.begin() + client + 1);
+
+	close (_clients[client]->getFd());
+	delete _clients[client];
+	_clients.erase(_clients.begin() + client);
 }
