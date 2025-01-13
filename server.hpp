@@ -55,6 +55,7 @@ private:
 	void	_inviteResp( std::vector<std::string> &cmds, int client );
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
+	bool	_botActivation( std::vector<std::string> &cmds, int client, Channel& channel, std::string message );
 
 public:
 	Server();

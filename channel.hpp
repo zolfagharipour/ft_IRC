@@ -3,14 +3,18 @@
 
 #include "ft_irc.h"
 #include "client.hpp"
+#include "bot.hpp"
 #include "server.hpp"
 
 class Client;
 class Server;
+class Bot;
 
 class Channel {
     private:
 		Server*							_server;
+        Bot                             _bot;
+        bool                            _botActivated;
         std::string                     _name;
         std::string                     _topic;
         bool                            _topicRestricted;
@@ -36,17 +40,19 @@ class Channel {
         bool                                    getInviteOnly();
         int                                     getUserLimit();
         bool                                    getUserLimitStatus();
+        bool                                    isBotActivated();
         Client                                  *getOperator();
         const std::map<std::string, Client*>    &getUsers();
         const std::string                       getKey( );
+
 
         //user management
         bool    addUser( Client *client);
         void    removeUser( Client *client, std::string message, bool selfEcho );
         void    removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho );
         bool    isUserInChannel( std::string &nickname );
-        bool    isGuestList(std::string &nickname);
-        void    removeFromGuestList(std::string nick);
+        bool    isGuestList( std::string &nickname );
+        void    removeFromGuestList( std::string nick );
 
         //OP MANAGEMENT
         void    addOperator( Client *client, std::string sourceName );
@@ -71,6 +77,10 @@ class Channel {
 
 		// messaging
 		void	_broadcast( std::string message, std::string senderName, bool selfEcho );
+        
+        void    setBotActivation( bool status );
+        std::string censor( std::vector<std::string> &cmds );
+        bool        shallKick( std::string message );
     };
 
 #endif

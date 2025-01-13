@@ -13,6 +13,28 @@ void	Server::_sendMsg( std::vector<std::string> &cmds, int sender, int target ){
 	std::cout << "\n>> " << respond;
 }
 
+bool	Server::_botActivation( std::vector<std::string> &cmds, int client, Channel& channel, std::string message ){
+	std::string	respond;
+
+	if (message.find("activate bot") != std::string::npos){
+		if (!channel.isOperator(_clients[client])){
+			numericReply(_clients[client], "482", channel.getName());
+			return true;
+		}
+		if (message.find("deactivate bot") != std::string::npos){
+			channel.setBotActivation(false);
+			respond = " PRIVMSG #" + channel.getName() + " :Bot is not active on this channel";
+		}
+		else{
+			channel.setBotActivation(true);
+			respond = " PRIVMSG #" + channel.getName() + " :Bot is not active on this channel";
+		}
+		channel._broadcast(respond, "", true);
+		return true;
+	}
+	return false;
+}
+
 void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 	std::map<std::string, Channel*>::iterator 	it;
 	Channel		*channel;
@@ -31,11 +53,23 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 			numericReply(_clients[client], "403", chName);
 			return ;
 		}
-		respond =  " PRIVMSG #" + chName;
-		for (int i = 2; i < cmds.size(); i++){
-			respond += " " + cmds[i];
+		respond = " PRIVMSG #" + chName;
+		if (!channel->isBotActivated()){
+			for (int i = 2; i < cmds.size(); i++){
+				respond += " " + cmds[i];
+			}
 		}
-		channel->_broadcast(respond, _clients[client]->getNickName(), false);
+		else{
+			std::string afterCensor = channel->censor(cmds);
+			if (channel->shallKick(afterCensor)){
+				std::string	message = "PART #" + channel->getName() + " :Comrade has left the channel on his own will";
+				channel->removeUser(_clients[client], message, true);
+				return ;
+			}
+			respond += afterCensor;
+		}
+		if (!_botActivation(cmds, client, *channel, respond))
+			channel->_broadcast(respond, _clients[client]->getNickName(), false);
 		return ;
 	}
 	std::string nick = _lowerCase(cmds[1]);

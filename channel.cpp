@@ -2,7 +2,7 @@
 #include "server.hpp"
 
 Channel::Channel( const std::string &name, Server* server ) :
-		_name(name), _inviteOnly(false), _userLimit(-1), _topicRestricted(false), _server(server) {
+		_name(name), _inviteOnly(false), _userLimit(-1), _botActivated(false), _topicRestricted(false), _server(server) {
         _userLimitRestricted = false;
 }
 
@@ -55,6 +55,11 @@ bool Channel::getUserLimitStatus( ) {
     return _userLimitRestricted;
 }
 
+bool    Channel::isBotActivated(){
+    return _botActivated;
+}
+
+
 const std::string Channel::getKey() {
     return _key;
 }
@@ -101,6 +106,18 @@ void    Channel::inviteUser( Client *sourceClient, Client *targetClient ) {
 
     _server->numericReply(sourceClient, "341", _name);
 	_guestList.insert(targetClient->getNickName());
+}
+
+void    Channel::setBotActivation( bool status ){
+    _botActivated = status;
+}
+
+std::string    Channel::censor( std::vector<std::string> &cmds ){
+    return _bot.censor(cmds);
+}
+
+bool            Channel::shallKick( std::string message ){
+    return _bot.shallKick(message);
 }
 
 void    Channel::printUsers() {
