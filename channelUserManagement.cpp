@@ -44,7 +44,7 @@ void    Channel::removeFromGuestList(std::string nick) {
 
 bool    Channel::addUser( Client *client ) {
     if (_userLimitRestricted && _users.size() >= _userLimit) {
-        _server->numericReply(client, "471", this->_name);
+        _server->numericReply(client, "471", this->_name, "", "");
         return false ;
     }
 	_users.insert(std::make_pair(client->getNickName(), client));
@@ -53,7 +53,7 @@ bool    Channel::addUser( Client *client ) {
 
 	_broadcast(respond, client->getNickName(), true);
     if (!getTopic().empty())
-        _server->numericReply(client, "332", _name);
+        _server->numericReply(client, "332", _name, "", "");
 
     return true ;
 }

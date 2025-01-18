@@ -5,7 +5,7 @@ void    Channel::setInviteOnly( Client *client, bool inviteOnly ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)){
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _inviteOnly = inviteOnly;
@@ -20,12 +20,12 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
     std::string channelName = _name;
 
     if (!hasPersmission(client)) {
-        _server->numericReply(client, "482", _name);
+        _server->numericReply(client, "482", _name, "", "");
         return ;
     }
 
     if (cmds.size() < 4) {
-        _server->numericReply(client, "461", _name);
+        _server->numericReply(client, "461", _name, "MODE", "");
         return ;
     }
 
@@ -48,7 +48,7 @@ void    Channel::removeUserLimit( Client *client ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)){
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
 
@@ -58,7 +58,7 @@ void    Channel::removeUserLimit( Client *client ) {
 
 void    Channel::setTopic( Client *client, const std::string &topic ) {
     if (_topicRestricted && !hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     if (_topic == topic)
@@ -73,7 +73,7 @@ void    Channel::setKey( Client *client, std::string key ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _key = key;
@@ -85,7 +85,7 @@ void    Channel::removeKey( Client *client ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _key.clear();
@@ -97,7 +97,7 @@ void    Channel::setTopicRestriction( Client *client, bool status ) {
     std::string channelName = _name;
     
     if (!hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _topicRestricted = status;
@@ -119,7 +119,7 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
 
 
     if (!hasPersmission(sourceClient)) {
-        this->_server->numericReply(sourceClient, "482", this->_name);
+        this->_server->numericReply(sourceClient, "482", this->_name, "", "");
         return ;
     }
 
@@ -127,11 +127,11 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
         std::string nickName = cmds[i];
 
         if (!_server->getClient(nickName))
-            _server->numericReply(sourceClient, "401", "");
+            _server->numericReply(sourceClient, "401", "", "", nickName);
         
         it = _users.find(nickName);
         if (it == _users.end()) {
-            _server->numericReply(sourceClient, "441", this->_name);
+            _server->numericReply(sourceClient, "441", this->_name, "", nickName);
             continue ;
         }
         Client *client = it->second;
@@ -150,11 +150,11 @@ void    Channel::kickUser( Client *sourceClient, Client *targetClient, std::stri
     std::string	respond = "KICK #" + _name + " " + targetClient->getNickName();
 
 	if (!hasPersmission(sourceClient)) {
-        _server->numericReply(sourceClient, "482", _name);
+        _server->numericReply(sourceClient, "482", _name, "", "");
 		return ;
     }
     if (!this->isUserInChannel(targetClient->getNickName())) {
-        _server->numericReply(sourceClient, "441", _name);
+        _server->numericReply(sourceClient, "441", _name, "", targetClient->getNickName());
         return ;
     }
 	if (message.size())

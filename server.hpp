@@ -13,14 +13,15 @@ class Channel;
 class Server
 {
 private:
-	std::string							_serverName;
-	std::string							_password;
-	int									_serFd;
-	const int							_port;
-	static int							_signal;
-	std::vector<Client*>				_clients;
-	std::vector<struct pollfd>			_pollFd;
-	std::map<std::string, Channel *>	_channels; //map of channel name to channel
+	std::string									_serverName;
+	std::string									_password;
+	int											_serFd;
+	const int									_port;
+	static int									_signal;
+	std::vector<Client*>						_clients;
+	std::vector<struct pollfd>					_pollFd;
+	std::map<std::string, Channel *>			_channels; //map of channel name to channel
+	const std::map<std::string, std::string>	_numericResponse;
 	
 	/*constructor add*/
 	// std::set<Channel *>				_channels;
@@ -79,7 +80,7 @@ public:
 
 	//debug
 	void		printChannels();
-	void		numericReply( Client *client, std::string numeric, std::string channel );
+	void		numericReply( Client *client, std::string numeric, std::string channel, std::string command, std::string nickName );
 };
 
 #endif

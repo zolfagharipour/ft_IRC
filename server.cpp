@@ -2,9 +2,33 @@
 
 int Server::_signal = false;
 
-Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
-
-Server::Server( int port ) : _port(port) { }
+Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00")
+					, _numericResponse({
+		{"001", ":Welcome to the MyIrc"},
+		{"331", ":No topic is set"},
+		{"332", ":"},
+		{"341", ""},
+		{"401", " :No such nick/channel"},
+		{"403", ":No such channel"},
+		{"404", ":Cannot send to channel"},
+		{"409", ":No origin specified"},
+		{"411", ":No recipient given "},
+		{"431", ":No nickname given"},
+		{"432", " :Erroneous nickname"},
+		{"433", " :Nickname is already in use"},
+		{"441", ":They aren't on that channel"},
+		{"442", ":Your're not on that channel"},
+		{"443", ":is already on channel"},
+		{"451", ":You have not registered"},
+		{"461", " :Not enough parameters"},
+		{"462", ":Unauthorized command (already registered)"},
+		{"464", ":Password incorrect"},
+		{"471", ":Cannot join channel (+l)"},
+		{"473", ":Cannot join channel (+i)"},
+		{"475", ":Cannot join channel (+k)"},
+		{"479", ":Erroneous channel name"},
+		{"482", ":You're not a channel operator"},
+	}){ }
 
 Server::~Server(){
 	for (size_t i = 0; i < _pollFd.size(); ++i)
@@ -44,7 +68,7 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	Channel *channel;
 	
 	if (channelName.empty())
-		numericReply(client, "403", channelName);
+		numericReply(client, "403", channelName, "", "");
 
 	//does the channel exist?
 	std::map<std::string, Channel *>::iterator it = this->_channels.find(channelName);
@@ -57,18 +81,18 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 
 	//is client in channel?
 	if (channel->isUserInChannel(client->getNickName())) {
-		numericReply(client, "443", channelName);
+		numericReply(client, "443", channelName, "", client->getNickName());
 		return ;
 	}
 	
 	//invite only channel?
 	if (channel->getInviteOnly() && !channel->isGuestList(client->getNickName())) {
-		numericReply(client, "473", channelName);
+		numericReply(client, "473", channelName, "", "");
 		return ;
 	}
 
 	if (!channel->getKey().empty() && key != channel->getKey() && !channel->isGuestList(client->getNickName())) {
-        numericReply(client, "475", channelName );
+        numericReply(client, "475", channelName, "", "");
 		return ;
     }
 

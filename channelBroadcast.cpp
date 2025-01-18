@@ -14,7 +14,7 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 		respond = ":" + _server->getName();
 	}
 	else if (!isUserInChannel(senderNick)){
-		server.numericReply(_server->getClient(senderNick), "404", getName());
+		server.numericReply(_server->getClient(senderNick), "404", getName(), "", "");
 		return ;
 	}
 

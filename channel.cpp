@@ -76,23 +76,23 @@ Client *Channel::getOperator( ) {
 
 void    Channel::inviteUser( Client *sourceClient, Client *targetClient ) {
     if (_inviteOnly && !hasPersmission(sourceClient)) {
-        _server->numericReply(sourceClient, "482", _name);
+        _server->numericReply(sourceClient, "482", _name, "", "");
         return ;
     }
 
     if (!isUserInChannel(sourceClient->getNickName())) {
-        _server->numericReply(sourceClient, "442", _name);
+        _server->numericReply(sourceClient, "442", _name, "", "");
         return ;
     }
 
     if (isUserInChannel(targetClient->getNickName())) {
-        _server->numericReply(sourceClient, "443", _name);
+        _server->numericReply(sourceClient, "443", _name, "", targetClient->getNickName());
         return ;
     }
 
     //
     if (_userLimitRestricted && _users.size() >= _userLimit) {
-        _server->numericReply(sourceClient, "471", this->_name);
+        _server->numericReply(sourceClient, "471", this->_name, "", "");
         return ;
     }
 	// _users.insert(std::make_pair(targetClient->getNickName(), targetClient));
@@ -104,7 +104,7 @@ void    Channel::inviteUser( Client *sourceClient, Client *targetClient ) {
     send(targetClient->getFd(), respond.data(), respond.size(), 0);
     std::cout << "\n>> " << respond;
 
-    _server->numericReply(sourceClient, "341", _name);
+    _server->numericReply(sourceClient, "341", _name, "", targetClient->getNickName());
 	_guestList.insert(targetClient->getNickName());
 }
 
