@@ -28,7 +28,7 @@ Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00")
 		{"475", ":Cannot join channel (+k)"},
 		{"479", ":Erroneous channel name"},
 		{"482", ":You're not a channel operator"},
-	}){ }
+	}){}
 
 Server::~Server(){
 	for (size_t i = 0; i < _pollFd.size(); ++i)

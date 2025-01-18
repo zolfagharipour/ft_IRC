@@ -22,6 +22,9 @@ private:
 	std::vector<struct pollfd>					_pollFd;
 	std::map<std::string, Channel *>			_channels; //map of channel name to channel
 	const std::map<std::string, std::string>	_numericResponse;
+
+	typedef void (Server::*CommandHandler)( std::vector<std::string>& cmds, int client );
+    std::map<std::string, CommandHandler> _commandFn;
 	
 	/*constructor add*/
 	// std::set<Channel *>				_channels;
@@ -31,6 +34,7 @@ private:
 	void		_removeClient( int client, std::string message );
 	
 	void		_SocketInit();
+	void		_commandFnInit();
 	void		_serverRespond( int client );
 	void		_ServerLoop( int pollIndx );
 	bool		_parser( std::vector<std::string> &cmds, int client );

@@ -1,5 +1,22 @@
 #include "server.hpp"
 
+void	Server::_commandFnInit(){
+	_commandFn["CAP"] = &Server::_capResp;
+    _commandFn["PASS"] = &Server::_passResp;
+    _commandFn["NICK"] = &Server::_nickResp;
+    _commandFn["USER"] = &Server::_userResp;
+    _commandFn["PING"] = &Server::_pingResp;
+    _commandFn["PRIVMSG"] = &Server::_privMsgResp;
+    _commandFn["JOIN"] = &Server::_joinResp;
+    _commandFn["PART"] = &Server::_partResp;
+    _commandFn["MODE"] = &Server::_modeResp;
+    _commandFn["TOPIC"] = &Server::_topicResp;
+    _commandFn["KICK"] = &Server::_kickResp;
+    _commandFn["QUIT"] = &Server::_quitResp;
+    _commandFn["INVITE"] = &Server::_inviteResp;
+}
+
+
 void	Server::_SocketInit() {
 	
 	struct sockaddr_in	sockAdd;
@@ -72,6 +89,7 @@ void	Server::_ServerLoop( int pollIndx ) {
 
 void Server::ServerInit() {
 	_SocketInit();
+	_commandFnInit();
 
 	while (!_signal) {
 		_ServerLoop(-1);

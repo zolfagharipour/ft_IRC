@@ -293,38 +293,14 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 			&& cmds[0] != "CAP" && cmds[0] != "PASS"){
 		return true ;
 	}
-
-	if (cmds[0] == "CAP")
-		_capResp(cmds, client);
-	else if(cmds[0] == "PASS")
-		_passResp(cmds, client);
-	else if (cmds[0] == "NICK")
-		_nickResp(cmds, client);
-	else if (cmds[0] == "USER")
-		_userResp(cmds, client);
-	else if (cmds[0] == "PING")
-		_pingResp(cmds, client);
-	else if (cmds[0] == "PRIVMSG")
-		_privMsgResp(cmds, client);
-	else if (cmds[0] == "JOIN")
-		_joinResp(cmds, client);
-	else if (cmds[0] == "PART")
-		_partResp(cmds, client);
-	else if (cmds[0] == "MODE")
-		_modeResp(cmds, client);
-	else if (cmds[0] == "TOPIC")
-		_topicResp(cmds, client);
-	else if (cmds[0] == "KICK")
-		_kickResp(cmds, client);
-	else if (cmds[0] == "QUIT"){
-		_quitResp(cmds, client);
+	std::string command = cmds[0];
+	std::map<std::string, CommandHandler>::iterator it = _commandFn.find(cmds[0]);
+	if (it != _commandFn.end())
+		(this->*(it->second))(cmds, client);
+	
+	if (command == "QUIT")
 		return false;
-	}
-	else if (cmds[0] == "INVITE")
-		_inviteResp(cmds, client);
-	// remove channel if empty in kickResp
-
-	return (true);
+	return true;
 }
 
 
