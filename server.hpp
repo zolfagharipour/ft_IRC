@@ -20,29 +20,23 @@ private:
 	static int									_signal;
 	std::vector<Client*>						_clients;
 	std::vector<struct pollfd>					_pollFd;
-	std::map<std::string, Channel *>			_channels; //map of channel name to channel
+	std::map<std::string, Channel *>			_channels;
 	const std::map<std::string, std::string>	_numericResponse;
 
 	typedef void (Server::*CommandHandler)( std::vector<std::string>& cmds, int client );
     std::map<std::string, CommandHandler> _commandFn;
-	
-	/*constructor add*/
-	// std::set<Channel *>				_channels;
 
-	void		_clientRegister();
-	void		_clientCommunicate( size_t i );
-	void		_removeClient( int client, std::string message );
-	
-	void		_SocketInit();
-	void		_commandFnInit();
-	void		_serverRespond( int client );
-	void		_ServerLoop( int pollIndx );
-	bool		_parser( std::vector<std::string> &cmds, int client );
-	std::string& _lowerCase( std::string& nick );
-	bool		_nickValidity( std::string& nick );
-	bool		_channelNameValidity( std::string& channelName );
-
-	
+	void			_clientRegister( );
+	void			_clientCommunicate( size_t i );
+	void			_removeClient( int client, std::string message );
+	void			_SocketInit( );
+	void			_commandFnInit( );
+	void			_serverRespond( int client );
+	void			_ServerLoop( int pollIndx );
+	bool			_parser( std::vector<std::string> &cmds, int client );
+	std::string&	_lowerCase( std::string& nick );
+	bool			_nickValidity( std::string& nick );
+	bool			_channelNameValidity( std::string& channelName );
 
 	// RESPONDS
 	void	_capResp( std::vector<std::string> &cmds, int client );
@@ -63,27 +57,24 @@ private:
 	bool	_botActivation( std::vector<std::string> &cmds, int client, Channel& channel, std::string message );
 
 public:
-	Server();
+	Server( );
 	Server( int port );
-	~Server();
+	~Server( );
 	
-	void		ServerInit();
-
-	void		signalMonitor();
+	void		ServerInit( );
+	void		signalMonitor( );
 	static void	handler( int signum );
 
-	Channel *getChannel( std::string channelName );
-	Client *getClient( std::string clientName );
+	Channel 	*getChannel( std::string channelName );
+	Client		*getClient( std::string clientName );
 
-	const std::string	&getName();
+	const std::string	&getName( );
 
 	//channel management
 	void		joinChannel( Client *client, const std::string &channelName, std::string key );
 	void		addChannel( Channel *);
 	void		addChannel( std::string name );
 
-	//debug
-	void		printChannels();
 	void		numericReply( Client *client, std::string numeric, std::string channel, std::string command, std::string nickName );
 };
 

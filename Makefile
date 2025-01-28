@@ -3,8 +3,6 @@ INC			= 	ft_irc.h
 CXX			=	c++
 CXXFLAGS	=	-g#-Wall -Wextra -Werror -std=c++98
 
-
-# AR		=	ar rc
 RM		=	rm -f
 
 SRC		=	$(wildcard *.cpp) 

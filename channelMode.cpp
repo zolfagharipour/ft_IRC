@@ -18,6 +18,7 @@ void    Channel::setInviteOnly( Client *client, bool inviteOnly ) {
 void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) {
     std::string clientName = client->getNickName();
     std::string channelName = _name;
+    int 		limit;
 
     if (!hasPersmission(client)) {
         _server->numericReply(client, "482", _name, "", "");
@@ -29,7 +30,6 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
         return ;
     }
 
-    int limit;
     try {
         limit = std::stoi(cmds[3]);
         if (limit <= 0)
@@ -106,10 +106,6 @@ void    Channel::setTopicRestriction( Client *client, bool status ) {
     else
         _broadcast("MODE #" + channelName + " -t", clientName, true);
     
-}
-
-const std::string &Channel::getTopic() {
-    return _topic;
 }
 
 void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds ) {

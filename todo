@@ -1,3 +1,4 @@
+#include <algorithm>
 change member functions of client and channel to be in the correct place, e.g. join/leave channel in server class isntead of client class
 make sure server class holds ptr to clients and channels
 what happens with private messages - find out
@@ -68,3 +69,15 @@ pw and user limit: numeric reply when not enough params
 - add user return false in some cases, 
 - taken/granted op rights upon join or leaving channel broadcast?
 - invite multiple peple to multiple channels?
+
+
+
+------LAST CHANGES--------
+
+	-reduce insults
+	-delete IPadd from client
+	-arrange includes
+	-write the main with av
+	-compile with -Www
+
+	chanl mode +i

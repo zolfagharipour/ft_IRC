@@ -9,15 +9,15 @@ class Channel;
 class Client
 {
 	private:
-		int Fd;
-		std::string IPadd;		/*do we need the ip adress?*/
-		std::string	_nickName;
-		std::string	_userName;
-		std::string	_realName;
-		bool		_authenticated;
-		bool		_registered;
-		std::string	_buff;
+		int 						Fd;
+		std::string					IPadd;
+		std::string					_nickName;
+		std::string					_userName;
+		std::string					_realName;
+		std::string					_buff;
 		std::vector<std::string>	_vectorCMD;
+		bool						_authenticated;
+		bool						_registered;
 
 
 	public:

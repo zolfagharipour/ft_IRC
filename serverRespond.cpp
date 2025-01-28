@@ -18,7 +18,6 @@ void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 		return ;
 	}
 	numericReply(_clients[client], "464", "", "", "");
-	// _removeClient(_clients[client].getFd());
 }
 
 void	Server::_userResp( std::vector<std::string> &cmds, int client ){
@@ -67,7 +66,6 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 
 	std::vector<std::string> channelList;
 	std::vector<std::string> keyList;
-
 	std::stringstream ss(cmds[1]);
 	std::string channelName;
 
@@ -95,7 +93,6 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 }
 
 void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
-	
 	std::string nick = _clients[client]->getNickName();
 	std::vector<std::string> channels;
 	
@@ -175,7 +172,7 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 	Client *clientPtr = _clients[client];
 	std::string channelName = cmds[1];
 
-	if (channelName[0] != '#')
+	if (channelName[0] != '#' || cmds.size() < 3)
 		return ;
 
 	if (!channelName.empty() && channelName[0] == '#')
@@ -296,7 +293,6 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 		return false;
 	return true;
 }
-
 
 void	Server::_serverRespond( int client ){
 	std::vector<std::string>	cmds;

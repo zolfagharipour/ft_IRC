@@ -68,17 +68,15 @@ void	Server::_ServerLoop( int pollIndx ) {
 		_pollFd[i].events = POLLOUT;
 	}
 	if (poll(&_pollFd[i], loopEnd, timOut) < 0 && !_signal) {
-		// throw (std::runtime_error("poll() failed"));
+		throw (std::runtime_error("poll() failed"));
 		return ;
 	}
 	for (; i < loopEnd; i++) {
 		if (_pollFd[i].revents & POLLIN) {
-			if (_pollFd[i].fd == _serFd) {
+			if (_pollFd[i].fd == _serFd)
 				_clientRegister();
-			}
-			else {
+			else
 				_clientCommunicate(i);
-			}
 		}
 		if (_pollFd[i].revents & POLLOUT) {
 			_serverRespond(i - 1);

@@ -27,20 +27,20 @@ class Channel {
         std::string                     _key;
 
     public:
-        Channel() {};
+        Channel( ) {};
         Channel( const Channel& other );
         Channel(const std::string &name, Server* server );
         Channel& operator=( const Channel& other );
-        ~Channel();
+        ~Channel( );
 
-        const std::string                       &getName();
-        const std::string                       &getTopic();
-        bool                                    getInviteOnly();
-        int                                     getUserLimit();
-        bool                                    getUserLimitStatus();
-        bool                                    isBotActivated();
-        Client                                  *getOperator();
-        const std::map<std::string, Client*>    &getUsers();
+        const std::string                       &getName( );
+        const std::string                       &getTopic( );
+        bool                                    getInviteOnly( );
+        int                                     getUserLimit( );
+        bool                                    getUserLimitStatus( );
+        bool                                    isBotActivated( );
+        Client                                  *getOperator( );
+        const std::map<std::string, Client*>    &getUsers( );
         const std::string                       getKey( );
 
         //User management
@@ -68,9 +68,6 @@ class Channel {
         void    changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds );
         void    setKey( Client *client, std::string key );
         void    removeKey( Client *client );
-
-        //debug
-        void    printUsers();
 
 		// messaging
 		void	_broadcast( std::string message, std::string senderName, bool selfEcho );

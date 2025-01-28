@@ -106,21 +106,12 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 
 void	Server::addChannel( Channel *channel ) {
 	_channels[channel->getName()] = channel;
-	//added on server
 }
 
 void	Server::addChannel( std::string name ) {
 	Channel channel(name, this);
 	_channels[channel.getName()] = &channel;
 	std::cout << "Channel " << channel.getName() << " added on server" << std::endl;
-}
-
-void	Server::printChannels( ) {
-    std::cout << "Channels on the server:\t\t";
-    for (std::map<std::string, Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
-        std::cout << it->first << " ";// Print the nickname
-    }
-    std::cout << std::endl;
 }
 
 bool	Server::_channelNameValidity( std::string& channelName ){
@@ -134,6 +125,5 @@ bool	Server::_channelNameValidity( std::string& channelName ){
             return false;
         }
     }
-
     return true;
 }

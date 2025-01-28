@@ -30,14 +30,10 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 
 	if (cmds.size() < 2){
 		numericReply(_clients[client], "431", "", "", "");
-		// if (!_clients[client].isRegistered())
-		// 	_removeClient(_clients[client].getFd());
 		return ;
 	}
 	if (!_nickValidity(cmds[1])){
 		numericReply(_clients[client], "432", "", "", cmds[1]);
-		// if (!_clients[client].isRegistered())
-		// 	_removeClient(_clients[client].getFd());
 		return ;
 	}
 	nick = _lowerCase(cmds[1]);
@@ -45,8 +41,6 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 	for (int i = 0; i < _clients.size(); i++){
 		if (_clients[i]->getNickName() == nick){
 			numericReply(_clients[client], "433", "", "", nick);
-			// if (!_clients[client].isRegistered())
-			// 	_removeClient(_clients[client].getFd());
 			return ;
 		}
 	}

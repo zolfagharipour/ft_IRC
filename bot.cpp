@@ -109,8 +109,6 @@ bool	Bot::shallKick( std::string& message ){
 	return false;
 }
 
-
-
-Bot::~Bot()
+Bot::~Bot( )
 {
 }

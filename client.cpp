@@ -1,7 +1,5 @@
 #include "client.hpp"
 
-/*don't i need to initiate the _opStatus and _channel anyhow?*/
-
 Client::Client( ) : Fd (-1), _authenticated(false), _registered(false), _nickName("*") {};
 
 Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::string username) : Fd(fd), IPadd(ipAddress), _authenticated(false) {
@@ -28,12 +26,10 @@ Client&	Client::operator=( const Client& other ){
 	_vectorCMD = other._vectorCMD;
 	return *this;
 }
-/*destructor missing*/
 
 Client::~Client( ) {
     _vectorCMD.clear();
 }
-
 
 int Client::getFd( ) {
     return Fd;
