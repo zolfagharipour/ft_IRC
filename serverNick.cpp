@@ -3,7 +3,7 @@
 
 
 std::string	&Server::_lowerCase( std::string& nick ){
-	for (int i = 0; i < nick.size(); i++){
+	for (size_t i = 0; i < nick.size(); i++){
 		if ((nick[i] >= 'A' && nick[i] <= 'Z') || nick[i] == '[' || nick[i] == ']' || nick[i] == '\\')
 			nick[i] += 32;
 		else if (nick[i] == '~')
@@ -17,7 +17,7 @@ bool	Server::_nickValidity( std::string& nick ){
 
 	if (nick.size() > 9 || std::isdigit(nick[0]) || nick[0] == '-')
 		return 0;
-	for (int i = 0; i < nick.size(); i++){
+	for (size_t i = 0; i < nick.size(); i++){
 		if (!std::isalpha(nick[i]) && specialChr.find(nick[i]) == std::string::npos
 				&& nick[i] != '-')
 			return 0;
@@ -38,7 +38,7 @@ void	Server::_nickResp( std::vector<std::string> &cmds, int client ){
 	}
 	nick = _lowerCase(cmds[1]);
 	
-	for (int i = 0; i < _clients.size(); i++){
+	for (size_t i = 0; i < _clients.size(); i++){
 		if (_clients[i]->getNickName() == nick){
 			numericReply(_clients[client], "433", "", "", nick);
 			return ;

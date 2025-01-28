@@ -21,7 +21,7 @@ private:
 	std::vector<Client*>						_clients;
 	std::vector<struct pollfd>					_pollFd;
 	std::map<std::string, Channel *>			_channels;
-	const std::map<std::string, std::string>	_numericResponse;
+	std::map<std::string, std::string>			_numericResponse;
 
 	typedef void (Server::*CommandHandler)( std::vector<std::string>& cmds, int client );
     std::map<std::string, CommandHandler> _commandFn;
@@ -54,7 +54,7 @@ private:
 	void	_inviteResp( std::vector<std::string> &cmds, int client );
 
 	void	_sendMsg( std::vector<std::string> &cmds, int client, int sender );
-	bool	_botActivation( std::vector<std::string> &cmds, int client, Channel& channel, std::string message );
+	bool	_botActivation( int client, Channel& channel, std::string message );
 
 public:
 	Server( );

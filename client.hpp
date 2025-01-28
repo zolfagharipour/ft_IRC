@@ -10,7 +10,6 @@ class Client
 {
 	private:
 		int 						Fd;
-		std::string					IPadd;
 		std::string					_nickName;
 		std::string					_userName;
 		std::string					_realName;
@@ -23,7 +22,6 @@ class Client
 	public:
 		Client( );
 		Client( const Client& otehr );
-		Client( int fd, const std::string &ipAddress, std::string nickname, std::string username );
 		Client&	operator=( const Client& otehr );
 		~Client( );
 
@@ -35,7 +33,6 @@ class Client
 		bool		isRegistered( );
 
 		void 		setFd( int fd );
-		void 		setIpAdd( std::string ipadd );
 		void		setNickName( std::string nick );
 		void		setUserName( std::string nick );
 		void		setRealName( std::string nick );

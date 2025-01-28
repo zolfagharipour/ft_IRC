@@ -5,7 +5,7 @@ void	Server::_sendMsg( std::vector<std::string> &cmds, int sender, int target ){
 	std::string respond;
 
 	respond =  ":" + _clients[sender]->getNickName() + " PRIVMSG " + _clients[target]->getNickName();
-	for (int i = 2; i < cmds.size(); i++){
+	for (size_t i = 2; i < cmds.size(); i++){
 		respond += " " + cmds[i];
 	}
 	respond += "\r\n";
@@ -13,7 +13,7 @@ void	Server::_sendMsg( std::vector<std::string> &cmds, int sender, int target ){
 	std::cout << "\n>> " << respond;
 }
 
-bool	Server::_botActivation( std::vector<std::string> &cmds, int client, Channel& channel, std::string message ){
+bool	Server::_botActivation( int client, Channel& channel, std::string message ){
 	std::string	respond;
 
 	if (message.find("bot") != std::string::npos){
@@ -55,7 +55,7 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 		}
 		respond = " PRIVMSG #" + chName;
 		if (!channel->isBotActivated()){
-			for (int i = 2; i < cmds.size(); i++){
+			for (size_t i = 2; i < cmds.size(); i++){
 				respond += " " + cmds[i];
 			}
 		}
@@ -68,12 +68,12 @@ void	Server::_privMsgResp( std::vector<std::string> &cmds, int client ){
 			}
 			respond += afterCensor;
 		}
-		if (!_botActivation(cmds, client, *channel, respond))
+		if (!_botActivation(client, *channel, respond))
 			channel->_broadcast(respond, _clients[client]->getNickName(), false);
 		return ;
 	}
 	std::string nick = _lowerCase(cmds[1]);
-	for (int i = 0; i < _clients.size(); i++){
+	for (size_t i = 0; i < _clients.size(); i++){
 		if (_clients[i]->getNickName() == nick){
 			_sendMsg(cmds, client, i);
 			return ;

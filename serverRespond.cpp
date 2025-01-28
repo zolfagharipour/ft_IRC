@@ -34,7 +34,7 @@ void	Server::_userResp( std::vector<std::string> &cmds, int client ){
 	}
 
 	realName = cmds[4].substr(1);
-	for (int i = 5; i < cmds.size(); i++){
+	for (size_t i = 5; i < cmds.size(); i++){
 		realName += " " + cmds[i];
 	}
 	_clients[client]->setUserName(cmds[1]);

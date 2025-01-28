@@ -75,7 +75,7 @@ pw and user limit: numeric reply when not enough params
 ------LAST CHANGES--------
 
 	-reduce insults
-	-delete IPadd from client
+	-DONE: delete IPadd from client
 	-arrange includes
 	-write the main with av
 	-compile with -Www

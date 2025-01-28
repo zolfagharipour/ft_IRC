@@ -1,12 +1,6 @@
 #include "client.hpp"
 
-Client::Client( ) : Fd (-1), _authenticated(false), _registered(false), _nickName("*") {};
-
-Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::string username) : Fd(fd), IPadd(ipAddress), _authenticated(false) {
-    _userName = username;
-    _nickName = nickname;
-    std::cout << username << ": " << "client created! Username: " << _userName << " Nickname: " << _nickName << std::endl;
-}
+Client::Client( ) : Fd (-1), _nickName("*"), _authenticated(false), _registered(false) {};
 
 Client::Client( const Client& other ) {
 	*this = other;
@@ -16,7 +10,6 @@ Client&	Client::operator=( const Client& other ){
 	if (this == &other)
 		return (*this);
 	Fd = other.Fd;
-	IPadd = other.IPadd;
 	_nickName = other._nickName;
 	_userName = other._userName;
 	_realName = other._realName;
@@ -57,10 +50,6 @@ bool    Client::isRegistered( ) {
 
 void Client::setFd( int fd ){
     this->Fd = fd;
-}
-
-void Client::setIpAdd( std::string ipadd ){
-    IPadd = ipadd;
 }
 
 void    Client::setNickName( std::string nick ){

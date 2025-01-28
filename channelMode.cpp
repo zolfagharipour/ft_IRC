@@ -31,7 +31,8 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
     }
 
     try {
-        limit = std::stoi(cmds[3]);
+        limit = std::atoi(cmds[3].c_str());
+        // limit = std::stoi(cmds[3]);
         if (limit <= 0)
             throw std::out_of_range("too small user limit");
     } catch (const std::exception &e) {
@@ -40,7 +41,10 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
  
     _userLimit = limit;
     _userLimitRestricted = true;
-    _broadcast("MODE #" + channelName + " +l " + std::to_string(limit), clientName, true);
+
+    std::ostringstream oss;
+    oss << limit;
+    _broadcast("MODE #" + channelName + " +l " + oss.str(), clientName, true);
 }
 
 void    Channel::removeUserLimit( Client *client ) {

@@ -22,7 +22,7 @@ class Channel {
         std::set<Client *>              _operators;
         std::set<std::string>           _guestList;
         bool                            _inviteOnly;
-        int                             _userLimit;
+        size_t                          _userLimit;
         bool                            _userLimitRestricted;
         std::string                     _key;
 

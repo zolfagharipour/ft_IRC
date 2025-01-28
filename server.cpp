@@ -2,33 +2,62 @@
 
 int Server::_signal = false;
 
-Server::Server( ) : _port(6667), _serverName("irc.fzserver"), _password("00")
-					, _numericResponse({
-		{"001", ":Welcome to the MyIrc"},
-		{"331", ":No topic is set"},
-		{"332", ":"},
-		{"341", ""},
-		{"401", " :No such nick/channel"},
-		{"403", ":No such channel"},
-		{"404", ":Cannot send to channel"},
-		{"409", ":No origin specified"},
-		{"411", ":No recipient given "},
-		{"431", ":No nickname given"},
-		{"432", " :Erroneous nickname"},
-		{"433", " :Nickname is already in use"},
-		{"441", ":They aren't on that channel"},
-		{"442", ":Your're not on that channel"},
-		{"443", ":is already on channel"},
-		{"451", ":You have not registered"},
-		{"461", " :Not enough parameters"},
-		{"462", ":Unauthorized command (already registered)"},
-		{"464", ":Password incorrect"},
-		{"471", ":Cannot join channel (+l)"},
-		{"473", ":Cannot join channel (+i)"},
-		{"475", ":Cannot join channel (+k)"},
-		{"479", ":Erroneous channel name"},
-		{"482", ":You're not a channel operator"},
-	}){}
+Server::Server( ) : _serverName("irc.fzserver"), _password("00"), _port(6667) {
+		
+		_numericResponse["001"] = ":Welcome to the MyIrc";
+		_numericResponse["331"] = ":No topic is set";
+		_numericResponse["332"] = ":";
+		_numericResponse["341"] = "";
+		_numericResponse["401"] = " :No such nick/channel";
+		_numericResponse["403"] = ":No such channel";
+		_numericResponse["404"] = ":Cannot send to channel";
+		_numericResponse["409"] = ":No origin specified";
+		_numericResponse["411"] = ":No recipient given ";
+		_numericResponse["431"] = ":No nickname given";
+		_numericResponse["432"] = " :Erroneous nickname";
+		_numericResponse["433"] = " :Nickname is already in use";
+		_numericResponse["441"] = ":They aren't on that channel";
+		_numericResponse["442"] = ":Your're not on that channel";
+		_numericResponse["443"] = ":is already on channel";
+		_numericResponse["451"] = ":You have not registered";
+		_numericResponse["461"] = " :Not enough parameters";
+		_numericResponse["462"] = ":Unauthorized command (already registered)";
+		_numericResponse["464"] = ":Password incorrect";
+		_numericResponse["471"] = ":Cannot join channel (+l)";
+		_numericResponse["473"] = ":Cannot join channel (+i)";
+		_numericResponse["475"] = ":Cannot join channel (+k)";
+		_numericResponse["479"] = ":Erroneous channel name";
+		_numericResponse["482"] = ":You're not a channel operator";
+	}
+
+
+// Server::Server( ) : _serverName("irc.fzserver"), _password("00"), _port(6667),
+// 		_numericResponse({
+// 		{"001", ":Welcome to the MyIrc"},
+// 		{"331", ":No topic is set"},
+// 		{"332", ":"},
+// 		{"341", ""},
+// 		{"401", " :No such nick/channel"},
+// 		{"403", ":No such channel"},
+// 		{"404", ":Cannot send to channel"},
+// 		{"409", ":No origin specified"},
+// 		{"411", ":No recipient given "},
+// 		{"431", ":No nickname given"},
+// 		{"432", " :Erroneous nickname"},
+// 		{"433", " :Nickname is already in use"},
+// 		{"441", ":They aren't on that channel"},
+// 		{"442", ":Your're not on that channel"},
+// 		{"443", ":is already on channel"},
+// 		{"451", ":You have not registered"},
+// 		{"461", " :Not enough parameters"},
+// 		{"462", ":Unauthorized command (already registered)"},
+// 		{"464", ":Password incorrect"},
+// 		{"471", ":Cannot join channel (+l)"},
+// 		{"473", ":Cannot join channel (+i)"},
+// 		{"475", ":Cannot join channel (+k)"},
+// 		{"479", ":Erroneous channel name"},
+// 		{"482", ":You're not a channel operator"},
+// 	}){}
 
 Server::~Server( ){
 	for (size_t i = 0; i < _pollFd.size(); ++i)
@@ -36,7 +65,9 @@ Server::~Server( ){
 	_pollFd.clear();
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();) {
 		delete it->second;
-		it = _channels.erase(it);
+		std::map<std::string, Channel *>::iterator tmp = it;
+		++it;
+		_channels.erase(tmp);
 	}
 	for (size_t i = 0; i < _clients.size(); i++) {
 		delete _clients[i];
@@ -53,7 +84,7 @@ Client *Server::getClient( std::string clientName ){
 		if ((*it)->getNickName() == clientName)
 			return (*it);
 	}
-	return nullptr;
+	return NULL;
 }
 
 Channel *Server::getChannel( std::string channelName) {
@@ -61,7 +92,7 @@ Channel *Server::getChannel( std::string channelName) {
 	if (it != _channels.end())
 		return it->second;
 	else
-		return nullptr;
+		return NULL;
 }
 
 void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {

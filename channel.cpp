@@ -2,7 +2,7 @@
 #include "server.hpp"
 
 Channel::Channel( const std::string &name, Server* server ) :
-		_name(name), _inviteOnly(false), _userLimit(-1), _botActivated(false), _topicRestricted(false), _server(server) {
+		_server(server), _botActivated(false), _name(name), _topicRestricted(false), _inviteOnly(false), _userLimit(-1) {
         _userLimitRestricted = false;
 }
 
