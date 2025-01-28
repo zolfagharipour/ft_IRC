@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-void	Server::_clientRegister() {
+void	Server::_clientRegister( ) {
 	Client				*newClient = new Client();
 	struct pollfd       newPoll;
 	struct sockaddr_in	cliSock;
@@ -36,7 +36,7 @@ void	Server::_clientRegister() {
 	std::cout << "Client is registered" << std::endl;
 }
 
-void	Server::_clientCommunicate(size_t i) {
+void	Server::_clientCommunicate( size_t i ) {
 	char		buff[512];
 	int			bytesRead;
 

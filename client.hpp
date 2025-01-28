@@ -11,7 +11,6 @@ class Client
 	private:
 		int Fd;
 		std::string IPadd;		/*do we need the ip adress?*/
-
 		std::string	_nickName;
 		std::string	_userName;
 		std::string	_realName;
@@ -22,17 +21,18 @@ class Client
 
 
 	public:
-		Client();
+		Client( );
 		Client( const Client& otehr );
 		Client( int fd, const std::string &ipAddress, std::string nickname, std::string username );
 		Client&	operator=( const Client& otehr );
-		
-		int getFd();
-		std::string &getNickName();
-		std::string &getUserName();
-		std::string &getRealName();
-		bool		isAuthenticated();
-		bool		isRegistered();
+		~Client( );
+
+		int getFd( );
+		std::string &getNickName( );
+		std::string &getUserName( );
+		std::string &getRealName( );
+		bool		isAuthenticated( );
+		bool		isRegistered( );
 
 		void 		setFd( int fd );
 		void 		setIpAdd( std::string ipadd );

@@ -20,7 +20,7 @@ class Channel {
         bool                            _topicRestricted;
         std::map<std::string, Client*>  _users;
         std::set<Client *>              _operators;
-        std::set<std::string>              _guestList;
+        std::set<std::string>           _guestList;
         bool                            _inviteOnly;
         int                             _userLimit;
         bool                            _userLimitRestricted;
@@ -29,7 +29,6 @@ class Channel {
     public:
         Channel() {};
         Channel( const Channel& other );
-        //what initiated to? more arguments?
         Channel(const std::string &name, Server* server );
         Channel& operator=( const Channel& other );
         ~Channel();

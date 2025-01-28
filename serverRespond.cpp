@@ -106,7 +106,6 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 		return ;
 	}
 
-	//store channels that should be parted in a vector, get rid of #
 	std::string channelNames = cmds[1];
 	if (!channelNames.empty()) {
 		std::stringstream ss(channelNames);
@@ -118,7 +117,6 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 		}
 	}
 
-	//iteratre though all channels, separated by comma
 	for (size_t i = 0; i < channels.size(); ++i) {
 		std::string currentChannelName = channels[i];
 
@@ -177,14 +175,12 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 	Client *clientPtr = _clients[client];
 	std::string channelName = cmds[1];
 
-	//get clear channel name
 	if (channelName[0] != '#')
 		return ;
 
 	if (!channelName.empty() && channelName[0] == '#')
 			channelName = channelName.substr(1);
 
-	//get channel pointer matched to name
 	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
 	if (it == _channels.end()) {
 		numericReply(_clients[client], "403", channelName, "", "");
@@ -244,11 +240,9 @@ void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
 	Client *clientPtr = _clients[client];
 	std::string channelName = cmds[1];
 
-	//get clear channel name
 	if (!channelName.empty() && channelName[0] == '#')
 			channelName = channelName.substr(1);
 
-	//get channel pointer matched to name
 	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
 	if (it == _channels.end()) {
 		numericReply(_clients[client], "403", channelName, "", "");

@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-void	Server::_commandFnInit(){
+void	Server::_commandFnInit( ){
 	_commandFn["CAP"] = &Server::_capResp;
     _commandFn["PASS"] = &Server::_passResp;
     _commandFn["NICK"] = &Server::_nickResp;
@@ -17,7 +17,7 @@ void	Server::_commandFnInit(){
 }
 
 
-void	Server::_SocketInit() {
+void	Server::_SocketInit( ) {
 	
 	struct sockaddr_in	sockAdd;
 	struct pollfd       newPoll;
@@ -87,7 +87,7 @@ void	Server::_ServerLoop( int pollIndx ) {
 	}
 }
 
-void Server::ServerInit() {
+void Server::ServerInit( ) {
 	_SocketInit();
 	_commandFnInit();
 

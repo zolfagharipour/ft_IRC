@@ -2,7 +2,7 @@
 
 int Server::_signal = false;
 
-Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00")
+Server::Server( ) : _port(6667), _serverName("irc.fzserver"), _password("00")
 					, _numericResponse({
 		{"001", ":Welcome to the MyIrc"},
 		{"331", ":No topic is set"},
@@ -30,7 +30,7 @@ Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00")
 		{"482", ":You're not a channel operator"},
 	}){}
 
-Server::~Server(){
+Server::~Server( ){
 	for (size_t i = 0; i < _pollFd.size(); ++i)
 		close (_pollFd[i].fd);
 	_pollFd.clear();
@@ -43,7 +43,7 @@ Server::~Server(){
 	}
 }
 
-const std::string	&Server::getName(){
+const std::string	&Server::getName( ){
 	return _serverName;
 }
 
@@ -104,18 +104,18 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 
 
 
-void	Server::addChannel(Channel *channel) {
+void	Server::addChannel( Channel *channel ) {
 	_channels[channel->getName()] = channel;
 	//added on server
 }
 
-void	Server::addChannel(std::string name) {
+void	Server::addChannel( std::string name ) {
 	Channel channel(name, this);
 	_channels[channel.getName()] = &channel;
 	std::cout << "Channel " << channel.getName() << " added on server" << std::endl;
 }
 
-void	Server::printChannels() {
+void	Server::printChannels( ) {
     std::cout << "Channels on the server:\t\t";
     for (std::map<std::string, Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
         std::cout << it->first << " ";// Print the nickname

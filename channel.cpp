@@ -37,6 +37,7 @@ Channel& Channel::operator=(const Channel& other) {
 Channel::~Channel(){
 	_users.clear();
 	_operators.clear();
+	_guestList.clear();
 }
 
 const std::string&  Channel::getName( ){

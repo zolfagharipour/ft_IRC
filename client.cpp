@@ -2,7 +2,7 @@
 
 /*don't i need to initiate the _opStatus and _channel anyhow?*/
 
-Client::Client() : Fd (-1), _authenticated(false), _registered(false), _nickName("*") {};
+Client::Client( ) : Fd (-1), _authenticated(false), _registered(false), _nickName("*") {};
 
 Client::Client(int fd, const std::string &ipAddress, std::string nickname, std::string username) : Fd(fd), IPadd(ipAddress), _authenticated(false) {
     _userName = username;
@@ -30,35 +30,40 @@ Client&	Client::operator=( const Client& other ){
 }
 /*destructor missing*/
 
-int Client::getFd() {
+Client::~Client( ) {
+    _vectorCMD.clear();
+}
+
+
+int Client::getFd( ) {
     return Fd;
 }
 
-std::string &Client::getNickName() {
+std::string &Client::getNickName( ) {
     return _nickName;
 }
 
-std::string &Client::getUserName() {
+std::string &Client::getUserName( ) {
     return _userName;
 }
 
-std::string &Client::getRealName() {
+std::string &Client::getRealName( ) {
     return _realName;
 }
 
-bool    Client::isAuthenticated() {
+bool    Client::isAuthenticated( ) {
     return _authenticated;
 }
 
-bool    Client::isRegistered() {
+bool    Client::isRegistered( ) {
     return _registered; 
 }
 
-void Client::setFd(int fd){
+void Client::setFd( int fd ){
     this->Fd = fd;
 }
 
-void Client::setIpAdd(std::string ipadd){
+void Client::setIpAdd( std::string ipadd ){
     IPadd = ipadd;
 }
 
@@ -74,11 +79,11 @@ void    Client::setRealName( std::string name ){
     _realName = name;
 }
 
-void    Client::authenticate(){
+void    Client::authenticate( ){
     _authenticated = true;
 }
 
-void    Client::registered(){
+void    Client::registered( ){
     _registered = true;
 }
 
@@ -86,15 +91,15 @@ void		Client::addBuff( std::string buff ){
     _buff.append(buff);
 }
 
-std::string	    &Client::getBuff() {
+std::string	    &Client::getBuff( ) {
     return _buff;
 }
 
-void		Client::clearBuff(){
+void		Client::clearBuff( ){
     _vectorCMD.clear();
 }
 
-std::vector<std::string>	&Client::getCommand(){
+std::vector<std::string>	&Client::getCommand( ){
     std::string                 command;
     std::string                 word;
     std::istringstream          ss;
