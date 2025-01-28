@@ -57,8 +57,7 @@ private:
 	bool	_botActivation( int client, Channel& channel, std::string message );
 
 public:
-	Server( );
-	Server( int port );
+	Server( int port, std::string password );
 	~Server( );
 	
 	void		ServerInit( );

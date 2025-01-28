@@ -2,7 +2,7 @@
 
 int Server::_signal = false;
 
-Server::Server( ) : _serverName("irc.fzserver"), _password("00"), _port(6667) {
+Server::Server( int port, std::string password ) : _serverName("irc.fzserver"), _password(password), _port(port) {
 		
 		_numericResponse["001"] = ":Welcome to the MyIrc";
 		_numericResponse["331"] = ":No topic is set";
@@ -29,35 +29,6 @@ Server::Server( ) : _serverName("irc.fzserver"), _password("00"), _port(6667) {
 		_numericResponse["479"] = ":Erroneous channel name";
 		_numericResponse["482"] = ":You're not a channel operator";
 	}
-
-
-// Server::Server( ) : _serverName("irc.fzserver"), _password("00"), _port(6667),
-// 		_numericResponse({
-// 		{"001", ":Welcome to the MyIrc"},
-// 		{"331", ":No topic is set"},
-// 		{"332", ":"},
-// 		{"341", ""},
-// 		{"401", " :No such nick/channel"},
-// 		{"403", ":No such channel"},
-// 		{"404", ":Cannot send to channel"},
-// 		{"409", ":No origin specified"},
-// 		{"411", ":No recipient given "},
-// 		{"431", ":No nickname given"},
-// 		{"432", " :Erroneous nickname"},
-// 		{"433", " :Nickname is already in use"},
-// 		{"441", ":They aren't on that channel"},
-// 		{"442", ":Your're not on that channel"},
-// 		{"443", ":is already on channel"},
-// 		{"451", ":You have not registered"},
-// 		{"461", " :Not enough parameters"},
-// 		{"462", ":Unauthorized command (already registered)"},
-// 		{"464", ":Password incorrect"},
-// 		{"471", ":Cannot join channel (+l)"},
-// 		{"473", ":Cannot join channel (+i)"},
-// 		{"475", ":Cannot join channel (+k)"},
-// 		{"479", ":Erroneous channel name"},
-// 		{"482", ":You're not a channel operator"},
-// 	}){}
 
 Server::~Server( ){
 	for (size_t i = 0; i < _pollFd.size(); ++i)

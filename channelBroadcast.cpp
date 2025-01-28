@@ -4,7 +4,6 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 	std::map<std::string, Client*>::iterator it = _users.find(senderNick);
 	std::string		respond;
 	Client			*sender;
-	Server			server;
 	
 	if (it != _users.end()){
 		sender = it->second;
@@ -14,7 +13,7 @@ void	Channel::_broadcast( std::string message, std::string senderNick, bool self
 		respond = ":" + _server->getName();
 	}
 	else if (!isUserInChannel(senderNick)){
-		server.numericReply(_server->getClient(senderNick), "404", getName(), "", "");
+		_server->numericReply(_server->getClient(senderNick), "404", getName(), "", "");
 		return ;
 	}
 
