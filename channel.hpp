@@ -18,7 +18,7 @@ class Channel {
         std::string                     _name;
         std::string                     _topic;
         bool                            _topicRestricted;
-        std::map<std::string, Client*>  _users; //key = nickname, value: client pointer
+        std::map<std::string, Client*>  _users;
         std::set<Client *>              _operators;
         std::set<std::string>              _guestList;
         bool                            _inviteOnly;
@@ -34,7 +34,6 @@ class Channel {
         Channel& operator=( const Channel& other );
         ~Channel();
 
-        //getters
         const std::string                       &getName();
         const std::string                       &getTopic();
         bool                                    getInviteOnly();
@@ -45,8 +44,7 @@ class Channel {
         const std::map<std::string, Client*>    &getUsers();
         const std::string                       getKey( );
 
-
-        //user management
+        //User management
         bool    addUser( Client *client);
         void    removeUser( Client *client, std::string message, bool selfEcho );
         void    removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho );

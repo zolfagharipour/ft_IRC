@@ -57,3 +57,20 @@ bool    Channel::addUser( Client *client ) {
 
     return true ;
 }
+
+void    Channel::kickUser( Client *sourceClient, Client *targetClient, std::string message ) {
+    std::string	respond = "KICK #" + _name + " " + targetClient->getNickName();
+
+	if (!hasPersmission(sourceClient)) {
+        _server->numericReply(sourceClient, "482", _name, "", "");
+		return ;
+    }
+    if (!this->isUserInChannel(targetClient->getNickName())) {
+        _server->numericReply(sourceClient, "441", _name, "", targetClient->getNickName());
+        return ;
+    }
+	if (message.size())
+		respond += message;
+	// _broadcast(respond, sourceClient->getNickName(), true)
+    removeUser(targetClient, sourceClient, respond, true);
+}

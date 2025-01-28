@@ -106,7 +106,6 @@ std::vector<std::string>	&Client::getCommand(){
     if (pos != std::string::npos){
         command = _buff.substr(0, pos);
         std::istringstream          ss(command);
-        // _vectorCMD.clear();
         while (ss >> word){
             _vectorCMD.push_back(word);
         }

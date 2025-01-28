@@ -90,13 +90,11 @@ void    Channel::inviteUser( Client *sourceClient, Client *targetClient ) {
         return ;
     }
 
-    //
     if (_userLimitRestricted && _users.size() >= _userLimit) {
         _server->numericReply(sourceClient, "471", this->_name, "", "");
         return ;
-    }
-	// _users.insert(std::make_pair(targetClient->getNickName(), targetClient));
-	
+    }	
+    
     std::string		respond;
     respond = ":" + sourceClient->getNickName() + "!" + sourceClient->getUserName();
     respond += " INVITE " + targetClient->getNickName() + " :#" + getName();
