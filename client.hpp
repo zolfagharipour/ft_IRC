@@ -10,8 +10,8 @@ class Client
 {
 	private:
 		int Fd;
-		/*do we need the ip adress?*/
-		std::string IPadd;
+		std::string IPadd;		/*do we need the ip adress?*/
+
 		std::string	_nickName;
 		std::string	_userName;
 		std::string	_realName;

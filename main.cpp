@@ -1,8 +1,6 @@
 #include "ft_irc.h"
 #include "server.hpp"
 
-
-
 int	main(){
     try {
         Server server;

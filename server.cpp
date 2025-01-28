@@ -57,7 +57,7 @@ Client *Server::getClient( std::string clientName ){
 }
 
 Channel *Server::getChannel( std::string channelName) {
-	auto it = _channels.find(channelName);
+	std::map<std::string, Channel *>::iterator it = _channels.find(channelName);
 	if (it != _channels.end())
 		return it->second;
 	else
@@ -70,7 +70,6 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 	if (channelName.empty())
 		numericReply(client, "403", channelName, "", "");
 
-	//does the channel exist?
 	std::map<std::string, Channel *>::iterator it = this->_channels.find(channelName);
 	if (it != this->_channels.end())
 		channel = it->second;
@@ -79,13 +78,11 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		_channels.insert(std::make_pair(channelName, channel));
 	}
 
-	//is client in channel?
 	if (channel->isUserInChannel(client->getNickName())) {
 		numericReply(client, "443", channelName, "", client->getNickName());
 		return ;
 	}
 	
-	//invite only channel?
 	if (channel->getInviteOnly() && !channel->isGuestList(client->getNickName())) {
 		numericReply(client, "473", channelName, "", "");
 		return ;
