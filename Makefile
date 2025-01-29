@@ -1,4 +1,4 @@
-NAME		=	IRC
+NAME		=	ircserv
 INC			= 	ft_irc.h
 CXX			=	c++
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
