@@ -2,24 +2,50 @@
 
 int Server::_signal = false;
 
-Server::Server() : _port(6667), _serverName("irc.fzserver"), _password("00"){ }
+Server::Server( int port, std::string password ) : _serverName("irc.fzserver"), _password(password), _port(port) {
+		
+		_numericResponse["001"] = ":Welcome to the MyIrc";
+		_numericResponse["331"] = ":No topic is set";
+		_numericResponse["332"] = ":";
+		_numericResponse["341"] = "";
+		_numericResponse["401"] = " :No such nick/channel";
+		_numericResponse["403"] = ":No such channel";
+		_numericResponse["404"] = ":Cannot send to channel";
+		_numericResponse["409"] = ":No origin specified";
+		_numericResponse["411"] = ":No recipient given ";
+		_numericResponse["431"] = ":No nickname given";
+		_numericResponse["432"] = " :Erroneous nickname";
+		_numericResponse["433"] = " :Nickname is already in use";
+		_numericResponse["441"] = ":They aren't on that channel";
+		_numericResponse["442"] = ":Your're not on that channel";
+		_numericResponse["443"] = ":is already on channel";
+		_numericResponse["451"] = ":You have not registered";
+		_numericResponse["461"] = " :Not enough parameters";
+		_numericResponse["462"] = ":Unauthorized command (already registered)";
+		_numericResponse["464"] = ":Password incorrect";
+		_numericResponse["471"] = ":Cannot join channel (+l)";
+		_numericResponse["473"] = ":Cannot join channel (+i)";
+		_numericResponse["475"] = ":Cannot join channel (+k)";
+		_numericResponse["479"] = ":Erroneous channel name";
+		_numericResponse["482"] = ":You're not a channel operator";
+	}
 
-Server::Server( int port ) : _port(port) { }
-
-Server::~Server(){
+Server::~Server( ){
 	for (size_t i = 0; i < _pollFd.size(); ++i)
 		close (_pollFd[i].fd);
 	_pollFd.clear();
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();) {
 		delete it->second;
-		it = _channels.erase(it);
+		std::map<std::string, Channel *>::iterator tmp = it;
+		++it;
+		_channels.erase(tmp);
 	}
 	for (size_t i = 0; i < _clients.size(); i++) {
 		delete _clients[i];
 	}
 }
 
-const std::string	&Server::getName(){
+const std::string	&Server::getName( ){
 	return _serverName;
 }
 
@@ -29,24 +55,23 @@ Client *Server::getClient( std::string clientName ){
 		if ((*it)->getNickName() == clientName)
 			return (*it);
 	}
-	return nullptr;
+	return NULL;
 }
 
 Channel *Server::getChannel( std::string channelName) {
-	auto it = _channels.find(channelName);
+	std::map<std::string, Channel *>::iterator it = _channels.find(channelName);
 	if (it != _channels.end())
 		return it->second;
 	else
-		return nullptr;
+		return NULL;
 }
 
 void	Server::joinChannel( Client *client, const std::string &channelName, std::string key ) {
 	Channel *channel;
 	
 	if (channelName.empty())
-		numericReply(client, "403", channelName);
+		numericReply(client, "403", channelName, "", "");
 
-	//does the channel exist?
 	std::map<std::string, Channel *>::iterator it = this->_channels.find(channelName);
 	if (it != this->_channels.end())
 		channel = it->second;
@@ -55,20 +80,18 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 		_channels.insert(std::make_pair(channelName, channel));
 	}
 
-	//is client in channel?
 	if (channel->isUserInChannel(client->getNickName())) {
-		numericReply(client, "443", channelName);
+		numericReply(client, "443", channelName, "", client->getNickName());
 		return ;
 	}
 	
-	//invite only channel?
 	if (channel->getInviteOnly() && !channel->isGuestList(client->getNickName())) {
-		numericReply(client, "473", channelName);
+		numericReply(client, "473", channelName, "", "");
 		return ;
 	}
 
 	if (!channel->getKey().empty() && key != channel->getKey() && !channel->isGuestList(client->getNickName())) {
-        numericReply(client, "475", channelName );
+        numericReply(client, "475", channelName, "", "");
 		return ;
     }
 
@@ -83,23 +106,14 @@ void	Server::joinChannel( Client *client, const std::string &channelName, std::s
 
 
 
-void	Server::addChannel(Channel *channel) {
+void	Server::addChannel( Channel *channel ) {
 	_channels[channel->getName()] = channel;
-	//added on server
 }
 
-void	Server::addChannel(std::string name) {
+void	Server::addChannel( std::string name ) {
 	Channel channel(name, this);
 	_channels[channel.getName()] = &channel;
 	std::cout << "Channel " << channel.getName() << " added on server" << std::endl;
-}
-
-void	Server::printChannels() {
-    std::cout << "Channels on the server:\t\t";
-    for (std::map<std::string, Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
-        std::cout << it->first << " ";// Print the nickname
-    }
-    std::cout << std::endl;
 }
 
 bool	Server::_channelNameValidity( std::string& channelName ){
@@ -113,6 +127,5 @@ bool	Server::_channelNameValidity( std::string& channelName ){
             return false;
         }
     }
-
     return true;
 }

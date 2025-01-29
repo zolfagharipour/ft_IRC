@@ -5,7 +5,7 @@ void    Channel::setInviteOnly( Client *client, bool inviteOnly ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)){
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _inviteOnly = inviteOnly;
@@ -18,20 +18,21 @@ void    Channel::setInviteOnly( Client *client, bool inviteOnly ) {
 void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) {
     std::string clientName = client->getNickName();
     std::string channelName = _name;
+    int 		limit;
 
     if (!hasPersmission(client)) {
-        _server->numericReply(client, "482", _name);
+        _server->numericReply(client, "482", _name, "", "");
         return ;
     }
 
     if (cmds.size() < 4) {
-        _server->numericReply(client, "461", _name);
+        _server->numericReply(client, "461", _name, "MODE", "");
         return ;
     }
 
-    int limit;
     try {
-        limit = std::stoi(cmds[3]);
+        limit = std::atoi(cmds[3].c_str());
+        // limit = std::stoi(cmds[3]);
         if (limit <= 0)
             throw std::out_of_range("too small user limit");
     } catch (const std::exception &e) {
@@ -40,7 +41,10 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
  
     _userLimit = limit;
     _userLimitRestricted = true;
-    _broadcast("MODE #" + channelName + " +l " + std::to_string(limit), clientName, true);
+
+    std::ostringstream oss;
+    oss << limit;
+    _broadcast("MODE #" + channelName + " +l " + oss.str(), clientName, true);
 }
 
 void    Channel::removeUserLimit( Client *client ) {
@@ -48,7 +52,7 @@ void    Channel::removeUserLimit( Client *client ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)){
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
 
@@ -58,7 +62,7 @@ void    Channel::removeUserLimit( Client *client ) {
 
 void    Channel::setTopic( Client *client, const std::string &topic ) {
     if (_topicRestricted && !hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     if (_topic == topic)
@@ -73,7 +77,7 @@ void    Channel::setKey( Client *client, std::string key ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _key = key;
@@ -85,7 +89,7 @@ void    Channel::removeKey( Client *client ) {
     std::string channelName = _name;
 
     if (!hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _key.clear();
@@ -97,7 +101,7 @@ void    Channel::setTopicRestriction( Client *client, bool status ) {
     std::string channelName = _name;
     
     if (!hasPersmission(client)) {
-        this->_server->numericReply(client, "482", this->_name);
+        this->_server->numericReply(client, "482", this->_name, "", "");
         return ;
     }
     _topicRestricted = status;
@@ -108,10 +112,6 @@ void    Channel::setTopicRestriction( Client *client, bool status ) {
     
 }
 
-const std::string &Channel::getTopic() {
-    return _topic;
-}
-
 void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds ) {
 
     std::map<std::string, Client *>::iterator it;
@@ -119,7 +119,7 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
 
 
     if (!hasPersmission(sourceClient)) {
-        this->_server->numericReply(sourceClient, "482", this->_name);
+        this->_server->numericReply(sourceClient, "482", this->_name, "", "");
         return ;
     }
 
@@ -127,11 +127,11 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
         std::string nickName = cmds[i];
 
         if (!_server->getClient(nickName))
-            _server->numericReply(sourceClient, "401", "");
+            _server->numericReply(sourceClient, "401", "", "", nickName);
         
         it = _users.find(nickName);
         if (it == _users.end()) {
-            _server->numericReply(sourceClient, "441", this->_name);
+            _server->numericReply(sourceClient, "441", this->_name, "", nickName);
             continue ;
         }
         Client *client = it->second;
@@ -143,22 +143,4 @@ void    Channel::changeOperatorPrivilege( Client *sourceClient, bool give, std::
         else if (!give)
             removeOperator(client, sourceClient->getNickName());
     }
-}
-
-/*not mode, change file*/
-void    Channel::kickUser( Client *sourceClient, Client *targetClient, std::string message ) {
-    std::string	respond = "KICK #" + _name + " " + targetClient->getNickName();
-
-	if (!hasPersmission(sourceClient)) {
-        _server->numericReply(sourceClient, "482", _name);
-		return ;
-    }
-    if (!this->isUserInChannel(targetClient->getNickName())) {
-        _server->numericReply(sourceClient, "441", _name);
-        return ;
-    }
-	if (message.size())
-		respond += message;
-	// _broadcast(respond, sourceClient->getNickName(), true)
-    removeUser(targetClient, sourceClient, respond, true);
 }

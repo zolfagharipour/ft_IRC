@@ -18,35 +18,32 @@ class Channel {
         std::string                     _name;
         std::string                     _topic;
         bool                            _topicRestricted;
-        std::map<std::string, Client*>  _users; //key = nickname, value: client pointer
+        std::map<std::string, Client*>  _users;
         std::set<Client *>              _operators;
-        std::set<std::string>              _guestList;
+        std::set<std::string>           _guestList;
         bool                            _inviteOnly;
-        int                             _userLimit;
+        size_t                          _userLimit;
         bool                            _userLimitRestricted;
         std::string                     _key;
 
     public:
-        Channel() {};
+        Channel( ) {};
         Channel( const Channel& other );
-        //what initiated to? more arguments?
         Channel(const std::string &name, Server* server );
         Channel& operator=( const Channel& other );
-        ~Channel();
+        ~Channel( );
 
-        //getters
-        const std::string                       &getName();
-        const std::string                       &getTopic();
-        bool                                    getInviteOnly();
-        int                                     getUserLimit();
-        bool                                    getUserLimitStatus();
-        bool                                    isBotActivated();
-        Client                                  *getOperator();
-        const std::map<std::string, Client*>    &getUsers();
+        const std::string                       &getName( );
+        const std::string                       &getTopic( );
+        bool                                    getInviteOnly( );
+        int                                     getUserLimit( );
+        bool                                    getUserLimitStatus( );
+        bool                                    isBotActivated( );
+        Client                                  *getOperator( );
+        const std::map<std::string, Client*>    &getUsers( );
         const std::string                       getKey( );
 
-
-        //user management
+        //User management
         bool    addUser( Client *client);
         void    removeUser( Client *client, std::string message, bool selfEcho );
         void    removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho );
@@ -71,9 +68,6 @@ class Channel {
         void    changeOperatorPrivilege( Client *sourceClient, bool give, std::vector<std::string> &cmds );
         void    setKey( Client *client, std::string key );
         void    removeKey( Client *client );
-
-        //debug
-        void    printUsers();
 
 		// messaging
 		void	_broadcast( std::string message, std::string senderName, bool selfEcho );

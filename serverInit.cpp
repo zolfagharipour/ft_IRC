@@ -1,6 +1,23 @@
 #include "server.hpp"
 
-void	Server::_SocketInit() {
+void	Server::_commandFnInit( ){
+	_commandFn["CAP"] = &Server::_capResp;
+    _commandFn["PASS"] = &Server::_passResp;
+    _commandFn["NICK"] = &Server::_nickResp;
+    _commandFn["USER"] = &Server::_userResp;
+    _commandFn["PING"] = &Server::_pingResp;
+    _commandFn["PRIVMSG"] = &Server::_privMsgResp;
+    _commandFn["JOIN"] = &Server::_joinResp;
+    _commandFn["PART"] = &Server::_partResp;
+    _commandFn["MODE"] = &Server::_modeResp;
+    _commandFn["TOPIC"] = &Server::_topicResp;
+    _commandFn["KICK"] = &Server::_kickResp;
+    _commandFn["QUIT"] = &Server::_quitResp;
+    _commandFn["INVITE"] = &Server::_inviteResp;
+}
+
+
+void	Server::_SocketInit( ) {
 	
 	struct sockaddr_in	sockAdd;
 	struct pollfd       newPoll;
@@ -38,27 +55,6 @@ void	Server::_SocketInit() {
 	std::cout << "Server socket created; waiting for a connection..." << std::endl;
 }
 
-// void Server::ServerInit() {
-// 	_SocketInit();
-
-// 	while (!_signal) {
-// 		if (poll(&_pollFd[0], _pollFd.size(), -1) < 0 && !_signal) {
-// 			throw (std::runtime_error("poll() failed"));
-//         }
-// 		for (size_t i = 0; i < _pollFd.size(); i++) {
-// 			if (_pollFd[i].revents & POLLIN) {
-// 				if (_pollFd[i].fd == _serFd) {
-// 				    _clientRegister();
-// 				}
-// 				else {
-// 					_clientCommunicate(i);
-// 					_serverRespond();
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
 void	Server::_ServerLoop( int pollIndx ) {
 	size_t	i = 0;
 	nfds_t	loopEnd = _pollFd.size();
@@ -72,17 +68,15 @@ void	Server::_ServerLoop( int pollIndx ) {
 		_pollFd[i].events = POLLOUT;
 	}
 	if (poll(&_pollFd[i], loopEnd, timOut) < 0 && !_signal) {
-		// throw (std::runtime_error("poll() failed"));
+		throw (std::runtime_error("poll() failed"));
 		return ;
 	}
 	for (; i < loopEnd; i++) {
 		if (_pollFd[i].revents & POLLIN) {
-			if (_pollFd[i].fd == _serFd) {
+			if (_pollFd[i].fd == _serFd)
 				_clientRegister();
-			}
-			else {
+			else
 				_clientCommunicate(i);
-			}
 		}
 		if (_pollFd[i].revents & POLLOUT) {
 			_serverRespond(i - 1);
@@ -91,8 +85,9 @@ void	Server::_ServerLoop( int pollIndx ) {
 	}
 }
 
-void Server::ServerInit() {
+void Server::ServerInit( ) {
 	_SocketInit();
+	_commandFnInit();
 
 	while (!_signal) {
 		_ServerLoop(-1);

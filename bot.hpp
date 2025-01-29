@@ -10,13 +10,11 @@ private:
 	std::set<std::string>				_toKick;
 
 public:
-	Bot();
-	~Bot();
+	Bot( );
+	~Bot( );
 
 	std::string	censor( std::vector<std::string> &cmds );
 	bool		shallKick( std::string& message );
 };
-
-
 
 #endif

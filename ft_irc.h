@@ -17,6 +17,7 @@
 # include <sys/poll.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <cstdlib>
 # include <set>
 # include <map>
 # include <sstream>

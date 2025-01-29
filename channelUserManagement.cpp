@@ -12,8 +12,7 @@ void    Channel::removeUser( Client *client, std::string message, bool selfEcho 
     _users.erase(senderNick);
 }
 
-void    Channel::removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho ){
-
+void    Channel::removeUser( Client *toRemove, Client *kicker, std::string message, bool selfEcho ) {
 	std::string	senderNick = kicker->getNickName();
 	if (!isUserInChannel(senderNick))
 		return ;
@@ -44,7 +43,7 @@ void    Channel::removeFromGuestList(std::string nick) {
 
 bool    Channel::addUser( Client *client ) {
     if (_userLimitRestricted && _users.size() >= _userLimit) {
-        _server->numericReply(client, "471", this->_name);
+        _server->numericReply(client, "471", this->_name, "", "");
         return false ;
     }
 	_users.insert(std::make_pair(client->getNickName(), client));
@@ -53,7 +52,55 @@ bool    Channel::addUser( Client *client ) {
 
 	_broadcast(respond, client->getNickName(), true);
     if (!getTopic().empty())
-        _server->numericReply(client, "332", _name);
+        _server->numericReply(client, "332", _name, "", "");
 
     return true ;
+}
+
+void    Channel::kickUser( Client *sourceClient, Client *targetClient, std::string message ) {
+    std::string	respond = "KICK #" + _name + " " + targetClient->getNickName();
+
+	if (!hasPersmission(sourceClient)) {
+        _server->numericReply(sourceClient, "482", _name, "", "");
+		return ;
+    }
+    if (!this->isUserInChannel(targetClient->getNickName())) {
+        _server->numericReply(sourceClient, "441", _name, "", targetClient->getNickName());
+        return ;
+    }
+	if (message.size())
+		respond += message;
+    removeUser(targetClient, sourceClient, respond, true);
+}
+
+void    Channel::inviteUser( Client *sourceClient, Client *targetClient ) {
+    if (_inviteOnly && !hasPersmission(sourceClient)) {
+        _server->numericReply(sourceClient, "482", _name, "", "");
+        return ;
+    }
+
+    if (!isUserInChannel(sourceClient->getNickName())) {
+        _server->numericReply(sourceClient, "442", _name, "", "");
+        return ;
+    }
+
+    if (isUserInChannel(targetClient->getNickName())) {
+        _server->numericReply(sourceClient, "443", _name, "", targetClient->getNickName());
+        return ;
+    }
+
+    if (_userLimitRestricted && _users.size() >= _userLimit) {
+        _server->numericReply(sourceClient, "471", this->_name, "", "");
+        return ;
+    }	
+    
+    std::string		respond;
+    respond = ":" + sourceClient->getNickName() + "!" + sourceClient->getUserName();
+    respond += " INVITE " + targetClient->getNickName() + " :#" + getName();
+	respond += "\r\n";
+    send(targetClient->getFd(), respond.data(), respond.size(), 0);
+    std::cout << "\n>> " << respond;
+
+    _server->numericReply(sourceClient, "341", _name, "", targetClient->getNickName());
+	_guestList.insert(targetClient->getNickName());
 }

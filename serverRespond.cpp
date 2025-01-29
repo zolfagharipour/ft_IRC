@@ -17,8 +17,7 @@ void	Server::_passResp( std::vector<std::string> &cmds, int client ){
 		_clients[client]->authenticate();
 		return ;
 	}
-	numericReply(_clients[client], "464", "");
-	// _removeClient(_clients[client].getFd());
+	numericReply(_clients[client], "464", "", "", "");
 }
 
 void	Server::_userResp( std::vector<std::string> &cmds, int client ){
@@ -26,29 +25,29 @@ void	Server::_userResp( std::vector<std::string> &cmds, int client ){
 
 	if (cmds.size() < 5 || _clients[client]->getNickName() == "*"
 			|| cmds[4][0] != ':'){
-		numericReply(_clients[client], "461", "");
+		numericReply(_clients[client], "461", "", "USER", "");
 		return ;
 	}
 	else if (_clients[client]->isRegistered()){
-		numericReply(_clients[client], "462", "");
+		numericReply(_clients[client], "462", "", "", "");
 		return ;
 	}
 
 	realName = cmds[4].substr(1);
-	for (int i = 5; i < cmds.size(); i++){
+	for (size_t i = 5; i < cmds.size(); i++){
 		realName += " " + cmds[i];
 	}
 	_clients[client]->setUserName(cmds[1]);
 	_clients[client]->setRealName(realName);
 	_clients[client]->registered();
-	numericReply(_clients[client], "001", "");
+	numericReply(_clients[client], "001", "", "", "");
 }
 
 void	Server::_pingResp( std::vector<std::string> &cmds, int client ){
 		std::string respond = "PONG ";
 
 		if (cmds.size() < 2){
-			numericReply(_clients[client], "409", "");
+			numericReply(_clients[client], "409", "", "", "");
 			return ;
 		}
 		respond += cmds[1] + "\r\n";
@@ -61,13 +60,12 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 		return ;
 	if (cmds.size() < 2 || (cmds.size() < 3 && cmds[1].size() < 1
 		&& cmds[1][0] == ':' )) {
-		numericReply(_clients[client], "461", "");
+		numericReply(_clients[client], "461", "", "JOIN", "");
 		return ;
 	}
 
 	std::vector<std::string> channelList;
 	std::vector<std::string> keyList;
-
 	std::stringstream ss(cmds[1]);
 	std::string channelName;
 
@@ -88,25 +86,23 @@ void	Server::_joinResp( std::vector<std::string> &cmds, int client ) {
 		std::string currentChannelname = channelList[i];
 		std::string key = (i < keyList.size()) ? keyList[i] : "";
 		if (!_channelNameValidity(currentChannelname))
-			numericReply(_clients[client], "479", currentChannelname);
+			numericReply(_clients[client], "479", currentChannelname, "", "");
 		else
 			joinChannel(_clients[client], currentChannelname, key);
 	}
 }
 
 void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
-	
 	std::string nick = _clients[client]->getNickName();
 	std::vector<std::string> channels;
 	
 	if ( !_clients[client]->isRegistered() )
 		return ;
 	if (cmds.size() < 2) {
-		numericReply(_clients[client], "461", "");
+		numericReply(_clients[client], "461", "", "PART", "");
 		return ;
 	}
 
-	//store channels that should be parted in a vector, get rid of #
 	std::string channelNames = cmds[1];
 	if (!channelNames.empty()) {
 		std::stringstream ss(channelNames);
@@ -118,19 +114,18 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 		}
 	}
 
-	//iteratre though all channels, separated by comma
 	for (size_t i = 0; i < channels.size(); ++i) {
 		std::string currentChannelName = channels[i];
 
 		std::map<std::string, Channel*>::iterator it = _channels.find(currentChannelName);
 		if (it == _channels.end()) {
-			numericReply(_clients[client], "403", currentChannelName);
+			numericReply(_clients[client], "403", currentChannelName, "", "");
         	continue ;
 		}
 
 		Channel *channel = it->second;
 		if (!channel->isUserInChannel(_clients[client]->getNickName()))
-			numericReply(_clients[client], "442", currentChannelName);
+			numericReply(_clients[client], "442", currentChannelName, "", "");
 
 		std::string partMessage = "PART #" + currentChannelName;
 		if (cmds.size() > 2) {
@@ -149,21 +144,21 @@ void	Server::_partResp( std::vector<std::string> &cmds, int client ) {
 
 void	Server::_kickResp( std::vector<std::string> &cmds, int client ){
 	if (cmds.size() < 3){
-		numericReply(_clients[client], "461", "");
+		numericReply(_clients[client], "461", "", "KICK", "");
 		return ;
 	}
 	if (cmds[1][0] != '#')
 		return ;
 	Client*	kickedClient = getClient(cmds[2]);
 	if (!kickedClient){
-		numericReply(_clients[client], "401", "");
+		numericReply(_clients[client], "401", "", "", cmds[2]);
 		return ;
 	}
 
 	std::string	channelName = cmds[1].substr(1);
 	Channel*	channel = getChannel(channelName);
 	if (!channel){
-		numericReply(_clients[client], "403", channelName);
+		numericReply(_clients[client], "403", channelName, "", "");
 		return ;
 	}
 	std::string reason;
@@ -177,17 +172,15 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 	Client *clientPtr = _clients[client];
 	std::string channelName = cmds[1];
 
-	//get clear channel name
-	if (channelName[0] != '#')
+	if (channelName[0] != '#' || cmds.size() < 3)
 		return ;
 
 	if (!channelName.empty() && channelName[0] == '#')
 			channelName = channelName.substr(1);
 
-	//get channel pointer matched to name
 	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
 	if (it == _channels.end()) {
-		numericReply(_clients[client], "403", channelName);
+		numericReply(_clients[client], "403", channelName, "", "");
 		return ;
 	}
 
@@ -225,7 +218,7 @@ void	Server::_inviteResp( std::vector<std::string> &cmds, int client ) {
 
 	std::map<std::string, Channel *>::iterator it = _channels.find(channelName);
 	if (it == _channels.end())  {
-        numericReply(sourceClient, "403", channelName);
+        numericReply(sourceClient, "403", channelName, "", "");
         return ;
     }
 	
@@ -233,7 +226,7 @@ void	Server::_inviteResp( std::vector<std::string> &cmds, int client ) {
 	Client *targetClient = getClient(nickName);
 	
 	if (!targetClient) {
-        numericReply(sourceClient, "401", channelName);
+        numericReply(sourceClient, "401", "", "", nickName);
         return ;
     }
 
@@ -244,26 +237,24 @@ void	Server::_topicResp( std::vector<std::string> &cmds, int client ) {
 	Client *clientPtr = _clients[client];
 	std::string channelName = cmds[1];
 
-	//get clear channel name
 	if (!channelName.empty() && channelName[0] == '#')
 			channelName = channelName.substr(1);
 
-	//get channel pointer matched to name
 	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
 	if (it == _channels.end()) {
-		numericReply(_clients[client], "403", channelName);
+		numericReply(_clients[client], "403", channelName, "", "");
 		return ;
 	}
 	Channel *channel = it->second;
 	if (cmds.size() == 2) {
 		if (channel->getTopic().empty())
-			numericReply(clientPtr, "331", channelName);
+			numericReply(clientPtr, "331", channelName, "", "");
 		else
-			numericReply(clientPtr, "332", channelName);
+			numericReply(clientPtr, "332", channelName, "", "");
 	}
 	else {
 		if (!channel->isUserInChannel(clientPtr->getNickName())) {
-			numericReply(_clients[client], "442", channelName);
+			numericReply(_clients[client], "442", channelName, "", "");
 			return ;
 		}
 		std::string newTopic;
@@ -293,40 +284,15 @@ bool	Server::_parser( std::vector<std::string> &cmds, int client ){
 			&& cmds[0] != "CAP" && cmds[0] != "PASS"){
 		return true ;
 	}
-
-	if (cmds[0] == "CAP")
-		_capResp(cmds, client);
-	else if(cmds[0] == "PASS")
-		_passResp(cmds, client);
-	else if (cmds[0] == "NICK")
-		_nickResp(cmds, client);
-	else if (cmds[0] == "USER")
-		_userResp(cmds, client);
-	else if (cmds[0] == "PING")
-		_pingResp(cmds, client);
-	else if (cmds[0] == "PRIVMSG")
-		_privMsgResp(cmds, client);
-	else if (cmds[0] == "JOIN")
-		_joinResp(cmds, client);
-	else if (cmds[0] == "PART")
-		_partResp(cmds, client);
-	else if (cmds[0] == "MODE")
-		_modeResp(cmds, client);
-	else if (cmds[0] == "TOPIC")
-		_topicResp(cmds, client);
-	else if (cmds[0] == "KICK")
-		_kickResp(cmds, client);
-	else if (cmds[0] == "QUIT"){
-		_quitResp(cmds, client);
+	std::string command = cmds[0];
+	std::map<std::string, CommandHandler>::iterator it = _commandFn.find(cmds[0]);
+	if (it != _commandFn.end())
+		(this->*(it->second))(cmds, client);
+	
+	if (command == "QUIT")
 		return false;
-	}
-	else if (cmds[0] == "INVITE")
-		_inviteResp(cmds, client);
-	// remove channel if empty in kickResp
-
-	return (true);
+	return true;
 }
-
 
 void	Server::_serverRespond( int client ){
 	std::vector<std::string>	cmds;
