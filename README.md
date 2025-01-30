@@ -29,7 +29,7 @@ This repository is intended as a reference and educational tool. **42 students a
 - `INVITE:` Invites a user to a channel.
 - `TOPIC:` Changes or displays the channel's topic.
 - `MODE:` Modifies channel settings with the following flags:
-    - **+i / -i**: Enable/disable invite-only mode.
+    - ``+i / -i``: Enable/disable invite-only mode.
     - **+t / -t**: Restrict topic changes to operators.
     - **+k <key> / -k**: Set/remove a channel key (password).
     - *+o <user> / -o <user>*: Grant/revoke operator privileges.
