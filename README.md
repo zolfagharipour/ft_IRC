@@ -56,7 +56,7 @@ make
 
 ## Usage
 
-Run the executable with the preferred ***port*** and password:
+Run the executable with the preferred **port** and **password**:
 
 ```bash
 ./ircserver <port> <password>
