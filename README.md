@@ -62,6 +62,6 @@ Run the executable with the preferred **port** and **password**:
 ./ircserver <port> <password>
 ```
 
-**Connecting to the Server:** Use an IRC client to connect to the server using the specified port and password.
+**Connecting to the Server:** Use an IRC client to connect to the server using the specified **port** and **password**.
 
 **Commands:** Once connected, you can use the supported IRC commands to interact with the server and other clients.
