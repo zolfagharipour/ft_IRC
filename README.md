@@ -16,60 +16,38 @@ This repository is intended as a reference and educational tool. **42 students a
 
   **Commands**: Implements essential IRC commands such as:
 
-      - KICK: Eject a client from a channel.
+   - KICK: Eject a client from a channel.
 
-      - INVITE: Invite a client to a channel.
+   - INVITE: Invite a client to a channel.
 
-      - TOPIC: Change or view the channel topic.
+   - TOPIC: Change or view the channel topic.
 
-      - MODE: Change the channel's mode (e.g., invite-only, channel key, user limit).
+   - MODE: Change the channel's mode (e.g., invite-only, channel key, user limit).
 
 Requirements
 
-    C++98 Compliance: The code must comply with the C++98 standard.
+   C++98 Compliance: The code must comply with the C++98 standard.
 
-    Non-blocking I/O: All I/O operations must be non-blocking, and forking is not allowed.
+   Non-blocking I/O: All I/O operations must be non-blocking, and forking is not allowed.
 
-    Single poll() Call: Only one poll() (or equivalent) call can be used to handle all I/O operations.
+   Single poll() Call: Only one poll() (or equivalent) call can be used to handle all I/O operations.
 
-    Makefile: The project must include a Makefile with the rules: $(NAME), all, clean, fclean, and re.
+   Makefile: The project must include a Makefile with the rules: $(NAME), all, clean, fclean, and re.
 
-Installation
+## Compilation
 
-    Clone the repository:
-    bash
-    Copy
+Clone the repository and compile the Minishell with the following commands:
 
-    git clone https://github.com/yourusername/ft_irc.git
-    cd ft_irc
+```bash
+git clone https://github.com/yourusername/ft_irc.git
+cd ft_irc
+make
+```
 
-    Compile the project:
-    bash
-    Copy
+## Usage
 
-    make
-
-    Run the server:
-    bash
-    Copy
-
-    ./ircserv <port> <password>
-
-    Replace <port> with the desired port number and <password> with the connection password.
-
-Usage
-
-    Connecting to the Server: Use an IRC client to connect to the server using the specified port and password.
-
-    Commands: Once connected, you can use the supported IRC commands to interact with the server and other clients.
-
-Testing
-
-To ensure the server handles various scenarios correctly, you can use the nc (netcat) command to simulate client connections and send commands in parts:
-bash
-Copy
-
-nc -C 127.0.0.1 6667
-com^Dman^Dd
-
-Use Ctrl+D to send the command in several parts.
+Connecting to the Server: Use an IRC client to connect to the server using the specified port and password.
+```bash
+./ircserver <port> <password>
+```
+Commands: Once connected, you can use the supported IRC commands to interact with the server and other clients.
