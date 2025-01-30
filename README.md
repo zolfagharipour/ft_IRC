@@ -23,7 +23,7 @@ This repository is intended as a reference and educational tool. **42 students a
 
 **Non-blocking I/O**: The server operates in a non-blocking manner, ensuring no process hangs. (Forking was not allowed).
 
-## Implemented IRC Commands:
+## Implemented IRC Commands for Operators in the Channels:
 
 - `KICK:` Removes a user from a channel.
 - `INVITE:` Invites a user to a channel.
