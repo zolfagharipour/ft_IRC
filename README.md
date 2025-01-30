@@ -19,9 +19,9 @@ This repository is intended as a reference and educational tool. **42 students a
 
 **C++98 Compliance**: The server is built in C++98, ensuring compatibility with the specified standard.
 
-**Single poll() Call**: The server must handle all I/O operations with a single poll() (or equivalent such as select(), kqueue(), or epoll()).
+**Single poll() Call**: The server must handle all I/O operations with a single poll().
 
-**Non-blocking I/O**: The server operates in a non-blocking manner, ensuring no process hangs. Forking is not allowed.
+**Non-blocking I/O**: The server operates in a non-blocking manner, ensuring no process hangs. (Forking was not allowed).
 
 ## Implemented IRC Commands:
 
@@ -32,7 +32,7 @@ This repository is intended as a reference and educational tool. **42 students a
     - **+i / -i**: Enable/disable invite-only mode.
     - **+t / -t**: Restrict topic changes to operators.
     - **+k <key> / -k**: Set/remove a channel key (password).
-    - **+o <user> / -o <user>**: Grant/revoke operator privileges.
+    - *+o <user> / -o <user>*: Grant/revoke operator privileges.
     - **+l <limit> / -l**: Set/remove a user limit on the channel.
 
 ## Bonus Features
