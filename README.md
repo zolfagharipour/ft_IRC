@@ -29,20 +29,20 @@ This repository is intended as a reference and educational tool. **42 students a
 - `INVITE:` Invites a user to a channel.
 - `TOPIC:` Changes or displays the channel's topic.
 - `MODE:` Modifies channel settings with the following flags:
-    `+i / -i`: Enable/disable invite-only mode.
-    `+t / -t`: Restrict topic changes to operators.
-    `+k <key> / -k`: Set/remove a channel key (password).
-    `+o <user> / -o <user>`: Grant/revoke operator privileges.
-    `+l <limit> / -l`: Set/remove a user limit on the channel.
+    - **+i / -i**: Enable/disable invite-only mode.
+    - **+t / -t**: Restrict topic changes to operators.
+    - **+k <key> / -k**: Set/remove a channel key (password).
+    - **+o <user> / -o <user>**: Grant/revoke operator privileges.
+    - **+l <limit> / -l**: Set/remove a user limit on the channel.
 
 ## Bonus Features
 
-- File Transfer: Implements a file transfer feature, allowing users to send files through the IRC server.
+- **File Transfer**: Implements a file transfer feature, allowing users to send files through the IRC server.
 
-- Chat Moderation Bot: A built-in bot that can be activated or deactivated by a channel operator.
- - Activated by sending ```bot on``` in the channel and deactivated with ```bot off```.
- - When active, it automatically replaces certain insulting words with more polite alternatives (e.g., ```shit``` → ```sheet```).
- - The bot also monitors messages and forcefully kicks any user who criticizes the Chinese government, making it appear as if they left voluntarily.
+- **Chat Moderation Bot**: A built-in bot that can be activated or deactivated by a channel operator.
+     - Activated by sending ```bot on``` in the channel and deactivated with ```bot off```.
+     - When active, it automatically replaces certain insulting words with more polite alternatives (e.g., ```shit``` → ```sheet```).
+     - The bot also monitors messages and forcefully kicks any user who criticizes the Chinese government, making it appear as if they left voluntarily.
 
 ## Compilation
 
