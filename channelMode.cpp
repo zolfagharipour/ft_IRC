@@ -32,7 +32,6 @@ void    Channel::setUserLimit( Client *client, std::vector<std::string> &cmds ) 
 
     try {
         limit = std::atoi(cmds[3].c_str());
-        // limit = std::stoi(cmds[3]);
         if (limit <= 0)
             throw std::out_of_range("too small user limit");
     } catch (const std::exception &e) {
