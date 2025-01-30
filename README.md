@@ -1,6 +1,8 @@
 # FT_IRC
 
-This project involves creating your own IRC (Internet Relay Chat) server in C++98. The server will allow multiple clients to connect, communicate in real-time, and interact with channels. The project emphasizes understanding and implementing network protocols, handling multiple clients simultaneously, and ensuring non-blocking I/O operations.
+This project involves creating our own IRC (Internet Relay Chat) server in **C++98**. The server allows multiple clients to connect, communicate in real-time, and interact within channels. It emphasizes understanding and implementing **network protocols**, **handling multiple clients simultaneously**, and ensuring **non-blocking I/O operations**.
+
+Our reference client for development and testing is **irssi**, ensuring compatibility and stability. While the server is tested with irssi, it is designed to work with other IRC clients as well.
 
 
 ## Warning for 42 Students
@@ -8,31 +10,39 @@ This project involves creating your own IRC (Internet Relay Chat) server in C++9
 This repository is intended as a reference and educational tool. **42 students are strongly advised not to copy this code without fully understanding its functionality.** Plagiarism in any form is against 42's principles and could lead to serious academic consequences. Use this repository responsibly to learn and better understand how to implement similar functionalities on your own.
 
 ## Features
-  **Real-time Messaging**: Supports both public and private messaging.
 
-  **Channel Management**: Users can join channels, send messages, and manage channel settings.
+**Real-time Messaging**: Supports both public and private messaging. Messages sent in a channel are broadcast to all members.
 
-  **User Roles**: Supports operators and regular users with different privileges.
+**Channel Management**: Users can create and join channels, send messages, and manage channel settings.
 
-  **Commands**: Implements essential IRC commands such as:
+**User Roles**: Implements both operators and regular users with distinct privileges.
 
-   - KICK: Eject a client from a channel.
+**C++98 Compliance**: The server is built in C++98, ensuring compatibility with the specified standard.
 
-   - INVITE: Invite a client to a channel.
+**Single poll() Call**: The server must handle all I/O operations with a single poll() (or equivalent such as select(), kqueue(), or epoll()).
 
-   - TOPIC: Change or view the channel topic.
+**Non-blocking I/O**: The server operates in a non-blocking manner, ensuring no process hangs. Forking is not allowed.
 
-   - MODE: Change the channel's mode (e.g., invite-only, channel key, user limit).
+## Implemented IRC Commands:
 
-Requirements
+-`KICK:` Removes a user from a channel.
+-`INVITE:` Invites a user to a channel.
+-`TOPIC:` Changes or displays the channel's topic.
+-`MODE:` Modifies channel settings with the following flags:
+    `+i / -i`: Enable/disable invite-only mode.
+    `+t / -t`: Restrict topic changes to operators.
+    `+k <key> / -k`: Set/remove a channel key (password).
+    `+o <user> / -o <user>`: Grant/revoke operator privileges.
+    `+l <limit> / -l`: Set/remove a user limit on the channel.
 
-   C++98 Compliance: The code must comply with the C++98 standard.
+## Bonus Features
 
-   Non-blocking I/O: All I/O operations must be non-blocking, and forking is not allowed.
+-`File Transfer:` Implements a file transfer feature, allowing users to send files through the IRC server.
 
-   Single poll() Call: Only one poll() (or equivalent) call can be used to handle all I/O operations.
-
-   Makefile: The project must include a Makefile with the rules: $(NAME), all, clean, fclean, and re.
+-`Chat Moderation Bot:` A built-in bot that can be activated or deactivated by a channel operator.
+ - Activated by sending ```bot on``` in the channel and deactivated with ```bot off```.
+ - When active, it automatically replaces certain insulting words with more polite alternatives (e.g., ```shit``` → ```sheet```).
+ - The bot also monitors messages and forcefully kicks any user who criticizes the Chinese government, making it appear as if they left voluntarily.
 
 ## Compilation
 
