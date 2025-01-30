@@ -42,11 +42,11 @@ This repository is intended as a reference and educational tool. **42 students a
 - **Chat Moderation Bot**: A built-in bot that can be activated or deactivated by a channel operator.
      - Activated by sending ```bot on``` in the channel and deactivated with ```bot off```.
      - When active, it automatically replaces certain insulting words with more polite alternatives (e.g., ```shit``` → ```sheet```).
-     - The bot also monitors messages and forcefully kicks any user who criticizes the Chinese government, making it appear as if they left voluntarily.
+     - The bot also monitors messages and forcefully kicks any user who criticizes the Chinese government, making it appear as if they left voluntarily. 😂
 
 ## Compilation
 
-Clone the repository and compile the Minishell with the following commands:
+Clone the repository and compile the Server with the following commands:
 
 ```bash
 git clone https://github.com/yourusername/ft_irc.git
@@ -56,8 +56,12 @@ make
 
 ## Usage
 
-Connecting to the Server: Use an IRC client to connect to the server using the specified port and password.
+Run the executable with the preferred ***port*** and password:
+
 ```bash
 ./ircserver <port> <password>
 ```
-Commands: Once connected, you can use the supported IRC commands to interact with the server and other clients.
+
+**Connecting to the Server:** Use an IRC client to connect to the server using the specified port and password.
+
+**Commands:** Once connected, you can use the supported IRC commands to interact with the server and other clients.
