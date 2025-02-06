@@ -49,7 +49,7 @@ This repository is intended as a reference and educational tool. **42 students a
 Clone the repository and compile the Server with the following commands:
 
 ```bash
-git clone https://github.com/yourusername/ft_irc.git
+git clone https://github.com/zolfagharipour/ft_irc.git
 cd ft_irc
 make
 ```
