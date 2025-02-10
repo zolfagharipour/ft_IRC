@@ -28,6 +28,6 @@ fclean: 	clean
 re:			clean all
 
 test: ${NAME}
-	clear && valgrind -s --leak-check=full --leak-check=full --show-leak-kinds=all --track-fds=yes ./IRC
+	clear && valgrind -s --leak-check=full --leak-check=full --show-leak-kinds=all --track-fds=yes ./ircserv 6667 00
 
 

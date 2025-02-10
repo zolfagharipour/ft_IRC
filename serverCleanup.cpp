@@ -19,7 +19,10 @@ void	Server::_removeClient( int client, std::string message ) {
 
 	_pollFd.erase(_pollFd.begin() + client + 1);
 
-	close (_clients[client]->getFd());
+	int error = 0;
+    socklen_t len = sizeof(error);
+	if (getsockopt(_clients[client]->getFd(), SOL_SOCKET, SO_ERROR, &error, &len) != -1)
+		close (_clients[client]->getFd());
 	delete _clients[client];
 	_clients.erase(_clients.begin() + client);
 }
