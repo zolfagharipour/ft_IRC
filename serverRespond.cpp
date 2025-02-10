@@ -186,25 +186,25 @@ void	Server::_modeResp( std::vector<std::string> &cmds, int client ) {
 
 	Channel *channel = it->second;
 
-	if (cmds[2] == "+t\0")
+	if (cmds[2] == "+t")
 		channel->setTopicRestriction(clientPtr, true);
-	else if (cmds[2] == "-t\0")
+	else if (cmds[2] == "-t")
 		channel->setTopicRestriction(clientPtr, false);
-	else if (cmds[2] == "+i\0")
+	else if (cmds[2] == "+i")
 		channel->setInviteOnly(clientPtr, true);
-	else if (cmds[2] == "-i\0")
+	else if (cmds[2] == "-i")
 		channel->setInviteOnly(clientPtr, true);
-	else if (cmds.size() > 3  && cmds[2] == "+k\0")
+	else if (cmds.size() > 3  && cmds[2] == "+k")
 		channel->setKey(clientPtr, cmds[3]);
-	else if (cmds[2] == "-k\0")
+	else if (cmds[2] == "-k")
 		channel->removeKey(clientPtr);
-	else if (cmds[2] == "+o\0")
+	else if (cmds[2] == "+o")
 		channel->changeOperatorPrivilege(clientPtr, true, cmds);
-	else if (cmds[2] == "-o\0")
+	else if (cmds[2] == "-o")
 		channel->changeOperatorPrivilege(clientPtr, false, cmds);
-	else if (cmds[2] == "+l\0")
+	else if (cmds[2] == "+l")
 		channel->setUserLimit(clientPtr, cmds);
-	else if (cmds[2] == "-l\0")
+	else if (cmds[2] == "-l")
 		channel->removeUserLimit(clientPtr);
 }
 

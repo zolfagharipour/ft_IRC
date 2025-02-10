@@ -74,7 +74,7 @@ void    Channel::kickUser( Client *sourceClient, Client *targetClient, std::stri
 }
 
 void    Channel::inviteUser( Client *sourceClient, Client *targetClient ) {
-    if (_inviteOnly && !hasPersmission(sourceClient)) {
+    if (!hasPersmission(sourceClient)) {
         _server->numericReply(sourceClient, "482", _name, "", "");
         return ;
     }
